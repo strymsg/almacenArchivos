@@ -1,0 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+	<head>
+		 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>Archivador temporal para compartir archivos</title>
+		<link rel="stylesheet" href="../static/base.css" type="text/css" />
+
+	</head>
+	<body>
+		<h1>El botadero</h1>
+		<div class="qu">
+			<p>
+			Un sitio <b>público</b> para compartir archivos
+			</p>		
+		</div>
+		<!-- Subida de archivos -->
+			<div class="nota">
+			<form method="post" id="upload_file" action="upload_file" enctype="multipart/form-data">			
+				<input type="file" name="file"/>
+				<input type="submit", class="btn", value="Subir archivo"/>
+					<p>Los archivos se eliminan después de 10 a 20 días, dependiendo su tamaño
+						 <a href="info" >¿por qué? </a>
+					 </p>
+			</form>	
+			</div>			
+
+			<!-- Listado de archivos -->		
+
+	</body>
+
+</html>

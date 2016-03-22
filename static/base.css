@@ -1,0 +1,60 @@
+/*
+  BOTADERO
+*/
+
+h1{
+	font-family: serif;
+	font-size: 33px;
+	color: #23261C;
+	text-align: center;
+}
+
+body {
+    padding-left: 30px;
+    padding-bottom: 20px;
+    padding-right: 30px;
+    padding-top: 10px;
+    background-color: #E0DAC2;
+    font-family: Helvetica;
+    font-size: 15px;
+}
+
+.qu {
+    padding: 5px;
+    font-size: 16px;
+    color: #313524;
+    font-family: serif;
+    font-style: italic;
+    text-align: center;
+}
+
+.nota {
+	font-size: 17px;
+	color: #58605A;
+	font-family: sans-serif;
+}
+
+.btn {
+	padding 5px;
+	font-weight: bold;
+}
+
+#lista_archivos{
+	position:  absolute;
+	padding: 2px;
+	line-height: 157%;	/* Interlineado */
+	width: 91%;
+	background-color: #D1C7AE;
+	font-family: monospace;
+	font-size: 14px;
+	border-style: dotted;
+	border-color: #C8B7A8;
+}
+
+a:hover {
+	font-weight: bold;
+	}
+	
+a{
+	color: #F55B0A;
+}
