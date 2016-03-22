@@ -1,3 +1,22 @@
+'''
+Copyright (C) 2016 Rodrigo Garcia
+
+This file is part of botadero.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  
+'''
 import os
 from flask import Flask
 from flask import render_template
@@ -7,7 +26,7 @@ from werkzeug import secure_filename
 
 app = Flask(__name__)
 
-# Parametros principales
+# Parametros principales TODO: (usar la clase ParametrosServidor para contener estos parametros, ver Docu/clase.dia (diagrama de clases))
 TOTAL_STORAGE = 0
 UPLOAD_FOLDER = secure_filename('almacen/') #cambiar a directorio relativo
 SIZE_1 = 0
@@ -16,6 +35,7 @@ TIME_TO_DEL_1 = 0
 TIME_TO_DEL_2 = 0
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
 
 @app.route('/')
 def pag_principal():
@@ -26,11 +46,14 @@ def pag_principal():
 Se muestran primero los mas recientes subidos
 '''
 def ls_archivos():
-    # aqui usar la clase EstadisticaArchivos
+    # aqui usar la clase EstadisticaArchivos para cargar parametros
     #
     #
     
-    # solo para pruebas
+    # Lo siguiente es solo para pruebas
+    # TODO: usar motor de templates jinja2, y usar tablas para mostar la
+    #       lista de archivos adecuadamente.
+    
     cad = '''
     <html> 
 <head>
@@ -90,7 +113,7 @@ def donwload_file(filename):
 
 ''' Funcion para subir archivos
 Al hacer seleccionar el boton para subir archivos, se debe comprobar algunos
-criterios para ser guardados en la BD:
+criterios para ser guardados:
 
 - Tamanyo del archivo
 De acuerdo a un parametro definido en `parametros.txt', si el archivo es mayor
@@ -101,13 +124,11 @@ que `SIZE_1' y menor que `SIZE_2' (bytes) sera borrado en `TIME_TO_DEL_1' (dias)
 - Si ya existe
 Al tratar de subir el archivo y para ahorrar espacio de almacenamiento, se 
 comprueba si el archivo ya existe. Esto haciendo un sha1sum del archivo enviado
-por el usuario. Luego se busca en la BD si este sha1sum coincide con el de algun
+por el usuario. Luego se busca en si este sha1sum coincide con el de algun
 otro archivo.
 
 Si el archivo ya existe, se muestra un mensaje al usuario:
-
 "El archivo ya existe, pero puede que tenga otro nombre"
-
 Y no se guarda en disco duro.
 
 - Si hay espacio disponible
@@ -129,12 +150,17 @@ def upload_file():
 
             # linea que guarda los archivos en disco
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            
 
-        return "<h4>"+ filename + "</h4>" + pag_res
+        return redirect("/", code=302)
+        # http://stackoverflow.com/questions/14343812/redirecting-to-url-in-flask
+
+        #return "Subido: <h4>"+ filename + "</h4>" + pag_res
+        #redirect(url_for(''))
     else:
-        return "WOE"
+        return "OOPS!"
 
 if __name__ == '__main__':
 
-    #app.debug = True
+    app.debug = True
     app.run()
