@@ -1,25 +1,32 @@
-# Parameters for "Botadero" app
-# NAME<blank_space>PARAMETER
-# example:
-# SIZE_10 1000000
+# Parametros para "botadero"
 
-# Total storage on the server for users to upload files through the app. (bytes)
+# NOMBRE<espacio_en_blaco>PARAMETRO
+#   solo es valido *un espacio en blanco*
+# ejemplo:
+#
+# SIZE_10 1000000
+#
+
+# Almacenamiento total en el servidor reservado para la app (bytes)
 
 TOTAL_STORAGE 160000000
 
-# Upload folder name (you can use relative path)
+# Nombre la carpeta de subidas (se pueden usar rutas relativas)
+
 UPLOAD_FOLDER almacen
 
-# File Size levels (bytes)
+# Niveles de tamaño de archivos (bytes)
 
 SIZE_1 100000
-SIZE_2 600000
+SIZE_2 550000
 
-# Maximun file size (bytes)
+# Tamaño máximo de archivos (bytes)
 
 SIZE_MAX_TO_UPLOAD 10000000
 
-# Time to delete files after being uploaded to the server. (days)
+# Tiempo para borrar los archivos después de que hayan sido subidos 
+# al servidor (bytes), corresponde a los niveles 1 y 2 definidos 
+# arriba.
 
 TIME_TO_DEL_1 20
 TIME_TO_DEL_2 10

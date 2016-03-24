@@ -22,48 +22,91 @@ from flask import request, redirect, url_for
 from logs import initLogs
 
 class ParametrosServidor:
-    def __init__(nombre_archivo_config, DebugLevel):
+    def __init__(self, nombre_archivo_config, DebugLevel):
+        self.NombreArchivoConfig = 'parametros.txt'
+        self.TotalStorage = 0
+        self.UploadFolder = "almacen/"
+        self.Size1 = 0
+        self.Size2 = 0
+        self.TimeToDel1 = 0
+        self.TimeToDel2 = 0
+        self.SizeMaxToUpload = 0
+        self.LogFileName = 'botadero.log'
+        self.DebugLevel = 0
+        self.init(nombre_archivo_config, DebugLevel)
+
+    def init(self, nombre_archivo_config, DebugLevel):
         self.NombreArchivoConfig = nombre_archivo_config
-        # Defaults if reload config fails
-        self.TotalStorage = 80 000 000 #aprox 80 GB
+        # configuraciones por defecto por is falla la carga desde archivo
+        self.TotalStorage = 80000000 #aprox 80 GB
         self.UploadFolder = "almacen/"
         self.Size1 = 100000 # aprox 100 MB
         self.Size2 = 500000 # aprox 500 MB
         self.TimeToDel1 = 15 # 15 days
         self.TimeToDel2 = 10 # 10 days
-        self.SizeMaxToUpload = 6 500 000 # aprox 6.5 GB
+        self.SizeMaxToUpload = 6500000 # aprox 6.5 GB
         self.LogFileName = 'botadero.log'
         self.DebugLevel = 20 # info
-        # initializes loggin
-        initLogs(LogFileName , self.DebugLevel)
+        # Inicializa el logueo
+        initLogs(self.LogFileName , self.DebugLevel)
         
-        if Reload_configs() != 0:
-            # log an error
-            print "[CONFIG_FILE] - Error loading file: %" \
-                %self.NombreArchivoConfig
+        err = self.Reload_configs()
+        if err != 0:
+            # registra el error
+            print "[CONFIG_FILE] - Error loading file: %(nom)s - %(num)d wrong parameters" \
+                %{'nom':self.NombreArchivoConfig, 'num':err}
 
-    def Reload_configs():
+    # Recargar las configuraciones desde el archivo de configuracion
+    def Reload_configs(self):
         cont = ''
+        err = 0
         with open(self.NombreArchivoConfig, 'r') as f_parametros:
             for line in f_parametros:
                 # detectar lineas validas con parametros
-                if line[0] != '#' and line[0] != ' ' and line[0]!='\n':
-                    param = line[0]
-                    if param == 'TOTAL_STORAGE':
-                        TOTAL_STORAGE = int(param)
-                    elif param == 'UPLOAD_FOLDER':
-                        UPLOAD_FOLDER = param
-                    elif param == 'SIZE_1':
-                        SIZE_1 = int(param)
-                    elif param == 'SIZE_2':
-                        SIZE_2 = int(param)
-                    elif param == 'TIME_TO_DEL_1':
-                        TIME_TO_DEL_1 = int(param)
-                    elif param == 'TIME_TO_DEL_2':
-                        TIME_TO_DEL_2 = int(param)
-                        #cont = cont + '>>'
-                        #cont = cont + line + '<br>'
-                        return ''
+                lis = line.split(' ')
+                if len(lis) > 1 and line[0] != '#' and line[0] != ' ' \
+                   and line[0]!='\n':
+
+                    if lis[0] == 'TOTAL_STORAGE':
+                        if lis[1] != '' and int(lis[1] > 0):
+                            self.TotalStorage = int(lis[1])
+                        else:
+                            err = err + 1
+                            print '[CONFIG_FILE] - Error: TOTAL_STORAGE parameter'
+                    elif lis[0] == 'UPLOAD_FOLDER':
+                        if lis[1] != '':
+                            # quitando \n
+                            aux = lis[1].split("\n") 
+                            self.UploadFolder = aux[0]
+                        else:
+                            err = err + 1
+                            print '[CONFIG_FILE] - Error: UPLOAD_FOLDER parameter'
+                    elif lis[0] == 'SIZE_1' and int(lis[1] > 0):
+                        if lis[1] != '' and int(lis[1] > 0):
+                            self.Size1 = int(lis[1])
+                        else:
+                            err = err + 1
+                            print '[CONFIG_FILE] - Error: SIZE_1 parameter'
+                    elif lis[0] == 'SIZE_2':
+                        if lis[1] != '' and int(lis[1] > 0):
+                            self.Size2 = int(lis[1])
+                        else:
+                            err = err + 1
+                            print '[CONFIG_FILE] - Error: SIZE_2 parameter'
+                    elif lis[0] == 'TIME_TO_DEL_1':
+                        if lis[1] != '' and int(lis[1] > 0):
+                            self.TimeToDel1 = int(lis[1])
+                        else:
+                            err = err + 1
+                            print '[CONFIG_FILE] - Error: TIME_TO_DEL_1 parameter'
+                    elif lis[0] == 'TIME_TO_DEL_2':
+                        if lis[1] != '' and int(lis[1] > 0):
+                            self.TimeToDel2 = int(lis[1])
+                        else:
+                            err = err + 1
+                            print '[CONFIG_FILE] - Error: TIME_TO_DEL_2 parameter'
+        return err
+        
     #app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
     #test

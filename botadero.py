@@ -23,83 +23,14 @@ from flask import render_template
 from flask import request, redirect, send_from_directory
 from flask import url_for
 from werkzeug import secure_filename
+from Parametros_Servidor import *
 
 app = Flask(__name__)
-
-# Parametros principales TODO: (usar la clase ParametrosServidor para contener estos parametros, ver Docu/clase.dia (diagrama de clases))
-TOTAL_STORAGE = 0
-UPLOAD_FOLDER = secure_filename('almacen/') #cambiar a directorio relativo
-SIZE_1 = 0
-SIZE_2 = 0
-TIME_TO_DEL_1 = 0
-TIME_TO_DEL_2 = 0
-
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
+#app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 @app.route('/')
 def pag_principal():
     return render_template("index.html") + ls_archivos()
-
-
-''' Lista los archivos subidos y muestra detalles
-Se muestran primero los mas recientes subidos
-'''
-def ls_archivos():
-    # aqui usar la clase EstadisticaArchivos para cargar parametros
-    #
-    #
-    
-    # Lo siguiente es solo para pruebas
-    # TODO: usar motor de templates jinja2, y usar tablas para mostar la
-    #       lista de archivos adecuadamente.
-    
-    cad = '''
-    <html> 
-<head>
-		 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<title>Archivador temporal para compartir archivos</title>
-		<link rel="stylesheet" href="../static/base.css" type="text/css" />
-
-	</head>
-    <body>
-'''
-    cad = cad + '<div id="lista_archivos">'
-    cad = cad + "<ul>"
-    upload_folder = "almacen/"
-
-    try:
-        nombres = os.listdir(upload_folder)
-    except OSError:
-        pass
-    else:
-        for arch in nombres:
-
-            # archivo
-            cad = cad + '<dl> <a href="%(up)s%(arch)s"> %(arch)s </a>' % \
-                  {"up": upload_folder,  "arch": arch}
-
-            size_long = os.stat(upload_folder + arch).st_size
-            unidades = "(B)"
-            if size_long > 1000 and size_long < 1000000:
-                tam = round(size_long/float(1000), 2)
-                unidades = "(KB)"
-            elif size_long > 1000000 and size_long < 1000000000:
-                tam = round(size_long/float(1000000), 2)
-                unidades = "(MB)"
-            elif size_long > 1000000000:
-                tam = round(size_long/float(1000000000), 2)
-                unidades = "(GB)"
-            else:
-                tam = float(size_long)
-
-            cad = cad + " <---------> " + str(tam) + " " + unidades
-            cad = cad + " <b> N dias </b>"
-            cad = cad + "</dl> \n"
-    cad = cad + "</ul>"
-    cad = cad + "</body> </html>"
-    return cad
-
 
 ''' Peticiones para descarga de archivos subidos
 basado en:
@@ -110,8 +41,7 @@ def donwload_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename, \
                                as_attachment=True)
 
-
-''' Funcion para subir archivos
+''' Funcion para subir archivos 
 Al hacer seleccionar el boton para subir archivos, se debe comprobar algunos
 criterios para ser guardados:
 
@@ -158,9 +88,85 @@ def upload_file():
         #return "Subido: <h4>"+ filename + "</h4>" + pag_res
         #redirect(url_for(''))
     else:
-        return "OOPS!"
+        return "Aaah?"
 
+
+''' Lista los archivos subidos y muestra detalles
+Se muestran primero los mas recientes subidos
+'''
+def ls_archivos():
+    # aqui usar la clase EstadisticaArchivos para cargar parametros
+    #
+    #
+    
+    # Lo siguiente es solo para pruebas
+    # TODO: usar motor de templates jinja2, y usar tablas para mostar la
+    #       lista de archivos adecuadamente.
+    
+    cad = '''
+    <html> 
+    <head>
+		 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>Archivador temporal para compartir archivos</title>
+		<link rel="stylesheet" href="../static/base.css" type="text/css" />
+
+	</head>
+    <body>
+'''
+    cad = cad + '<div id="lista_archivos">'
+    cad = cad + "<ul>"
+    upload_folder = "almacen/"
+
+    try:
+        nombres = os.listdir(upload_folder)
+    except OSError:
+        pass
+    else:
+        for arch in nombres:
+
+            # archivo
+            cad = cad + '<dl> <a href="%(up)s%(arch)s"> %(arch)s </a>' % \
+                  {"up": upload_folder,  "arch": arch}
+
+            size_long = os.stat(upload_folder + arch).st_size
+            unidades = "(B)"
+            if size_long > 1000 and size_long < 1000000:
+                tam = round(size_long/float(1000), 2)
+                unidades = "(KB)"
+            elif size_long > 1000000 and size_long < 1000000000:
+                tam = round(size_long/float(1000000), 2)
+                unidades = "(MB)"
+            elif size_long > 1000000000:
+                tam = round(size_long/float(1000000000), 2)
+                unidades = "(GB)"
+            else:
+                tam = float(size_long)
+
+            cad = cad + " <---------> " + str(tam) + " " + unidades
+            cad = cad + " <b> N dias </b>"
+            cad = cad + "</dl> \n"
+    cad = cad + "</ul>"
+    cad = cad + "</body> </html>"
+    return cad
+
+
+##### principal #####
 if __name__ == '__main__':
+
+    # cargar configuraciones del servidor
+    ParametrosServer = ParametrosServidor('parametros.txt', False)
+
+    print "[PARAMETERS] - TOTAL_STORAGE=%d" %ParametrosServer.TotalStorage
+    print "[PARAMETERS] - UPLOAD_FOLDER=%s" %ParametrosServer.UploadFolder
+    print "[PARAMETERS] - SIZE_1=%d" %ParametrosServer.Size1
+    print "[PARAMETERS] - SIZE_2=%d" %ParametrosServer.Size2
+    print "[PARAMETERS] - TO_DEL_1=%d" %ParametrosServer.TimeToDel1
+    print "[PARAMETERS] - TIME_TO_DEL_2=%d" %ParametrosServer.TimeToDel2
+    print "[PARAMETERS] - SIZE_MAX_TO_UPLOAD=%d" %ParametrosServer.SizeMaxToUpload
+    print "[PARAMETERS] - Log File =%s" %ParametrosServer.LogFileName
+    print "[PARAMETERS] - Debug Level =%d" %ParametrosServer.DebugLevel
+
+    app.config['UPLOAD_FOLDER'] = ParametrosServer.UploadFolder
 
     app.debug = True
     app.run()
