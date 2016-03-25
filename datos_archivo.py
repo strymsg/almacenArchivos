@@ -18,31 +18,35 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   
 '''
 import os, sys, datetime, hashlib
-'''
-'''
+
+
 class DatosDeArchivo:
     def __init__(self):
-        self.Nombre = ''
+        self.Nombre = '*'
         self.Tam = 0
         self.FechaYHoraDeSubida = datetime.datetime.now()
         self.Extension = ''
         self.NumDescargas = 0
         self.sha1sum = ''
 
-    def __init__(Nombre, Tam, FechaYHoraDeSubida, Extension, NumDescargas,\
-                 sha1sum):
-        self.Nombre = Nombre
+    # deberia determinar todos los demas atributos automaticamente
+    def __init__(self, Nombre_con_ruta):
+        self.Nombre = Nombre_con_ruta
+        
+# Nota acerca del nombre del archivo
+#  espcificar el archivo con la ruta completa
+# ejemplo para obtener ruta segura:
+#     ruta = almacen  ,  nombre = tatoo.png
+# se puede crear de forma segura con:
+#     DatosArchivo = DatosDeArchivo(os.path.join(ruta, nombre))
+
+    def __init__(self, Nombre_con_ruta, Tam, FechaYHoraDeSubida, Extension, sha1sum):
+        self.Nombre = Nombre_con_ruta
         self.Tam = Tam
         self.FechaYHoraDeSubida = FechaYHoraDeSubida
         self.Extension = Extension
-        self.NumDescargas = NumDescargas
+        self.NumDescargas = 0
         self.sha1sum = sha1sum
-
-    # constructor inteligente
-    # deberia determinar todos los demas atributos automaticamente
-    def __init__(Nombre):
-        self.Nombre = Nombre
-
 
     def dias_restantes(self):
         return (datetime.datetime.now() - FechaYHoraDeSubida).days()
@@ -53,8 +57,8 @@ class DatosDeArchivo:
 Notas:
 
 sha1sum
-
-  >>>hashlib.sha1("123").hexdigest
+  >>> import hashlib
+  >>> hashlib.sha1("123").hexdigest
   40bd001563085fc35165329ea1ff5c5ecbdbbeef
 
 datetime
@@ -86,6 +90,11 @@ datetime
   >>> d.minute
   25
   ...
+
+tamanyo 
+  >>> import os
+  >>> os.stat("libreboot").st_size
+  12788L
 
 '''
 

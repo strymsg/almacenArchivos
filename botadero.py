@@ -23,7 +23,15 @@ from flask import render_template
 from flask import request, redirect, send_from_directory
 from flask import url_for
 from werkzeug import secure_filename
-from Parametros_Servidor import *
+
+from Estadisticas_Archivos import *
+from datos_archivo import *
+
+#cargar configuraciones del servidor
+EstadisticaArchivos = EstadisticaArchivos('parametros.txt',\
+                                              False)
+ParametrosServer = EstadisticaArchivos.Parametros
+
 
 app = Flask(__name__)
 #app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -35,6 +43,8 @@ def pag_principal():
 ''' Peticiones para descarga de archivos subidos
 basado en:
 http://nullege.com/codes/search/flask.send_from_directory
+
+Aqui se puede agregar algun mecanismo para acumular estadisticas
 '''
 @app.route('/almacen/<filename>')
 def donwload_file(filename):
@@ -72,15 +82,32 @@ Si no se guarda en disco duro.
 @app.route('/upload_file', methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
-        file = request.files['file']
-        filename = '---'
+        file = request.files['file'] #devuelve tipo FileStorage
+        filename = ''
         if file:
             filename = secure_filename(file.filename)
-            pag_res = render_template("index.html")
 
-            # linea que guarda los archivos en disco
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            # copia el contenido del archivo para comprobacion
+            # parece que al usar file.read() el contenido se 
+            # destruye
             
+            # TODO: Ver la forma de hacer el checksum a medida
+            # los datos van llegando con haslib.update() para no
+            # copiar el archivo (duplicacion)
+            filecont = file.read()
+            
+            sha1sum = hashlib.sha1(filecont).hexdigest()
+            print "[UPLOAD] - Request to upload File %s" %filename,\
+                "checksum %s" % sha1sum
+    
+            # comprobar si existe el checksum
+            #os.remove(path) #para borrar el archivo
+        
+            # copia del archivo
+            file.seek(0)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+    
+            pag_res = render_template("index.html")
 
         return redirect("/", code=302)
         # http://stackoverflow.com/questions/14343812/redirecting-to-url-in-flask
@@ -154,7 +181,10 @@ def ls_archivos():
 if __name__ == '__main__':
 
     # cargar configuraciones del servidor
-    ParametrosServer = ParametrosServidor('parametros.txt', False)
+    # EstadisticaArchivos = EstadisticaArchivos('parametros.txt',\
+    #                                           False)
+    # ParametrosServer = EstadisticaArchivos.Parametros
+    #ParametrosServer = ParametrosServidor('parametros.txt', False)
 
     print "[PARAMETERS] - TOTAL_STORAGE=%d" %ParametrosServer.TotalStorage
     print "[PARAMETERS] - UPLOAD_FOLDER=%s" %ParametrosServer.UploadFolder
@@ -165,8 +195,8 @@ if __name__ == '__main__':
     print "[PARAMETERS] - SIZE_MAX_TO_UPLOAD=%d" %ParametrosServer.SizeMaxToUpload
     print "[PARAMETERS] - Log File =%s" %ParametrosServer.LogFileName
     print "[PARAMETERS] - Debug Level =%d" %ParametrosServer.DebugLevel
-
     app.config['UPLOAD_FOLDER'] = ParametrosServer.UploadFolder
+    #app.config['MAX_CONTENT_LENGTH'] = ParametrosServer.SizeMaxToUpload
 
     app.debug = True
     app.run()
