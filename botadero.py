@@ -33,6 +33,8 @@ ParametrosServer = EstadisticaArchivos.Parametros
 
 app = Flask(__name__)
 
+
+##### Rutas #######
 @app.route('/')
 def pag_principal():
     EstadisticaArchivos.Actualizar()
@@ -95,6 +97,7 @@ def upload_file():
 
             # comprobar si el archivo ya existe, si no registrar
             # ...
+            
 
             # restaura el puntero
             file.seek(0)
@@ -107,15 +110,39 @@ def upload_file():
     else:
         return "Aaah?"
 
-
+@app.route('/estadisticas')
+def mostrar_estadisticas():
+    EstadisticaArchivos.Actualizar()
+    cad = '''
+    <html> 
+    <head>
+     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+     <title>Archivador temporal para compartir archivos</title>
+     <link rel="stylesheet" href="../static/base.css" type="text/css" />
+    </head>
+    <body>
+'''
+    cad = cad + '<div id="lista_archivos">'
+    cr = '<ul>'
+    for na, da in EstadisticaArchivos.DictArchivos.iteritems():
+        cr = cr + "<li>"
+        cr = cr + '%(n)s <br> %(tam)d <br> %(nd)d <br> %(sha)s' %\
+             {'n':da.Nombre,'tam':da.Tam,'nd':da.NumDescargas,\
+              'sha':da.sha1sum}
+        fh = da.FechaYHoraDeSubida
+        cr = cr + '<br> %(d)d-%(m)d-%(y)d %(h)d:%(min)d' \
+             %{'y':fh.year, 'm':fh.month, 'd':fh.day, 'h':fh.hour,\
+               'min':fh.minute}
+        cr = cr + '</li>'
+    cr = cr + '</ul>'
+    cad = cad + cr + '</div></body></html>'
+    return render_template('index.html') + cad
+    
+######## Funciones Misc ##########
 ''' Lista los archivos subidos y muestra detalles
 Se muestran primero los mas recientes subidos
 '''
 def ls_archivos():
-    # aqui usar la clase EstadisticaArchivos para cargar parametros
-    #
-    #
-    
     # Lo siguiente es solo para pruebas
     # TODO: usar motor de templates jinja2, y usar tablas para mostar la
     #       lista de archivos adecuadamente.
@@ -131,42 +158,46 @@ def ls_archivos():
 '''
     cad = cad + '<div id="lista_archivos">'
     cad = cad + "<ul>"
-    upload_folder = "almacen/"
+    #upload_folder = "almacen/"
+    upload_folder = ParametrosServer.UploadFolder
 
-    try:
-        nombres = os.listdir(upload_folder)
-    except OSError:
-        pass
-    else:
-        for arch in nombres:
+    raw_nombres = EstadisticaArchivos.DictArchivos.keys()
+    nombres = []
 
-            # archivo
-            cad = cad + '<dl> <a href="%(up)s%(arch)s"> %(arch)s </a>' % \
-                  {"up": upload_folder,  "arch": arch}
+    # quitar la carpeta de los nombres
+    for nomb in raw_nombres:
+        nombres.append(\
+         nomb[len(ParametrosServer.UploadFolder)+1 : len(nomb)])
 
-            size_long = os.stat(upload_folder + arch).st_size
-            unidades = "(B)"
-            if size_long > 1000 and size_long < 1000000:
-                tam = round(size_long/float(1000), 2)
-                unidades = "(KB)"
-            elif size_long > 1000000 and size_long < 1000000000:
-                tam = round(size_long/float(1000000), 2)
-                unidades = "(MB)"
-            elif size_long > 1000000000:
-                tam = round(size_long/float(1000000000), 2)
-                unidades = "(GB)"
-            else:
-                tam = float(size_long)
+    # coloca cada archivo en la pantalla
+    for arch in nombres:
+        cad = cad + '<dl> <a href="%(up)s/%(arch)s"> %(arch)s </a>' % \
+              {"up": upload_folder,  "arch": arch}
+        # TODO: controlar excepcion
+        size_long = os.stat(upload_folder + "/"+ arch).st_size
+        unidades = "(B)"
+        if size_long > 1000 and size_long < 1000000:
+            tam = round(size_long/float(1000), 2)
+            unidades = "(KB)"
+        elif size_long > 1000000 and size_long < 1000000000:
+            tam = round(size_long/float(1000000), 2)
+            unidades = "(MB)"
+        elif size_long > 1000000000:
+            tam = round(size_long/float(1000000000), 2)
+            unidades = "(GB)"
+        else:
+            tam = float(size_long)
 
-            cad = cad + " <---------> " + str(tam) + " " + unidades
-            cad = cad + " <b> N dias </b>"
-            cad = cad + "</dl> \n"
+        cad = cad + " <---------> " + str(tam) + " " + unidades
+        cad = cad + " <b> N dias </b>"
+        cad = cad + "</dl> \n"
+            
     cad = cad + "</ul>"
     cad = cad + "</body> </html>"
     return cad
 
 
-##### principal #####
+############## principal ########################
 if __name__ == '__main__':
 
     # cargar configuraciones del servidor
@@ -185,7 +216,5 @@ if __name__ == '__main__':
     #app.config['MAX_CONTENT_LENGTH'] = ParametrosServer.SizeMaxToUpload
 
     app.debug = True
-
-
 
     app.run()

@@ -75,16 +75,17 @@ class EstadisticaArchivos:
     def ComprobarTiempoArchivos(self):
         archivos_a_borrar = []
         for na, da in self.DictArchivos.iteritems():
-            dt = datetime.datetime.now() - da.day
+            dt = (datetime.datetime.now() - da.FechaYHoraDeSubida).days
             
             # tamanyo
             tamanyo = da.Tam
-            if tamanyo > self.Size1 and self.tamanyo < Size2:
-                if dt > self.TimeToDel1:
+            if tamanyo > self.Parametros.Size1 and \
+               tamanyo < self.Parametros.Size2:
+                if dt >= self.Parametros.TimeToDel1:
                     archivos_a_borrar.append(na) # marca para borrar
-            elif tamanyo > self.Size2:
-                if  dt > self.TimeToDel2:
-                    archivos_a_borrar.append(na) # marca para borrar
+            elif tamanyo > self.Parametros.Size2:
+                if  dt >= self.Parametros.TimeToDel2:
+                    archivos_a_borrar.append(na) # marca para borra
             
         # borrado
         for na in archivos_a_borrar:
@@ -98,43 +99,68 @@ class EstadisticaArchivos:
             except OSError:
                 print '[REG] - Error: Trying to delete file %s' % na
                 
-            del(DictArchivos[na]) # borra del registro
-
-            
+            del(self.DictArchivos[na]) # borra del registro
 
     # comprueba las lista de archivos y si existen en el registro
     # crea nuevos registros si hay archivos nuevos.
     # Llama a la funcion ComprobarTiempoArchivos() para eliminar archivos
     # automaticamente segun `Parametros'
     def Actualizar(self):
-
+        nombres = self.ArchOrdenadosFechaSubida(self.Parametros.UploadFolder)
         # lista los archivos y comprueba si estan en los registros
+        for nomb in nombres:
+            nombre = os.path.join(self.Parametros.UploadFolder, nomb)
+            #nombre = secure_filename(nombre)
+            if self.ExisteNombre(nombre) == False:
+                # actualizar registro del nuevo archivo 
+                # este caso se deberia dar cuando se copia manualmente
+                # archivos en la carpeta UploadFolder.
+                
+                dt_arch = DatosDeArchivo()
+                dt_arch.auto_init(nombre)
+                # agrega nuevo registro
+                self.DictArchivos[nombre] = dt_arch 
+                    
+                # log TODO: activar este log solo si `LOG_REG' (implementar)
+                print '[REG] - New: File %(na)s size %(sz)d'\
+                    % {'na': nombre , 'sz': self.DictArchivos[nombre].Tam},\
+                    'created at', self.DictArchivos[nombre].FechaYHoraDeSubida
+
+        self.ComprobarTiempoArchivos()
+
+        # log
+        print '[REG] - Updated.'
+    
+    # TODO: Corregir esta funcion
+    def ArchOrdenadosFechaSubida(self, ruta):
+        nombres_ordenados = []
+        st_mtimes = []
+        sx = []
+        nx = []
         try:
-            nombres = os.listdir(self.Parametros.UploadFolder)
+            nombres = os.listdir(ruta)
         except OSError:
             pass
         else:
+            # ordena los nombres de acuerdo a la fecha de 'Subida'
+            i = 0
             for nomb in nombres:
-                nombre = os.path.join(self.Parametros.UploadFolder, nomb)
-                #nombre = secure_filename(nombre)
-                if self.ExisteNombre(nombre) == False:
-                    # actualizar registro del nuevo archivo 
-                    # este caso se deberia dar cuando se copia manualmente
-                    # archivos en la carpeta UploadFolder.
-                    
-                    #self.DictArchivos[nombre] = DatosArchivo
-                    dt_arch = DatosDeArchivo()
-                    dt_arch.auto_init(nombre)
-                    
-                    self.DictArchivos[nombre] = dt_arch
-                    
-                    # nuevo reg
-                    #self.getDictArchivos(nombre).auto_init(nombre)
-                    #self.DictArchivos[nombre].auto_init(nombre)
+                r = os.path.join(ruta, nomb)
+                sx.append(os.stat(r)) 
+                nx.append(nomb)
+                st_mtimes.append(sx[i].st_mtime)
+                i = i + 1
+                
+        st_mtimes.sort()
+        #print st_mtimes
 
-                    # log TODO: activar este log solo si `LOG_REG' (implementar)
-                    print '[REG] - New: File %(na)s size %(sz)d'\
-                        % {'na': nombre , 'sz': self.DictArchivos[nombre].Tam},\
-                        'created at', self.DictArchivos[nombre].FechaYHoraDeSubida
-        # log
-        print '[REG] - Updated!'
+        for num in st_mtimes:
+            # buscar nombre de archivo correspondiente a st_ctimes
+            i = 0
+            for nombre in nx:
+                if num == st_mtimes[i]:
+                    nombres_ordenados.append(nombre)
+                    break
+                i = i + 1
+        #print nombres_ordenados
+        return nombres_ordenados

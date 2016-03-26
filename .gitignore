@@ -1,0 +1,22 @@
+# emacs temps
+*~
+.*
+\#
+
+# python
+*.pyc
+
+# archivos subidos
+almacen/
+
+# virtual env
+botadero/
+
+# archivos log
+*.log
+*.log.*
+
+# autosaves dia
+*.autosave
+
+.gitignore

@@ -21,6 +21,13 @@ import os, sys, datetime, hashlib
 
 
 class DatosDeArchivo:
+    Nombre = ''
+    Tam = 0
+    FechaYHoraDeSubida = datetime.datetime.now()
+    Extension = ''
+    NumDescargas = 0
+    sha1sum = ''
+
     def __init__(self):
         self.Nombre = ''
         self.Tam = 0
@@ -43,7 +50,7 @@ class DatosDeArchivo:
         # sha1sum
         self.sha1sum = ''
         with open(self.Nombre, 'r') as fil:
-            self.sha1sum = hashlib.sha1(fil.read())
+            self.sha1sum = hashlib.sha1(fil.read()).hexdigest()
         # Fecha y hora simula creacion del archivo ahora.
         self.FechaYHoraDeSubida = datetime.datetime.now()
 
