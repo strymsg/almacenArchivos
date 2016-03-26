@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
   
 '''
-import os
+#import os
 from flask import Flask
 from flask import render_template
 from flask import request, redirect, send_from_directory
@@ -28,16 +28,14 @@ from Estadisticas_Archivos import *
 from datos_archivo import *
 
 #cargar configuraciones del servidor
-EstadisticaArchivos = EstadisticaArchivos('parametros.txt',\
-                                              False)
+EstadisticaArchivos = EstadisticaArchivos('parametros.txt', False)
 ParametrosServer = EstadisticaArchivos.Parametros
 
-
 app = Flask(__name__)
-#app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 @app.route('/')
 def pag_principal():
+    EstadisticaArchivos.Actualizar()
     return render_template("index.html") + ls_archivos()
 
 ''' Peticiones para descarga de archivos subidos
@@ -87,23 +85,18 @@ def upload_file():
         if file:
             filename = secure_filename(file.filename)
 
-            # copia el contenido del archivo para comprobacion
-            # parece que al usar file.read() el contenido se 
-            # destruye
-            
             # TODO: Ver la forma de hacer el checksum a medida
             # los datos van llegando con haslib.update() para no
             # copiar el archivo (duplicacion)
-            filecont = file.read()
             
-            sha1sum = hashlib.sha1(filecont).hexdigest()
+            sha1sum = hashlib.sha1(file.read()).hexdigest()
             print "[UPLOAD] - Request to upload File %s" %filename,\
                 "checksum %s" % sha1sum
-    
-            # comprobar si existe el checksum
-            #os.remove(path) #para borrar el archivo
-        
-            # copia del archivo
+
+            # comprobar si el archivo ya existe, si no registrar
+            # ...
+
+            # restaura el puntero
             file.seek(0)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
     
@@ -111,9 +104,6 @@ def upload_file():
 
         return redirect("/", code=302)
         # http://stackoverflow.com/questions/14343812/redirecting-to-url-in-flask
-
-        #return "Subido: <h4>"+ filename + "</h4>" + pag_res
-        #redirect(url_for(''))
     else:
         return "Aaah?"
 
@@ -133,11 +123,10 @@ def ls_archivos():
     cad = '''
     <html> 
     <head>
-		 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<title>Archivador temporal para compartir archivos</title>
-		<link rel="stylesheet" href="../static/base.css" type="text/css" />
-
-	</head>
+     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+     <title>Archivador temporal para compartir archivos</title>
+     <link rel="stylesheet" href="../static/base.css" type="text/css" />
+    </head>
     <body>
 '''
     cad = cad + '<div id="lista_archivos">'
@@ -181,10 +170,7 @@ def ls_archivos():
 if __name__ == '__main__':
 
     # cargar configuraciones del servidor
-    # EstadisticaArchivos = EstadisticaArchivos('parametros.txt',\
-    #                                           False)
-    # ParametrosServer = EstadisticaArchivos.Parametros
-    #ParametrosServer = ParametrosServidor('parametros.txt', False)
+    
 
     print "[PARAMETERS] - TOTAL_STORAGE=%d" %ParametrosServer.TotalStorage
     print "[PARAMETERS] - UPLOAD_FOLDER=%s" %ParametrosServer.UploadFolder
@@ -199,4 +185,7 @@ if __name__ == '__main__':
     #app.config['MAX_CONTENT_LENGTH'] = ParametrosServer.SizeMaxToUpload
 
     app.debug = True
+
+
+
     app.run()

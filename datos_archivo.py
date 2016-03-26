@@ -22,17 +22,31 @@ import os, sys, datetime, hashlib
 
 class DatosDeArchivo:
     def __init__(self):
-        self.Nombre = '*'
+        self.Nombre = ''
         self.Tam = 0
         self.FechaYHoraDeSubida = datetime.datetime.now()
         self.Extension = ''
         self.NumDescargas = 0
         self.sha1sum = ''
 
-    # deberia determinar todos los demas atributos automaticamente
-    def __init__(self, Nombre_con_ruta):
+    def auto_init(self, Nombre_con_ruta):
         self.Nombre = Nombre_con_ruta
-        
+        ## determinacion de atributos
+        # tamanyo
+        self.Tam = os.stat(Nombre_con_ruta).st_size
+        # Extension
+        self.Extension = ''
+        if len(Nombre_con_ruta.rsplit('.', 1)) > 1:
+            self.Extension = Nombre_con_ruta.rsplit('.', 1 )[1]
+        # NumDescargas
+        self.NumDescargas = 0
+        # sha1sum
+        self.sha1sum = ''
+        with open(self.Nombre, 'r') as fil:
+            self.sha1sum = hashlib.sha1(fil.read())
+        # Fecha y hora simula creacion del archivo ahora.
+        self.FechaYHoraDeSubida = datetime.datetime.now()
+
 # Nota acerca del nombre del archivo
 #  espcificar el archivo con la ruta completa
 # ejemplo para obtener ruta segura:
@@ -40,18 +54,25 @@ class DatosDeArchivo:
 # se puede crear de forma segura con:
 #     DatosArchivo = DatosDeArchivo(os.path.join(ruta, nombre))
 
-    def __init__(self, Nombre_con_ruta, Tam, FechaYHoraDeSubida, Extension, sha1sum):
-        self.Nombre = Nombre_con_ruta
-        self.Tam = Tam
-        self.FechaYHoraDeSubida = FechaYHoraDeSubida
-        self.Extension = Extension
-        self.NumDescargas = 0
-        self.sha1sum = sha1sum
+    # def __init__(self, Nombre_con_ruta, Tam, FechaYHoraDeSubida, Extension, sha1sum):
+    #     self.Nombre = Nombre_con_ruta
+    #     self.Tam = Tam
+    #     self.FechaYHoraDeSubida = FechaYHoraDeSubida
+    #     self.Extension = Extension
+    #     self.NumDescargas = 0
+    #     self.sha1sum = sha1sum
 
     def dias_restantes(self):
-        return (datetime.datetime.now() - FechaYHoraDeSubida).days()
+        return (datetime.datetime.now() - self.FechaYHoraDeSubida).days()
 
-    
+
+
+
+
+
+
+
+
 
 '''
 Notas:
@@ -76,8 +97,6 @@ datetime
   Segundos
   >>> (datetime.datetime.now() - d1).seconds
   70
-  
-
 
   >>> datetime.datetime.now()
   datetime.datetime(2016, 3, 21, 16, 25, 19, 192717)

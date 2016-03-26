@@ -18,11 +18,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   
 '''
 
-from flask import request, redirect, url_for
+#from flask import request, redirect, url_for
 from logs import initLogs
 
 class ParametrosServidor:
-    def __init__(self, nombre_archivo_config, DebugLevel):
+    NombreArchivoConfig = ''
+    TotalStorage = 0
+    UploadFolder = ''
+    Size1 = 0
+    Size2 = 0
+    TimeToDel1 = 0
+    TimeToDel2 = 0
+    SizeMaxToUpload = 0
+    LogFileName = ''
+    DebugLevel = 0
+        
+    def __init__(self):
         self.NombreArchivoConfig = 'parametros.txt'
         self.TotalStorage = 0
         self.UploadFolder = "almacen/"
@@ -32,7 +43,9 @@ class ParametrosServidor:
         self.TimeToDel2 = 0
         self.SizeMaxToUpload = 0
         self.LogFileName = 'botadero.log'
-        self.DebugLevel = 0
+        self.DebugLevel = 0        
+
+    def __init__(self, nombre_archivo_config, DebugLevel):
         self.init(nombre_archivo_config, DebugLevel)
 
     def init(self, nombre_archivo_config, DebugLevel):
