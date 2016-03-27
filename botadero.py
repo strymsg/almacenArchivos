@@ -38,7 +38,8 @@ app = Flask(__name__)
 @app.route('/')
 def pag_principal():
     EstadisticaArchivos.Actualizar()
-    return render_template("index.html") + ls_archivos()
+    return render_template("index.html") + \
+        espacio_disponible() +ls_archivos()
 
 ''' Peticiones para descarga de archivos subidos
 basado en:
@@ -124,7 +125,7 @@ def mostrar_estadisticas():
 '''
     cad = cad + '<div id="lista_archivos">'
     cr = '<ul>'
-    for na, da in EstadisticaArchivos.DictArchivos.iteritems():
+    for da in EstadisticaArchivos.PilaArchivos:
         cr = cr + "<li>"
         cr = cr + '%(n)s <br> %(tam)d <br> %(nd)d <br> %(sha)s' %\
              {'n':da.Nombre,'tam':da.Tam,'nd':da.NumDescargas,\
@@ -139,14 +140,9 @@ def mostrar_estadisticas():
     return render_template('index.html') + cad
     
 ######## Funciones Misc ##########
-''' Lista los archivos subidos y muestra detalles
-Se muestran primero los mas recientes subidos
-'''
-def ls_archivos():
-    # Lo siguiente es solo para pruebas
-    # TODO: usar motor de templates jinja2, y usar tablas para mostar la
-    #       lista de archivos adecuadamente.
-    
+''' Muestra Espacio Disponible y porcentaje '''
+def espacio_disponible():
+    # TODO: usar jinja2
     cad = '''
     <html> 
     <head>
@@ -156,25 +152,58 @@ def ls_archivos():
     </head>
     <body>
 '''
+    cad = cad + '<div id="espacio_disponible"> Disponibles: '
+    cad = cad + str(EstadisticaArchivos.AlmacenDisponible/1000000) + " MB"
+    cad = cad + ' (<b>' + \
+          str(EstadisticaArchivos.PorcentajeAlmacenDisponible) + "%</b>)"
+    cad = cad + ' Total de <b>' + str(EstadisticaArchivos.NumArchivos) + \
+          '</b> archivos guardados'
+    cad = cad + '</div>'
+    return cad
+''' Lista los archivos subidos y muestra detalles
+Se muestran primero los mas recientes subidos
+'''
+def ls_archivos():
+    # Lo siguiente es solo para pruebas
+    # TODO: usar motor de templates jinja2, y usar tablas para mostar la
+    #       lista de archivos adecuadamente.
+    cad = ''
+# cad = '''
+#     <html> 
+#     <head>
+#      <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+#      <title>Archivador temporal para compartir archivos</title>
+#      <link rel="stylesheet" href="../static/base.css" type="text/css" />
+#     </head>
+#     <body>
+# '''
+
     cad = cad + '<div id="lista_archivos">'
     cad = cad + "<ul>"
     #upload_folder = "almacen/"
     upload_folder = ParametrosServer.UploadFolder
+    pila_archivos = EstadisticaArchivos.PilaArchivos
+    # para mostrar los mas recientes primero
+    pila_archivos.reverse()
 
-    raw_nombres = EstadisticaArchivos.DictArchivos.keys()
+    raw_nombres = []
+    for ra in pila_archivos:
+        raw_nombres.append(ra.Nombre)
     nombres = []
-
     # quitar la carpeta de los nombres
     for nomb in raw_nombres:
+        #nombres.append(nomb)
         nombres.append(\
-         nomb[len(ParametrosServer.UploadFolder)+1 : len(nomb)])
+                       nomb[len(ParametrosServer.UploadFolder)+1 :])
 
     # coloca cada archivo en la pantalla
+    i = 0
     for arch in nombres:
         cad = cad + '<dl> <a href="%(up)s/%(arch)s"> %(arch)s </a>' % \
-              {"up": upload_folder,  "arch": arch}
+              {"up":ParametrosServer.UploadFolder, "arch": arch}
         # TODO: controlar excepcion
-        size_long = os.stat(upload_folder + "/"+ arch).st_size
+        #size_long = os.stat(upload_folder + "/"+ arch).st_size
+        size_long = pila_archivos[i].Tam
         unidades = "(B)"
         if size_long > 1000 and size_long < 1000000:
             tam = round(size_long/float(1000), 2)
@@ -191,6 +220,7 @@ def ls_archivos():
         cad = cad + " <---------> " + str(tam) + " " + unidades
         cad = cad + " <b> N dias </b>"
         cad = cad + "</dl> \n"
+        i = i + 1
             
     cad = cad + "</ul>"
     cad = cad + "</body> </html>"

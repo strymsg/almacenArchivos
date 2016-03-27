@@ -9,7 +9,7 @@
 
 # Almacenamiento total en el servidor reservado para la app (bytes)
 
-TOTAL_STORAGE 160000000
+TOTAL_STORAGE 11000000000
 
 # Nombre la carpeta de subidas (se pueden usar rutas relativas)
 

@@ -18,7 +18,6 @@ Esta aplicación no usa bases de datos.
 ## Tareas por hacer
 
 * Mejorar la apariencia.
-* Hacer que los archivos se muestren por orden de subida.
 * Probar el sistema de borrado automatico
 * Implementar sistema detector de robots (captcha?).
 * Implementar límites de subida por usuario, esto para prevenir que un usuario suba demasiados archivos.
