@@ -39,8 +39,13 @@ app = Flask(__name__)
 @app.route('/')
 def pag_principal():
     EstadisticaArchivos.Actualizar()
-    return render_template("index.html") + \
-        espacio_disponible() +ls_archivos()
+    return render_template("index.html", \
+                           borrar_1=EstadisticaArchivos.Parametros.TimeToDel1,\
+                           borrar_2=EstadisticaArchivos.Parametros.TimeToDel2,\
+                           esp_disp=EstadisticaArchivos.AlmacenDisponible/1000000,\
+                           p_disp=EstadisticaArchivos.PorcentajeAlmacenDisponible,\
+                           num_arch=EstadisticaArchivos.NumArchivos,\
+                           lista_archivos=ls_archivos())
 
 ''' Peticiones para descarga de archivos subidos
 basado en:
@@ -53,34 +58,7 @@ def donwload_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename, \
                                as_attachment=True)
 
-''' Funcion para subir archivos 
-Al hacer seleccionar el boton para subir archivos, se debe comprobar algunos
-criterios para ser guardados:
-
-- Tamanyo del archivo
-De acuerdo a un parametro definido en `parametros.txt', si el archivo es mayor
-que `SIZE_1' y menor que `SIZE_2' (bytes) sera borrado en `TIME_TO_DEL_1' (dias)
-,si es mayor que `SIZE_2' se borrara en `TIME_TO_DEL_2' donde se asume que
-`SIZE_2' > `SIZE_1'.
-
-- Si ya existe
-Al tratar de subir el archivo y para ahorrar espacio de almacenamiento, se 
-comprueba si el archivo ya existe. Esto haciendo un sha1sum del archivo enviado
-por el usuario. Luego se busca en si este sha1sum coincide con el de algun
-otro archivo.
-
-Si el archivo ya existe, se muestra un mensaje al usuario:
-"El archivo ya existe, pero puede que tenga otro nombre"
-Y no se guarda en disco duro.
-
-- Si hay espacio disponible
-De `parametros.txt' se comprueba `TOTAL_STORAGE', si la suma de el tamanyo de
-todos los archivos subidos mas el nuevo archivo exceden este valor, se muestra:
-
-"No hay espacio disponible, Si quieres que haya mas puedes colaborar donando :)"
-
-Si no se guarda en disco duro.
-'''     
+''' Funcion para subir archivos '''
 @app.route('/upload_file', methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
@@ -137,91 +115,56 @@ def mostrar_estadisticas():
     return render_template('index.html') + cad
     
 ######## Funciones Misc ##########
-''' Muestra Espacio Disponible y porcentaje '''
-def espacio_disponible():
-    # TODO: usar jinja2
-    cad = '''
-    <html> 
-    <head>
-     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-     <title>Archivador temporal para compartir archivos</title>
-     <link rel="stylesheet" href="../static/base.css" type="text/css" />
-    </head>
-    <body>
-'''
-    cad = cad + '<div id="espacio_disponible"> Disponibles: '
-    cad = cad + str(EstadisticaArchivos.AlmacenDisponible/1000000) + " MB"
-    cad = cad + ' (<b>' + \
-          str(EstadisticaArchivos.PorcentajeAlmacenDisponible) + "%</b>)"
-    cad = cad + ' Total de <b>' + str(EstadisticaArchivos.NumArchivos) + \
-          '</b> archivos guardados'
-    cad = cad + '</div>'
-    return cad
-''' Lista los archivos subidos y muestra detalles
-Se muestran primero los mas recientes subidos
-'''
+# Devuelve una lista con nombre_archivo, tamanyo y dias_restantes 
+# para eliminacion del directorio del de subidas.
 def ls_archivos():
-    # Lo siguiente es solo para pruebas
     # TODO: usar motor de templates jinja2, y usar tablas para mostar la
     #       lista de archivos adecuadamente.
-    cad = ''
-# cad = '''
-#     <html> 
-#     <head>
-#      <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-#      <title>Archivador temporal para compartir archivos</title>
-#      <link rel="stylesheet" href="../static/base.css" type="text/css" />
-#     </head>
-#     <body>
-# '''
+    l_archivos = []
 
-    cad = cad + '<div id="lista_archivos">'
-    cad = cad + "<ul>"
-    #upload_folder = "almacen/"
     upload_folder = ParametrosServer.UploadFolder
     pila_archivos = EstadisticaArchivos.PilaArchivos
     # para mostrar los mas recientes primero
-    pila_archivos.reverse()
-
+    #pila_archivos.reverse()
+    
     raw_nombres = []
+    dr = []
     for ra in pila_archivos:
+        dr.append(ra.edad())
         raw_nombres.append(ra.Nombre)
+
     nombres = []
     # quitar la carpeta de los nombres
     for nomb in raw_nombres:
         #nombres.append(nomb)
-        nombres.append(\
-                       nomb[len(ParametrosServer.UploadFolder)+1 :])
-
+        nombres.append(nomb[len(ParametrosServer.UploadFolder)+1 :])
+    
     # coloca cada archivo en la pantalla
     i = 0
     for arch in nombres:
-        cad = cad + '<dl> <a href="%(up)s/%(arch)s"> %(arch)s </a>' % \
-              {"up":ParametrosServer.UploadFolder, "arch": arch}
+        #cad = cad + '<dl> <a href="%(up)s/%(arch)s"> %(arch)s </a>' % \
+        #{"up":ParametrosServer.UploadFolder, "arch": arch}
         # TODO: controlar excepcion
-        #size_long = os.stat(upload_folder + "/"+ arch).st_size
         size_long = pila_archivos[i].Tam
-        unidades = "(B)"
+        unidades = "B"
         if size_long > 1000 and size_long < 1000000:
             tam = round(size_long/float(1000), 2)
-            unidades = "(KB)"
+            unidades = "KB"
         elif size_long > 1000000 and size_long < 1000000000:
             tam = round(size_long/float(1000000), 2)
-            unidades = "(MB)"
+            unidades = "MB"
         elif size_long > 1000000000:
             tam = round(size_long/float(1000000000), 2)
-            unidades = "(GB)"
+            unidades = "GB"
         else:
             tam = float(size_long)
 
-        cad = cad + " <---------> " + str(tam) + " " + unidades
-        cad = cad + " <b> N dias </b>"
-        cad = cad + "</dl> \n"
+        # lista a devolver
+        l_archivos.append([upload_folder, arch, str(tam)+" "+unidades, str(dr[i])])
+
         i = i + 1
-            
-    cad = cad + "</ul>"
-    cad = cad + "</body> </html>"
-    return cad
+
+    return l_archivos
 
 
 ############## principal ########################
@@ -234,7 +177,7 @@ if __name__ == '__main__':
     print "[PARAMETERS] - UPLOAD_FOLDER=%s" %ParametrosServer.UploadFolder
     print "[PARAMETERS] - SIZE_1=%d" %ParametrosServer.Size1
     print "[PARAMETERS] - SIZE_2=%d" %ParametrosServer.Size2
-    print "[PARAMETERS] - TO_DEL_1=%d" %ParametrosServer.TimeToDel1
+    print "[PARAMETERS] - TIME_TO_DEL_1=%d" %ParametrosServer.TimeToDel1
     print "[PARAMETERS] - TIME_TO_DEL_2=%d" %ParametrosServer.TimeToDel2
     print "[PARAMETERS] - SIZE_MAX_TO_UPLOAD=%d" %ParametrosServer.SizeMaxToUpload
     print "[PARAMETERS] - Log File =%s" %ParametrosServer.LogFileName

@@ -28,6 +28,6 @@ SIZE_MAX_TO_UPLOAD 10000000
 # al servidor (bytes), corresponde a los niveles 1 y 2 definidos 
 # arriba.
 
-TIME_TO_DEL_1 10
-TIME_TO_DEL_2 10
+TIME_TO_DEL_1 12
+TIME_TO_DEL_2 18
 

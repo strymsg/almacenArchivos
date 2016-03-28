@@ -19,7 +19,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 import os, sys, datetime, hashlib
 
-
 class DatosDeArchivo:
     Nombre = ''
     Tam = 0
@@ -69,8 +68,8 @@ class DatosDeArchivo:
     #     self.NumDescargas = 0
     #     self.sha1sum = sha1sum
 
-    def dias_restantes(self):
-        return (datetime.datetime.now() - self.FechaYHoraDeSubida).days()
+    def edad(self):
+        return (datetime.datetime.now() - self.FechaYHoraDeSubida).days
 
 
 

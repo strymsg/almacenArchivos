@@ -110,7 +110,6 @@ class EstadisticaArchivos:
             Ea = pickle.load(Eaf)
             # copia el objeto guardado
             self.PilaArchivos = Ea.PilaArchivos
-            self.Parametros = Ea.Parametros
             self.AlmacenDisponible = Ea.AlmacenDisponible
             self.PorcentajeAlmacenDisponible = Ea.PorcentajeAlmacenDisponible
             self.NumArchivos = self.NumArchivos
@@ -119,6 +118,7 @@ class EstadisticaArchivos:
             print '[REG] - Loaded: Data from object file '\
                 , '        EstadisticaArchivos.pkl'
             self.Actualizar()
+            self.Parametros.Reload_configs()
             return True
         except:
             print '[REG] - Warning: Not found object file '\

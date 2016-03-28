@@ -20,69 +20,34 @@
 		<form method="post" id="upload_file" action="upload_file" enctype="multipart/form-data">			
 			<input type="file" name="file"/>
 			<input type="submit", class="btn", value="Subir archivo"/>
-				<p>Los archivos se eliminan después de 10 a 20 días, dependiendo su tamaño
+				<p>Los archivos se eliminan después de {{ borrar_1 }} a {{ borrar_2 }} días, dependiendo su tamaño
 					 <a href="info" >¿por qué? </a>
 				 </p>
 		</form>	
 	</div>	
 		
 	<!-- Estadisticas generales -->
-			
+	Disponibles {{ esp_disp }} MB (<b>{{ p_disp }} %</b>) Total de <b>{{ num_arch }}</b> archivos
+	
 	<!-- Listado de Archivos -->	
-	
 	<table id="lista_archivos">
-	<tr>
-		<td class="nombres">Nombre</td>
-		<td class="tam">Tamanyo</td>
-		<td class="dias_restantes">dias restantes</td>
-	</tr>
-	<tr>
-		<td class="nombres"><a>Nombre_corto.zip.tar.bz</a></td>
-		<td class="tam">11.3 KB</td>
-		<td class="dias_restantes">9</td>
-	</tr>
-	<tr>
-		<td class="nombres"><a>Con_tamany_medianamente_superior_2016</a></td>
-		<td class="tam">15.33 MB</td>
-		<td class="dias_restantes">5</td>
-	</tr>
-	<tr>
-		<td class="nombres"><a>Un_NombrE_Largo_tal_vez_mas_larg_de_lo_que_se _tiene_comunmente_jajaja_2015_12_90.zip.tar.bz2.gpg</a></td>
-		<td class="tam">155.2 MB</td>
-		<td class="dias_restantes">5</td>
-	</tr>
+		<tr>
+			<td class="nombres">ARCHIVO</td>	
+			<td class="tam">TAMAÑO</td>
+			<td class="dias_restantes">Días para borrar archivo</td>
+		</tr>
+		{% for reg_arch in lista_archivos|reverse %}
+		<tr>
+			<td class="nombres"><a href="{{ reg_arch[0] }}/{{ reg_arch[1] }}">{{ reg_arch[1] }}</a>
+			<td class="tam"> {{ reg_arch[2] }} </td>
+			<!-- variar colores (dias<3= rojo-gris, 3<dias<7= gris, dias>7=verde-gris) -->
+			<td class="dias_restantes">{{ reg_arch[3] }}</td>
+		</tr>
+		{% endfor %}
+
 	</table>
-		
-		<div class="col fill">
-			<div class="row">
-				<div id="lista_archivos">		
-					<dd>
-						<a>
-						PFC-Evaluacion_de_protocolos_de_encaminamientos_para_redes_vehiculares_VANET_-_Jose_Manuel_Garcia_Campos.zip.bz.tar.bz2	
-						</a>
-					</dd>		
-					<dd>
-						<a>
-						imagenes_del_gran_partido-piliti.zip	
-						</a>
-					</dd>		
-					
-					<div class="col fifth">	
-						<dd>20 MB	</dd>
-						<dd>100 MB	</dd>
-					</div>
-					<div class="col fifth">		
-								<dd>3 dias</dd>
-								<dd>8 dias</dd>	
-					</div>							
-				</div>
-		
-			</div>	
-		</div>
-		<br><br /><br><br /><br><br /><br><br />
-	
-	
-	<!--  -->
+
+	<!-- Notas al pie -->
 		
 	</body>
 

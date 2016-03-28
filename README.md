@@ -19,7 +19,6 @@ Esta aplicación no usa bases de datos.
 
 ## Tareas por hacer
 
-* Mejorar la apariencia usando tamplates jinja2.
 * Probar el sistema de borrado automatico.
 * Acelerar la comprobacion sha1sum al subir archivos.
 * Implementar sistema detector de robots (captcha?).
