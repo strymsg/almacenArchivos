@@ -17,6 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
   
 '''
+import pickle
 from Parametros_Servidor import *
 from datos_archivo import *
 
@@ -53,19 +54,45 @@ class EstadisticaArchivos:
         return False
         
 
-    def AgregarArchivo(self, Nombre_con_ruta, tam, \
-                       FechaYHoraDeSubida, Extension, sha1sum):
-        # TODO: Agregar comprobacion de espacio disponible
-        # ...
-        if self.ExisteArchivo(Nombre_con_ruta, sha1sum):
-            print "[STORE] - Warn: File %s " % Nombre_con_ruta, \
-                "or sha1sum %s exists, not uploaded." %sha1sum
+    def AgregarArchivo(self, Nombre_con_ruta, sha1sum, file):
+
+        # comprobacion de espacio disponible
+        fsize = len(file.read())
+        file.seek(0) # restarudando puntero
+        if (self.Parametros.TotalStorage - self.AlmacenDisponible)\
+           + fsize > self.Parametros.TotalStorage:
+            print "[STORAGE] - Error no free space: filesize %d"\
+                % fsize, " only %d(ts) " % self.AlmacenDisponible,\
+                " of space available."
+            file.close()
             return 1
+        # comprobacion de nombre
+        elif self.ExisteNombre(Nombre_con_ruta):
+            print "[STORE] - Warn: File %s " % Nombre_con_ruta, \
+                "            exists, not uploaded."
+            file.close()
+            return 2
+        # comprobacion de sha1sum
+        elif self.ExisteArchivo(Nombre_con_ruta, sha1sum):
+            print "[STORE] - Warn: sha1sum %s exists," % sha1sum, \
+                "            not uploaded."
+            file.close()
+            return 3
         else:
+            # guarda el archivo en disco
+            file.save(Nombre_con_ruta)
+            file.close()
             # agrega el nuevo registro a las estadisticas
-            da = DatosDeArchivo(Nombre_con_ruta, tam, \
-                                FechaYHoraDeSubida, Extension,sha1sum)
+            da = DatosDeArchivo()
+            da.auto_init(Nombre_con_ruta)
             self.PilaArchivos.append(da)
+
+            print '[REG] - New: File %(na)s size %(sz)d'\
+                % {'na': self.PilaArchivos[-1].Nombre ,\
+                   'sz': self.PilaArchivos[-1].Tam},\
+                '        created at', self.PilaArchivos[-1].FechaYHoraDeSubida
+            self.Actualizar()
+            file.close()
             return 0
             
     def BorrarArchivo(self, Nombre_con_ruta):
@@ -74,6 +101,30 @@ class EstadisticaArchivos:
             os.remove(Nombre_con_ruta)
             # borra el registro del archivo del diccionario de registros
             del self.PilaArchivos[self.PilaArchivos.index(Nombre_con_ruta)]
+
+    # Lee objeto guardado en archivo y si existe, copia sus configs
+    # en si mismo y retorna True.
+    def Inicializar(self):
+        try:
+            Eaf = open('EstadisticaArchivos.pkl', 'rb')
+            Ea = pickle.load(Eaf)
+            # copia el objeto guardado
+            self.PilaArchivos = Ea.PilaArchivos
+            self.Parametros = Ea.Parametros
+            self.AlmacenDisponible = Ea.AlmacenDisponible
+            self.PorcentajeAlmacenDisponible = Ea.PorcentajeAlmacenDisponible
+            self.NumArchivos = self.NumArchivos
+            
+            Eaf.close()
+            print '[REG] - Loaded: Data from object file '\
+                , '        EstadisticaArchivos.pkl'
+            self.Actualizar()
+            return True
+        except:
+            print '[REG] - Warning: Not found object file '\
+                , '        EstadisticaArchivos.pkl. Creating registers.'
+            self.Actualizar()
+            return False
 
     # comprueba si uno o mas archivos han estado almacenados por mas
     # dias de los especificados para su eliminacion.
@@ -120,7 +171,6 @@ class EstadisticaArchivos:
                 # agrega nuevo registro
                 self.PilaArchivos.append(dt_arch)
                     
-                # log TODO: activar este log solo si `LOG_REG' (implementar)
                 print '[REG] - New: File %(na)s size %(sz)d'\
                     % {'na': nomb , 'sz': self.PilaArchivos[-1].Tam},\
                     'created at', self.PilaArchivos[-1].FechaYHoraDeSubida
@@ -136,9 +186,15 @@ class EstadisticaArchivos:
         self.PorcentajeAlmacenDisponible = 100 - (tam_total * 100)\
                                            / self.AlmacenDisponible
         self.NumArchivos = len(self.PilaArchivos)
+        
+        print '[REG] - Updated.' # log
+        
 
-        # log
-        print '[REG] - Updated.'
+        Eaf = open('EstadisticaArchivos.pkl', 'wb')
+        pickle.dump(self ,Eaf)
+        Eaf.close()
+        
+        print '[REG] - Saved.' # log
     
 
     def ArchOrdenadosFechaSubida(self, ruta):

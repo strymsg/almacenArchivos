@@ -9,27 +9,81 @@
 
 	</head>
 	<body>
+
 		<h1>"El botadero"</h1>
 		<div class="qu">
-			<p>
-			Un sitio <b>público</b> para compartir archivos
-			</p>		
+			Un sitio <b>público</b> para compartir archivos	
 		</div>
-		<!-- Subida de archivos -->
-			<div class="nota">
-			<form method="post" id="upload_file" action="upload_file" enctype="multipart/form-data">			
-				<input type="file" name="file"/>
-				<input type="submit", class="btn", value="Subir archivo"/>
-					<p>Los archivos se eliminan después de 10 a 20 días, dependiendo su tamaño
-						 <a href="info" >¿por qué? </a>
-					 </p>
-			</form>	
-			</div>		
+		
+	<!-- Subida de archivos -->		
+	<div class="nota">
+		<form method="post" id="upload_file" action="upload_file" enctype="multipart/form-data">			
+			<input type="file" name="file"/>
+			<input type="submit", class="btn", value="Subir archivo"/>
+				<p>Los archivos se eliminan después de 10 a 20 días, dependiendo su tamaño
+					 <a href="info" >¿por qué? </a>
+				 </p>
+		</form>	
+	</div>	
+		
+	<!-- Estadisticas generales -->
 			
-		<!-- estadisticas generales -->
-
-		<!-- Listado de archivos -->		
-
+	<!-- Listado de Archivos -->	
+	
+	<table id="lista_archivos">
+	<tr>
+		<td class="nombres">Nombre</td>
+		<td class="tam">Tamanyo</td>
+		<td class="dias_restantes">dias restantes</td>
+	</tr>
+	<tr>
+		<td class="nombres"><a>Nombre_corto.zip.tar.bz</a></td>
+		<td class="tam">11.3 KB</td>
+		<td class="dias_restantes">9</td>
+	</tr>
+	<tr>
+		<td class="nombres"><a>Con_tamany_medianamente_superior_2016</a></td>
+		<td class="tam">15.33 MB</td>
+		<td class="dias_restantes">5</td>
+	</tr>
+	<tr>
+		<td class="nombres"><a>Un_NombrE_Largo_tal_vez_mas_larg_de_lo_que_se _tiene_comunmente_jajaja_2015_12_90.zip.tar.bz2.gpg</a></td>
+		<td class="tam">155.2 MB</td>
+		<td class="dias_restantes">5</td>
+	</tr>
+	</table>
+		
+		<div class="col fill">
+			<div class="row">
+				<div id="lista_archivos">		
+					<dd>
+						<a>
+						PFC-Evaluacion_de_protocolos_de_encaminamientos_para_redes_vehiculares_VANET_-_Jose_Manuel_Garcia_Campos.zip.bz.tar.bz2	
+						</a>
+					</dd>		
+					<dd>
+						<a>
+						imagenes_del_gran_partido-piliti.zip	
+						</a>
+					</dd>		
+					
+					<div class="col fifth">	
+						<dd>20 MB	</dd>
+						<dd>100 MB	</dd>
+					</div>
+					<div class="col fifth">		
+								<dd>3 dias</dd>
+								<dd>8 dias</dd>	
+					</div>							
+				</div>
+		
+			</div>	
+		</div>
+		<br><br /><br><br /><br><br /><br><br />
+	
+	
+	<!--  -->
+		
 	</body>
 
 </html>

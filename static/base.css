@@ -10,10 +10,10 @@ h1{
 }
 
 body {
-    padding-left: 30px;
-    padding-bottom: 20px;
-    padding-right: 30px;
-    padding-top: 10px;
+    padding-left: 20px;
+    padding-bottom: 15px;
+    padding-right: 20px;
+    padding-top: 5px;
     background-color: #E0DAC2;
     font-family: Helvetica;
     font-size: 15px;
@@ -28,12 +28,6 @@ body {
     text-align: center;
 }
 
-#espacio_disponible{
-	font-size: 12px;
-	color: #58605A;
-	/*color: #586C6A;*/
-}
-
 .nota {
 	font-size: 17px;
 	color: #58605A;
@@ -46,10 +40,10 @@ body {
 }
 
 #lista_archivos{
-	position:  absolute;
+	/*position:  absolute;*/
 	padding: 2px;
-	line-height: 157%;	/* Interlineado */
-	width: 94%;
+	line-height: 167%;	/* Interlineado */
+	/*width: 94%;*/
 	background-color: #D1C7AE;
 	font-family: monospace;
 	font-size: 14px;
@@ -57,10 +51,131 @@ body {
 	border-color: #C8B7A8;
 }
 
+
+table.ls_archivos{
+	padding: 2px;
+	position: absolute;
+	width: 94%;
+	border-style: dotted;
+	border-color: #C8B7A8;
+	line-height: 162%; /* Interlineado */
+	background-color: #D1C7AE;
+	font-family: monospace;
+}
+
+td.nombres{
+	width: 72%;
+	position: relative;
+	background-color: #CEC5AF;
+	font-style: inherit;
+}
+
+td.tam{
+	width: 15%;
+	font-size: 14px;
+	font-family: sans-serif;
+	text-align: center;
+}
+
+td.dias_restantes{
+	width: 12%;
+	font-weight: bold;
+	align-content: center;
+}
+
+a{
+	color: #CA3E19	;
+	text-decoration: none;
+	font-weight: normal;
+	padding-bottom: 1px;
+	border-bottom: 1px #867F6E;
+	border-bottom-style: dotted;
+	/*color: #F55B0A;*/
+}
+
 a:hover {
 	font-weight: bold;
-	}
-	
-a{
-	color: #F55B0A;
+	border-bottom-width: 2px;
+	border-bottom-style: dotted;
 }
+
+  .wrapper {
+	  margin-left: 12px; 
+	  margin-right:12px;
+  }
+
+  .row,.col,
+  .row:after,.col:after,
+  .row:before,.col:before{
+	  -webkit-box-sizing:border-box;
+          -moz-box-sizing:border-box;
+          box-sizing:border-box}
+  /* clearfix */
+  .row{*zoom:1}
+  .row:before,
+  .row:after{
+	  display:table;
+	  content:"";
+	  line-height:0}
+  .row:after{clear:both}
+  .row{
+	  padding:0;
+	  margin:0;}
+  /* should probably put *zoom:1; here but for clarity it's separated*/
+  ul.row,
+  li.col{ list-style-type:none }
+  .col{float:left}
+  .col,
+  .fill{width:100%}
+
+  /* grid mq */
+  @media (min-width:30em){
+	  .col:not(.fill){width:50%}
+	  .col.third:nth-child(3),
+	  .col.fifth:nth-child(5),
+	  .col.fourth+div:nth-child(3).fill,
+	  .col.fifth+div:nth-child(3).fill{width:100%}
+	  .col+.fill{width:50%}
+  }
+  @media (min-width:50em){
+	  .col.half{width:50%}
+	  .col.half+.fill{width:50%}
+	  .col.third,
+	  .col.third:nth-child(3){width:33.333%}
+	  .col.third+.fill{width:66.666%}
+	  .col.fourth{width:25%}
+	  .col.fourth+.fill{width:75%}
+	  .col.fourth+div:nth-child(3).fill{width:50%;}
+	  .col.fifth,
+	  .col.fifth:nth-child(5){width:20%}
+	  .col.fifth+.fill{width:80%}
+	  .col.fifth+div:nth-child(3).fill{width:60%;}
+	  .col.fifth+div:nth-child(4).fill{width:40%;}
+  }
+  /* ie8 overrides - I'd suggest using conditionals with either ".ie-8 class or loading in a separate legacy stylesheet with conditionals */
+  @media (min-width:30em){
+	  .row>.col{width:50%}
+	  .row>.fill.col{width:100%}
+	  .row>.half.col+.fill,
+	  .row>.third.col+.fill,
+	  .row>.fourth.col+.fill,
+	  .row>.fifth.col+.fill,
+	  .row>.fifth.col+div+div+.fill{width:50%}
+	  .row>.fourth.col+div+.fill,
+	  .row>.fifth.col+div+.fill,
+	  .row>.third.col+div+div,
+	  .row>.fifth.col+div+div+div+div{width:100%}
+  }
+  @media (min-width:50em){
+	  .row>.third.col,
+	  .row>.third.col+div+div{width:33.333%}
+	  .row>.third.col+.fill{width:66.666%}
+	  .row>.fourth.col{width:25%}
+	  .row>.fourth.col+.fill{width:75%}
+	  .row>.fourth.col+div+.fill{width:50%}
+	  .row>.fifth.col+.fill{width:80%}
+	  .row>.fifth.col,
+	  .row>.fifth.col+div+div+div+div{width:20%}
+	  .row>.fifth.col+div+.fill{width:60%}
+	  .row>.fifth.col+div+div+.fill{width:40%}
+  }

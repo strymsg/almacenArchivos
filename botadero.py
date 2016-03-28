@@ -17,17 +17,18 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
   
 '''
-#import os
 from flask import Flask
 from flask import render_template
 from flask import request, redirect, send_from_directory
 from flask import url_for
+
 from werkzeug import secure_filename
+from jinja2 import Environment, PackageLoader
 
 from Estadisticas_Archivos import *
 from datos_archivo import *
 
-#cargar configuraciones del servidor
+# cargar configuraciones del servidor
 EstadisticaArchivos = EstadisticaArchivos('parametros.txt', False)
 ParametrosServer = EstadisticaArchivos.Parametros
 
@@ -91,20 +92,16 @@ def upload_file():
             # TODO: Ver la forma de hacer el checksum a medida
             # los datos van llegando con haslib.update() para no
             # copiar el archivo (duplicacion)
-            
             sha1sum = hashlib.sha1(file.read()).hexdigest()
-            print "[UPLOAD] - Request to upload File %s" %filename,\
-                "checksum %s" % sha1sum
-
-            # comprobar si el archivo ya existe, si no registrar
-            # ...
+            print "[UPLOAD] - Request to upload File %s" %filename\
+                ,"           checksum %s" % sha1sum
             
-
             # restaura el puntero
             file.seek(0)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-    
-            pag_res = render_template("index.html")
+            aux = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            if EstadisticaArchivos.AgregarArchivo(aux, sha1sum, file) != 0:
+                # mostrar error en pantalla
+                return redirect('/estadisticas', code=302)
 
         return redirect("/", code=302)
         # http://stackoverflow.com/questions/14343812/redirecting-to-url-in-flask
@@ -127,11 +124,11 @@ def mostrar_estadisticas():
     cr = '<ul>'
     for da in EstadisticaArchivos.PilaArchivos:
         cr = cr + "<li>"
-        cr = cr + '%(n)s <br> %(tam)d <br> %(nd)d <br> %(sha)s' %\
+        cr = cr + 'nombre:%(n)s<br>tam:%(tam)d <br>descargas:%(nd)d <br> %(sha)s' %\
              {'n':da.Nombre,'tam':da.Tam,'nd':da.NumDescargas,\
               'sha':da.sha1sum}
         fh = da.FechaYHoraDeSubida
-        cr = cr + '<br> %(d)d-%(m)d-%(y)d %(h)d:%(min)d' \
+        cr = cr + '<br>Fecha: %(d)d-%(m)d-%(y)d %(h)d:%(min)d' \
              %{'y':fh.year, 'm':fh.month, 'd':fh.day, 'h':fh.hour,\
                'min':fh.minute}
         cr = cr + '</li>'
@@ -231,7 +228,7 @@ def ls_archivos():
 if __name__ == '__main__':
 
     # cargar configuraciones del servidor
-    
+    loaded = EstadisticaArchivos.Inicializar()
 
     print "[PARAMETERS] - TOTAL_STORAGE=%d" %ParametrosServer.TotalStorage
     print "[PARAMETERS] - UPLOAD_FOLDER=%s" %ParametrosServer.UploadFolder

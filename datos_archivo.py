@@ -53,7 +53,7 @@ class DatosDeArchivo:
             self.sha1sum = hashlib.sha1(fil.read()).hexdigest()
         # Fecha y hora simula creacion del archivo ahora.
         self.FechaYHoraDeSubida = datetime.datetime.now()
-
+    
 # Nota acerca del nombre del archivo
 #  espcificar el archivo con la ruta completa
 # ejemplo para obtener ruta segura:
