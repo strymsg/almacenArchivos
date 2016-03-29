@@ -34,7 +34,6 @@ ParametrosServer = EstadisticaArchivos.Parametros
 
 app = Flask(__name__)
 
-
 ##### Rutas #######
 @app.route('/')
 def pag_principal():
@@ -170,6 +169,8 @@ def ls_archivos():
 ############## principal ########################
 if __name__ == '__main__':
 
+    app.run(host='0.0.0.0')
+
     # cargar configuraciones del servidor
     loaded = EstadisticaArchivos.Inicializar()
 
@@ -185,6 +186,6 @@ if __name__ == '__main__':
     app.config['UPLOAD_FOLDER'] = ParametrosServer.UploadFolder
     #app.config['MAX_CONTENT_LENGTH'] = ParametrosServer.SizeMaxToUpload
 
-    app.debug = True
+    #app.debug = True
 
     app.run()

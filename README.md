@@ -19,12 +19,15 @@ Esta aplicación no usa bases de datos.
 
 ## Tareas por hacer
 
-* Probar el sistema de borrado automatico.
+Más urgentes primero.
+
+* Probar el sistema de borrado automático.
+* Hacer una apariencia "responsive".
+* Mover Logs a carpeta logs/
+* Implementar límites de subida por usuario, esto para prevenir que un usuario suba demasiados archivos.
+* Desplegar el servicio y hacer pruebas iniciales.
 * Acelerar la comprobacion sha1sum al subir archivos.
 * Implementar sistema detector de robots (captcha?).
-* Implementar límites de subida por usuario, esto para prevenir que un usuario suba demasiados archivos.
-
-
 
 
 
