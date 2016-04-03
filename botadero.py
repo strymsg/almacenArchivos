@@ -1,5 +1,5 @@
 '''
-Copyright (C) 2016 Rodrigo Garcia
+Copyright (C) 2016 Rodrigo Garcia <strysg@riseup.net>
 
 This file is part of botadero.
 
@@ -88,30 +88,13 @@ def upload_file():
 @app.route('/estadisticas')
 def mostrar_estadisticas():
     EstadisticaArchivos.Actualizar()
-    cad = '''
-    <html> 
-    <head>
-     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-     <title>Archivador temporal para compartir archivos</title>
-     <link rel="stylesheet" href="../static/base.css" type="text/css" />
-    </head>
-    <body>
-'''
-    cad = cad + '<div id="lista_archivos">'
-    cr = '<ul>'
-    for da in EstadisticaArchivos.PilaArchivos:
-        cr = cr + "<li>"
-        cr = cr + 'nombre:%(n)s<br>tam:%(tam)d <br>descargas:%(nd)d <br> %(sha)s' %\
-             {'n':da.Nombre,'tam':da.Tam,'nd':da.NumDescargas,\
-              'sha':da.sha1sum}
-        fh = da.FechaYHoraDeSubida
-        cr = cr + '<br>Fecha: %(d)d-%(m)d-%(y)d %(h)d:%(min)d' \
-             %{'y':fh.year, 'm':fh.month, 'd':fh.day, 'h':fh.hour,\
-               'min':fh.minute}
-        cr = cr + '</li>'
-    cr = cr + '</ul>'
-    cad = cad + cr + '</div></body></html>'
-    return render_template('index.html') + cad
+
+    return render_template("estadisticas.html", \
+                           datos_archivos=EstadisticaArchivos.PilaArchivos,\
+                           esp_disp=EstadisticaArchivos.AlmacenDisponible/1000000,\
+                           p_disp=EstadisticaArchivos.PorcentajeAlmacenDisponible,\
+                           num_arch=EstadisticaArchivos.NumArchivos,
+    )
     
 ######## Funciones Misc ##########
 # Devuelve una lista con nombre_archivo, tamanyo y dias_restantes 
@@ -120,16 +103,15 @@ def ls_archivos():
     # TODO: usar motor de templates jinja2, y usar tablas para mostar la
     #       lista de archivos adecuadamente.
     l_archivos = []
-
+    
     upload_folder = ParametrosServer.UploadFolder
     pila_archivos = EstadisticaArchivos.PilaArchivos
+    dias_restantes = EstadisticaArchivos.PilaDiasRestantes
     # para mostrar los mas recientes primero
     #pila_archivos.reverse()
     
     raw_nombres = []
-    dr = []
     for ra in pila_archivos:
-        dr.append(ra.edad())
         raw_nombres.append(ra.Nombre)
 
     nombres = []
@@ -159,7 +141,8 @@ def ls_archivos():
             tam = float(size_long)
 
         # lista a devolver
-        l_archivos.append([upload_folder, arch, str(tam)+" "+unidades, str(dr[i])])
+        l_archivos.append([upload_folder, arch, str(tam)+" "+unidades, \
+                           str(dias_restantes[i])])
 
         i = i + 1
 
@@ -169,11 +152,11 @@ def ls_archivos():
 ############## principal ########################
 if __name__ == '__main__':
 
-    app.run(host='0.0.0.0')
+    #app.run(host='0.0.0.0')
 
     # cargar configuraciones del servidor
     loaded = EstadisticaArchivos.Inicializar()
-
+    
     print "[PARAMETERS] - TOTAL_STORAGE=%d" %ParametrosServer.TotalStorage
     print "[PARAMETERS] - UPLOAD_FOLDER=%s" %ParametrosServer.UploadFolder
     print "[PARAMETERS] - SIZE_1=%d" %ParametrosServer.Size1
@@ -184,8 +167,8 @@ if __name__ == '__main__':
     print "[PARAMETERS] - Log File =%s" %ParametrosServer.LogFileName
     print "[PARAMETERS] - Debug Level =%d" %ParametrosServer.DebugLevel
     app.config['UPLOAD_FOLDER'] = ParametrosServer.UploadFolder
-    #app.config['MAX_CONTENT_LENGTH'] = ParametrosServer.SizeMaxToUpload
+     #app.config['MAX_CONTENT_LENGTH'] = ParametrosServer.SizeMaxToUpload
 
-    #app.debug = True
+    app.debug = True
 
     app.run()

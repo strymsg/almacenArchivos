@@ -1,5 +1,5 @@
 '''
-Copyright (C) 2016 Rodrigo Garcia
+Copyright (C) 2016 Rodrigo Garcia <strysg@riseup.net>
 
 This file is part of botadero.
 
@@ -30,12 +30,15 @@ class EstadisticaArchivos:
         self.NumArchivos = 0
 
         self.PilaArchivos = []
-        #self.DictArchivos = {'': DatosDeArchivo} # dummy
+        self.PilaDiasRestantes = []
 
     def GetDatosArchivo(self,  Nombre_con_ruta):
-        for nombre in self.PilaArchivos:
-            if Nombre_con_ruta == nombre:
-                return self.PilaArchivos.index(Nombre_con_ruta)
+        i = 0
+        for pa in self.PilaArchivos:
+            if Nombre_con_ruta == pa.Nombre:
+                return self.PilaArchivos[i]
+            i = i + 1
+                #return self.PilaArchivos.index(Nombre_con_ruta)
         return None
 
     def ExisteNombre(self, Nombre_con_ruta):
@@ -100,10 +103,11 @@ class EstadisticaArchivos:
             # borra el archivo de disco
             os.remove(Nombre_con_ruta)
             # borra el registro del archivo del diccionario de registros
-            del self.PilaArchivos[self.PilaArchivos.index(Nombre_con_ruta)]
+            del self.PilaArchivos[self.PilaArchivos.index(self.GetDatosArchivo(Nombre_con_ruta))]
 
     # Lee objeto guardado en archivo y si existe, copia sus configs
     # en si mismo y retorna True.
+    # Llama tambien a la funcion ComprobarTiempoArchivos()
     def Inicializar(self):
         try:
             Eaf = open('EstadisticaArchivos.pkl', 'rb')
@@ -126,42 +130,15 @@ class EstadisticaArchivos:
             self.Actualizar()
             return False
 
-    # comprueba si uno o mas archivos han estado almacenados por mas
-    # dias de los especificados para su eliminacion.
-    # Los elimina automaticamente y los borra del registro
-    def ComprobarTiempoArchivos(self):
-        archivos_a_borrar = []
-        for da in self.PilaArchivos:
-            dt = (datetime.datetime.now() - da.FechaYHoraDeSubida).days
-            
-            # tamanyo
-            tamanyo = da.Tam
-            if tamanyo > self.Parametros.Size1 and \
-               tamanyo < self.Parametros.Size2:
-                if dt >= self.Parametros.TimeToDel1:
-                    archivos_a_borrar.append(da.Nombre) # marca para borrar
-            elif tamanyo > self.Parametros.Size2:
-                if  dt >= self.Parametros.TimeToDel2:
-                    archivos_a_borrar.append(da.Nombre) # marca para borrar
-            
-        # borrado
-        for na in archivos_a_borrar:
-            # log
-            print '[REG] - Delete: File %(na)s size %(sz)d'\
-                  % {'na': na , 'sz': self.GetDatosArchivo(na).Tam} , \
-                  'created at',\
-                  self.GetDatosArchivo(na).FechaYHoraDeSubida , 'deleted!'
-            self.BorrarArchivo(na)
 
     # comprueba las lista de archivos y si existen en el registro
-    # crea nuevos registros si hay archivos nuevos.
-    # Llama a la funcion ComprobarTiempoArchivos() para eliminar archivos
-    # automaticamente segun `Parametros'
+    # crea nuevos registros si hay archivos nuevos. Llama a
+    # ComprobarTiempoArchivos()
     def Actualizar(self):
         nombres = self.ArchOrdenadosFechaSubida(self.Parametros.UploadFolder)
         # comprueba si los archivos estan en los registros
         for nomb in nombres:
-            self.GetDatosArchivo(nomb) 
+            #self.GetDatosArchivo(nomb) 
             if self.ExisteNombre(nomb) == False:
                 # actualizar registro del nuevo archivo 
                 # este caso se deberia dar cuando se copia manualmente
@@ -178,7 +155,7 @@ class EstadisticaArchivos:
         self.ComprobarTiempoArchivos()
 
         # determinacion de otros parametros estadisticos
-        tam_total = 0
+        tam_total =0 
         for da in self.PilaArchivos:
             tam_total = tam_total + da.Tam
             
@@ -196,6 +173,42 @@ class EstadisticaArchivos:
         
         print '[REG] - Saved.' # log
     
+
+    # comprueba si uno o mas archivos han estado almacenados por mas
+    # dias de los especificados para su eliminacion.
+    # Los elimina automaticamente y los borra del registro
+    def ComprobarTiempoArchivos(self):
+        self.PilaDiasRestantes = [] # borra la lista para actualizarla
+        archivos_a_borrar = []
+        for da in self.PilaArchivos:
+            edad = da.edad()
+            vt = 0            
+            # tamanyo
+            tamanyo = da.Tam
+            if tamanyo < self.Parametros.Size1 or \
+               (tamanyo >= self.Parametros.Size1 and \
+               tamanyo <= self.Parametros.Size2):
+                vt = self.Parametros.TimeToDel1 
+            elif tamanyo > self.Parametros.Size2:
+                vt = self.Parametros.TimeToDel2
+            elif tamanyo >= self.Parametros.SizeMaxToUpload:
+                vt = 999999 # para borrar inmediatamente
+        
+            # marca si se ha excedido el tiempo
+            if vt - edad < 0:
+                archivos_a_borrar.append(da.Nombre)
+            else:
+                self.PilaDiasRestantes.append(vt - edad)
+
+        # borrado
+        for na in archivos_a_borrar:
+            # log
+            print '[REG] - Delete: File %(na)s size %(sz)d'\
+                  % {'na': na , 'sz': self.GetDatosArchivo(na).Tam} , \
+                  'created at',self.GetDatosArchivo(na).FechaYHoraDeSubida , \
+                  'surpassed allowed time.'
+            self.BorrarArchivo(na)
+
 
     def ArchOrdenadosFechaSubida(self, ruta):
         # fuente http://stackoverflow.com/questions/168409/how-do-you-get-a-directory-listing-sorted-by-creation-date-in-python?lq=1

@@ -1,5 +1,5 @@
 '''
-Copyright (C) 2016 Rodrigo Garcia
+Copyright (C) 2016 Rodrigo Garcia <strysg@riseup.net>
 
 This file is part of botadero.
 
@@ -60,16 +60,9 @@ class DatosDeArchivo:
 # se puede crear de forma segura con:
 #     DatosArchivo = DatosDeArchivo(os.path.join(ruta, nombre))
 
-    # def __init__(self, Nombre_con_ruta, Tam, FechaYHoraDeSubida, Extension, sha1sum):
-    #     self.Nombre = Nombre_con_ruta
-    #     self.Tam = Tam
-    #     self.FechaYHoraDeSubida = FechaYHoraDeSubida
-    #     self.Extension = Extension
-    #     self.NumDescargas = 0
-    #     self.sha1sum = sha1sum
-
     def edad(self):
         return (datetime.datetime.now() - self.FechaYHoraDeSubida).days
+        #return (datetime.datetime.now() - self.FechaYHoraDeSubida).seconds
 
 
 

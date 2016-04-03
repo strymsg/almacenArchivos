@@ -29,7 +29,7 @@ body {
 }
 
 .nota {
-	font-size: 17px;
+	font-size: 15px;
 	color: #58605A;
 	font-family: sans-serif;
 }
@@ -42,8 +42,8 @@ body {
 #lista_archivos{
 	/*position:  absolute;*/
 	padding: 2px;
+	max-width: 98%;
 	line-height: 167%;	/* Interlineado */
-	/*width: 94%;*/
 	background-color: #D1C7AE;
 	font-family: monospace;
 	font-size: 14px;
@@ -55,7 +55,7 @@ body {
 table.ls_archivos{
 	padding: 2px;
 	position: absolute;
-	width: 94%;
+	width: 97%;
 	border-style: dotted;
 	border-color: #C8B7A8;
 	line-height: 162%; /* Interlineado */
@@ -69,6 +69,7 @@ td.nombres{
 	background-color: #CABFA3;
 	font-style: inherit;
 	max-width: 77%;
+	min-width: 11%;
 }
 
 td.tam{
@@ -82,6 +83,21 @@ td.dias_restantes{
 	width: 9%;
 	font-size: 14px;
 	font-weight: bold; 
+}
+
+#dias_muchos{
+	color: #287528;
+	font-weight: normal;
+}
+
+#dias_moderados{
+	color: #7D5A23;
+	font-weight: bold;
+}
+
+#dias_pocos{
+	color: #DD1719;
+	font-weight: bolder;
 }
 
 a{

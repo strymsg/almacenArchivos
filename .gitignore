@@ -6,6 +6,9 @@
 # python
 *.pyc
 
+# archivos serializados
+*.pkl
+
 # archivos subidos
 almacen/
 

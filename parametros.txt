@@ -17,17 +17,17 @@ UPLOAD_FOLDER almacen
 
 # Niveles de tamaño de archivos (bytes)
 
-SIZE_1 100000
-SIZE_2 550000
+SIZE_1 70000000
+SIZE_2 222000000
 
 # Tamaño máximo de archivos (bytes)
 
-SIZE_MAX_TO_UPLOAD 10000000
+SIZE_MAX_TO_UPLOAD 5000000000
 
 # Tiempo para borrar los archivos después de que hayan sido subidos 
 # al servidor (bytes), corresponde a los niveles 1 y 2 definidos 
 # arriba.
 
-TIME_TO_DEL_1 12
-TIME_TO_DEL_2 18
+TIME_TO_DEL_1 15
+TIME_TO_DEL_2 10
 

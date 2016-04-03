@@ -13,7 +13,7 @@ La app optimiza el almacenamiento evitando que se suban archivos con el mismo no
 
 *Requiere* [Python-flask](http://flask.pocoo.org/docs/0.10/installation/#installation)
 
-*Ejecucion* Una vez instalado python-flask: `python botadero.py`
+*Ejecucion* Una vez instalado python-flask: `python2.7 botadero.py`
 
 Esta aplicación no usa bases de datos.
 
@@ -21,12 +21,11 @@ Esta aplicación no usa bases de datos.
 
 Más urgentes primero.
 
-* Probar el sistema de borrado automático.
 * Hacer una apariencia "responsive".
-* Mover Logs a carpeta logs/
 * Implementar límites de subida por usuario, esto para prevenir que un usuario suba demasiados archivos.
+* Agregar Disclaimer.
 * Desplegar el servicio y hacer pruebas iniciales.
-* Acelerar la comprobacion sha1sum al subir archivos.
+* Acelerar la comprobacion sha1sum y subida de archivos.
 * Implementar sistema detector de robots (captcha?).
 
 

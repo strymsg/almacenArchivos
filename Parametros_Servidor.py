@@ -1,5 +1,5 @@
 '''
-Copyright (C) 2016 Rodrigo Garcia
+Copyright (C) 2016 Rodrigo Garcia <strysg@riseup.net>
 
 This file is part of botadero.
 
@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #from flask import request, redirect, url_for
 from logs import initLogs
+import os
 
 class ParametrosServidor:
     NombreArchivoConfig = ''
@@ -42,7 +43,7 @@ class ParametrosServidor:
         self.TimeToDel1 = 0
         self.TimeToDel2 = 0
         self.SizeMaxToUpload = 0
-        self.LogFileName = 'botadero.log'
+        self.LogFileName = os.path.join('logs', 'botadero.log')
         self.DebugLevel = 0        
 
     def __init__(self, nombre_archivo_config, DebugLevel):
@@ -58,7 +59,7 @@ class ParametrosServidor:
         self.TimeToDel1 = 15 # 15 days
         self.TimeToDel2 = 10 # 10 days
         self.SizeMaxToUpload = 6500000 # aprox 6.5 GB
-        self.LogFileName = 'botadero.log'
+        self.LogFileName = os.path.join('logs', 'botadero.log')
         self.DebugLevel = 20 # info
 
         # Inicializa el logueo
@@ -121,5 +122,3 @@ class ParametrosServidor:
                             err = err + 1
                             print '[CONFIG_FILE] - Error: TIME_TO_DEL_2 parameter'
         return err
-
-        
