@@ -22,8 +22,9 @@ Esta aplicación no usa bases de datos.
 Más urgentes primero.
 
 * Hacer una apariencia "responsive".
+* Agregar contador de descargas.
 * Implementar límites de subida por usuario, esto para prevenir que un usuario suba demasiados archivos.
-* Agregar Disclaimer.
+* Agregar Disclaimer y revisar cambiar LICENCIA a AGPL.
 * Desplegar el servicio y hacer pruebas iniciales.
 * Acelerar la comprobacion sha1sum y subida de archivos.
 * Implementar sistema detector de robots (captcha?).

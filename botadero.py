@@ -68,7 +68,7 @@ def upload_file():
 
             # TODO: Ver la forma de hacer el checksum a medida
             # los datos van llegando con haslib.update() para no
-            # copiar el archivo (duplicacion)
+            # copiar el archivo (evitar duplicacion)
             sha1sum = hashlib.sha1(file.read()).hexdigest()
             print "[UPLOAD] - Request to upload File %s" %filename\
                 ,"           checksum %s" % sha1sum
@@ -93,8 +93,7 @@ def mostrar_estadisticas():
                            datos_archivos=EstadisticaArchivos.PilaArchivos,\
                            esp_disp=EstadisticaArchivos.AlmacenDisponible/1000000,\
                            p_disp=EstadisticaArchivos.PorcentajeAlmacenDisponible,\
-                           num_arch=EstadisticaArchivos.NumArchivos,
-    )
+                           num_arch=EstadisticaArchivos.NumArchivos )
     
 ######## Funciones Misc ##########
 # Devuelve una lista con nombre_archivo, tamanyo y dias_restantes 
@@ -167,8 +166,7 @@ if __name__ == '__main__':
     print "[PARAMETERS] - Log File =%s" %ParametrosServer.LogFileName
     print "[PARAMETERS] - Debug Level =%d" %ParametrosServer.DebugLevel
     app.config['UPLOAD_FOLDER'] = ParametrosServer.UploadFolder
-     #app.config['MAX_CONTENT_LENGTH'] = ParametrosServer.SizeMaxToUpload
 
-    app.debug = True
+    #app.debug = True
 
     app.run()
