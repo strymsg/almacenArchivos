@@ -9,11 +9,13 @@ Los parámetros como espacio de alamcenamiento reservado para la aplicación, ti
 
 La app optimiza el almacenamiento evitando que se suban archivos con el mismo nombre o mismo contenido.
 
-*LICENCIA* **GPLv3**
+*LICENCIA* **AGPL**
 
 *Requiere* [Python-flask](http://flask.pocoo.org/docs/0.10/installation/#installation)
 
-*Ejecucion* Una vez instalado python-flask: `python2.7 botadero.py`
+*Ejecucion* Una vez instalado python-flask: `python2.7 botadero.py` en el directorio del proyecto.
+
+*Revisar logs* tail -f logs/botadero.log
 
 Esta aplicación no usa bases de datos.
 
@@ -22,13 +24,8 @@ Esta aplicación no usa bases de datos.
 Más urgentes primero.
 
 * Hacer una apariencia "responsive".
-* Agregar contador de descargas.
 * Implementar límites de subida por usuario, esto para prevenir que un usuario suba demasiados archivos.
-* Agregar Disclaimer y revisar cambiar LICENCIA a AGPL.
+* Agregar Disclaimer.
 * Desplegar el servicio y hacer pruebas iniciales.
 * Acelerar la comprobacion sha1sum y subida de archivos.
 * Implementar sistema detector de robots (captcha?).
-
-
-
-

@@ -1,21 +1,19 @@
 '''
+Botadero, una aplicacion para compartir archivos libremente.
 Copyright (C) 2016 Rodrigo Garcia <strysg@riseup.net>
 
-This file is part of botadero.
-
 This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
+it under the terms of the GNU Affero General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+GNU Affero General Public License for more details.
 
-You should have received a copy of the GNU General Public License
+You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
-  
 '''
 from flask import Flask
 from flask import render_template
@@ -33,6 +31,7 @@ EstadisticaArchivos = EstadisticaArchivos('parametros.txt', False)
 ParametrosServer = EstadisticaArchivos.Parametros
 
 app = Flask(__name__)
+app.config['UPLOAD_FOLDER'] = ParametrosServer.UploadFolder
 
 ##### Rutas #######
 @app.route('/')
@@ -54,6 +53,7 @@ Aqui se puede agregar algun mecanismo para acumular estadisticas
 '''
 @app.route('/almacen/<filename>')
 def donwload_file(filename):
+    EstadisticaArchivos.IncrementarNumDescargas(os.path.join(app.config['UPLOAD_FOLDER'], filename))
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename, \
                                as_attachment=True)
 
@@ -122,8 +122,6 @@ def ls_archivos():
     # coloca cada archivo en la pantalla
     i = 0
     for arch in nombres:
-        #cad = cad + '<dl> <a href="%(up)s/%(arch)s"> %(arch)s </a>' % \
-        #{"up":ParametrosServer.UploadFolder, "arch": arch}
         # TODO: controlar excepcion
         size_long = pila_archivos[i].Tam
         unidades = "B"
@@ -165,8 +163,8 @@ if __name__ == '__main__':
     print "[PARAMETERS] - SIZE_MAX_TO_UPLOAD=%d" %ParametrosServer.SizeMaxToUpload
     print "[PARAMETERS] - Log File =%s" %ParametrosServer.LogFileName
     print "[PARAMETERS] - Debug Level =%d" %ParametrosServer.DebugLevel
-    app.config['UPLOAD_FOLDER'] = ParametrosServer.UploadFolder
 
-    #app.debug = True
+
+    app.debug = True
 
     app.run()

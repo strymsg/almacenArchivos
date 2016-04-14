@@ -1,21 +1,19 @@
 '''
+Botadero, una aplicacion para compartir archivos libremente.
 Copyright (C) 2016 Rodrigo Garcia <strysg@riseup.net>
 
-This file is part of botadero.
-
 This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
+it under the terms of the GNU Affero General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+GNU Affero General Public License for more details.
 
-You should have received a copy of the GNU General Public License
+You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
-  
 '''
 import pickle
 from Parametros_Servidor import *
@@ -31,6 +29,14 @@ class EstadisticaArchivos:
 
         self.PilaArchivos = []
         self.PilaDiasRestantes = []
+
+    def GetIndexArchivo(self, Nombre_con_ruta):
+        i = 0
+        for pa in self.PilaArchivos:
+            if Nombre_con_ruta == pa.Nombre:
+                return i
+            i = i + 1
+        return -1
 
     def GetDatosArchivo(self,  Nombre_con_ruta):
         i = 0
@@ -56,9 +62,19 @@ class EstadisticaArchivos:
                 return False
         return False
         
+    def IncrementarNumDescargas(self, Nombre_con_ruta):
+        i = self.GetIndexArchivo(Nombre_con_ruta)
+        if i != -1:
+            self.PilaArchivos[i].NumDescargas = self.PilaArchivos[i].NumDescargas + 1
+            print "[REG] - Download: Count increased to %d" \
+                % self.PilaArchivos[i].NumDescargas,\
+                "        of file %s" % Nombre_con_ruta
+        else:
+            print "[REG] - Error: File %s" % Nombre_con_ruta,\
+                "        could not be found!"
 
     def AgregarArchivo(self, Nombre_con_ruta, sha1sum, file):
-
+        
         # comprobacion de espacio disponible
         fsize = len(file.read())
         file.seek(0) # restarudando puntero

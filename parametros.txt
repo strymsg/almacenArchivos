@@ -6,14 +6,13 @@
 #
 # SIZE_10 1000000
 #
+# Los comentarios deben ir en lineas separadas, no es valida: 
+# 
+# TIME_TO_DEL_2 10#comentario
 
 # Almacenamiento total en el servidor reservado para la app (bytes)
 
 TOTAL_STORAGE 11000000000
-
-# Nombre la carpeta de subidas (se pueden usar rutas relativas)
-
-UPLOAD_FOLDER almacen
 
 # Niveles de tamaño de archivos (bytes)
 
