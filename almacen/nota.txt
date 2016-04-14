@@ -1,1 +1,27 @@
-Aqui se alamacenan los archivos subidos por los usuarios.
+El botadero
+
+Aqui se alamacenan los archivos subidos, quiensea puede
+subir archivos.
+
+Si subes un archivo, todos podrán descargarlo durante X 
+días dependiendo del espacio que ocupa, después de ese
+tiempo se borrará automáticamente. 
+
+Incluso los registros del archivo se borrarán, esto para
+aprovechar el almacenamiento disponible dejando que otros
+compartan otros archivos.
+
+No se permiten archivos duplicados, si se tratan de subir
+archivos y tienen el mismo nombre no se guardaran.
+
+A parte del nombre la aplicación comprueba el contenido
+de los archivos subidos haciendo un checksum rápido, si
+el resultado de la operación coincide con el contenido de
+otro archivo almacenado tampoco se subirá el archivo.
+
+Este es un espacio público, respétalo compartiendo contenido
+de utilidad colectiva.
+
+Disfruta el servicio :)
+
+	 	  "Compartir es bueno"
