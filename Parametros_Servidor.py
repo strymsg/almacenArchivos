@@ -24,6 +24,7 @@ class ParametrosServidor:
     UploadFolder = ''
     Size1 = 0
     Size2 = 0
+    TimeToDel0 = 0
     TimeToDel1 = 0
     TimeToDel2 = 0
     SizeMaxToUpload = 0
@@ -36,6 +37,7 @@ class ParametrosServidor:
         self.UploadFolder = "almacen"
         self.Size1 = 0
         self.Size2 = 0
+        self.TimeToDel0 = 0
         self.TimeToDel1 = 0
         self.TimeToDel2 = 0
         self.SizeMaxToUpload = 0
@@ -48,13 +50,14 @@ class ParametrosServidor:
     def init(self, nombre_archivo_config, DebugLevel):
         self.NombreArchivoConfig = nombre_archivo_config
         # configuraciones por defecto por si falla la carga desde archivo
-        self.TotalStorage = 80000000 #aprox 80 GB
+        self.TotalStorage = 80000000000 #aprox 80 GB
         self.UploadFolder = "almacen"
         self.Size1 = 100000 # aprox 100 MB
         self.Size2 = 500000 # aprox 500 MB
-        self.TimeToDel1 = 15 # 15 days
-        self.TimeToDel2 = 10 # 10 days
-        self.SizeMaxToUpload = 6500000 # aprox 6.5 GB
+        self.TimeToDel0 = 18 # 18 dias
+        self.TimeToDel1 = 15 # 15 dias
+        self.TimeToDel2 = 10 # 10 dias
+        self.SizeMaxToUpload = 650000000000 # aprox 6.5 GB
         self.LogFileName = os.path.join('logs', 'botadero.log')
         self.DebugLevel = 20 # info
 
@@ -97,6 +100,18 @@ class ParametrosServidor:
                         else:
                             err = err + 1
                             print '[CONFIG_FILE] - Error: SIZE_2 parameter'
+                    if lis[0] == 'SIZE_MAX_TO_UPLOAD':
+                        if lis[1] != '' and int(lis[1] > 0):
+                            self.SizeMaxToUpload = int(lis[1])
+                        else:
+                            err = err + 1
+                            print '[CONFIG_FILE] - Error: TOTAL_STORAGE parameter'
+                    elif lis[0] == 'TIME_TO_DEL_0':
+                        if lis[1] != '' and int(lis[1] > 0):
+                            self.TimeToDel1 = int(lis[1])
+                        else:
+                            err = err + 1
+                            print '[CONFIG_FILE] - Error: TIME_TO_DEL_0 parameter'
                     elif lis[0] == 'TIME_TO_DEL_1':
                         if lis[1] != '' and int(lis[1] > 0):
                             self.TimeToDel1 = int(lis[1])

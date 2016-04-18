@@ -1,0 +1,68 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+	<head>
+		 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>Archivador temporal para compartir archivos</title>
+		<link rel="stylesheet" href="../static/base.css" type="text/css" />
+
+	</head>
+	<body>
+
+		<h1>"El botadero"</h1>
+		<div class="qu">
+			Un sitio <b>público</b> para compartir archivos	
+		</div>
+		
+	<h2>El botadero</h2>
+	<p>Este es un sitio donde se puede subir archivos para que cualquiera pueda descargarlos, si subes un archivo
+	 todos podrán descargarlo durante {{ td0 }} a {{ td2 }} días dependiendo del espacio que ocupa, después de ese
+	tiempo se borrará automáticamente.
+	</p>
+	<h2>¿Por qué se borran los archivos?</h2>
+	<p>La principal razón es para <b>ahorrar espacio de almacenamiento</b>, este servidor ha dispuesto {{ dm }} MB para
+	almacenar archivos, si los archivos no se borrarán automáticamente, el espacio se terminaría tarde o temprano.</p>
+	
+	<p>Mientras más espacio disponible haya más archivos se pueden compartir y más gente puede descargarlos,
+	además siendo este un espacio de almacenamiento temporal con esto los contenidos que la gente comparte 
+	se renueva constantemente.</p>	
+	
+	<h2>Criterios de borrado de archivos</h2>
+	<p>Si un archivo subido tiene un tamaño menor que {{ sz1 }} MB se borrará en {{ td0 }} días, si
+	tiene un tamaño entre {{ sz1 }} MB y {{ sz2 }} MB se borrará en {{ td1 }} días, si un archivo tiene un tamaño
+	mayor que {{ sz2 }} MB y menor o igual que {{ ms }} MB se borrará {{ td2 }} días y si el tamaño es mayor que
+	{{ ms }} MB no podrá ser subido.</p>
+	
+	<p>Cuando un archivo se borra, sus registros en el servidor tambíen se eliminan.</p>	
+	
+	<h2>No se guardan archivos duplicados</h2>
+	<p>Si se trata de subir un archivo cuyo nombre existe entre los disponibles para descarga, se cancela la subida.</p>	
+	<p>Si el resultado de hacer sha1sum a un archivo que intentas subir coincide con el sha1sum de otro disponible
+	para su descarga, también se cancela la subida.</p>
+	
+	<h2>No se guardan registros de los usuarios</h2>
+	<p>Cuando subes un archivo, la aplicación no guarda datos relacionados a tu dirección IP o computadora.</p>
+	
+	<h2>Respeta a todas y todos</h2>
+	<p>Recuerda que este es un espacio público y <b>si subes algo todas y todos podrán verlo</b>.</p>
+	<p>Comparte archivos que sean de utlidad de las y los visitantes de este sitio, no subas material que no 
+	les sirva o que les perjudique.</p>
+	<p>Aunque la aplicación no tiene como detectar esto, si hay contenido que perjudique a alguién los 
+	administradores de este servidor podrán borrarlo en cualquier momento.</p>
+	<p>Cuida este espacio para que siga funcionando por que <b>compartir es bueno</b>.</p>
+	<!-- Notas al pie -->
+	
+	<div class="nota">
+	<p>Revisa las <a href="estadisticas" > estadisticas </a> de los archivos. 
+	<a href="/" >Inicio </a>
+	</p>
+	</div>
+	
+	<!-- Notas al pie -->
+	<div class="qu">
+		<p>Compartir es bueno</p>
+		<p> <a href="https://notabug.org/r00thouse/botadero">Código fuente</a> de esta aplicación.  </p>
+	</div>
+	</body>
+
+</html>

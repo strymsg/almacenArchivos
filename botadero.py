@@ -94,6 +94,16 @@ def mostrar_estadisticas():
                            esp_disp=EstadisticaArchivos.AlmacenDisponible/1000000,\
                            p_disp=EstadisticaArchivos.PorcentajeAlmacenDisponible,\
                            num_arch=EstadisticaArchivos.NumArchivos )
+
+@app.route('/info')
+def mostar_info():
+    return render_template("info.html", dm=EstadisticaArchivos.Parametros.TotalStorage/1000000,\
+                           sz1=EstadisticaArchivos.Parametros.Size1/1000000,\
+                           sz2=EstadisticaArchivos.Parametros.Size2/1000000,\
+                           td0=EstadisticaArchivos.Parametros.TimeToDel0,\
+                           td1=EstadisticaArchivos.Parametros.TimeToDel1,\
+                           td2=EstadisticaArchivos.Parametros.TimeToDel2,\
+                           ms=EstadisticaArchivos.Parametros.SizeMaxToUpload/1000000)
     
 ######## Funciones Misc ##########
 # Devuelve una lista con nombre_archivo, tamanyo y dias_restantes 
@@ -158,6 +168,7 @@ if __name__ == '__main__':
     print "[PARAMETERS] - UPLOAD_FOLDER=%s" %ParametrosServer.UploadFolder
     print "[PARAMETERS] - SIZE_1=%d" %ParametrosServer.Size1
     print "[PARAMETERS] - SIZE_2=%d" %ParametrosServer.Size2
+    print "[PARAMETERS] - TIME_TO_DEL_0=%d" %ParametrosServer.TimeToDel0
     print "[PARAMETERS] - TIME_TO_DEL_1=%d" %ParametrosServer.TimeToDel1
     print "[PARAMETERS] - TIME_TO_DEL_2=%d" %ParametrosServer.TimeToDel2
     print "[PARAMETERS] - SIZE_MAX_TO_UPLOAD=%d" %ParametrosServer.SizeMaxToUpload

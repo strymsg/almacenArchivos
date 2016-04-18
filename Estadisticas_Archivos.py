@@ -201,9 +201,10 @@ class EstadisticaArchivos:
             vt = 0            
             # tamanyo
             tamanyo = da.Tam
-            if tamanyo < self.Parametros.Size1 or \
-               (tamanyo >= self.Parametros.Size1 and \
-               tamanyo <= self.Parametros.Size2):
+            if tamanyo <  self.Parametros.Size1:
+                vt = self.Parametros.TimeToDel0
+            elif tamanyo >= self.Parametros.Size1 and \
+               tamanyo <= self.Parametros.Size2:
                 vt = self.Parametros.TimeToDel1 
             elif tamanyo > self.Parametros.Size2:
                 vt = self.Parametros.TimeToDel2

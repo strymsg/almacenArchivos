@@ -14,7 +14,7 @@ body {
     padding-bottom: 15px;
     padding-right: 20px;
     padding-top: 5px;
-    background-color: #E0DAC2;
+    background-color: #CABC9B;
     font-family: Helvetica;
     font-size: 15px;
 }
@@ -44,7 +44,8 @@ body {
 	padding: 2px;
 	max-width: 98%;
 	line-height: 167%;	/* Interlineado */
-	background-color: #D1C7AE;
+	/*background-color: #D1C7AE;*/
+	background-color: #D4C49B;
 	font-family: monospace;
 	font-size: 14px;
 	border-style: solid;
@@ -66,7 +67,8 @@ table.ls_archivos{
 td.nombres{
 	width: 79%;
 	word-wrap: break-word;
-	background-color: #CABFA3;
+	/*background-color: #CABFA3;*/
+	background-color: #C9B88B;
 	font-style: inherit;
 	max-width: 77%;
 	min-width: 11%;
@@ -101,14 +103,13 @@ td.dias_restantes{
 }
 
 a{
-	color: #1D1C14;
-	/*color: #936E0D;*/
+	/*color: #1D1C14;*/
 	text-decoration: none;
 	font-weight: bold;
 	padding-bottom: 1px;
 	border-bottom: 1px #867F6E;
 	border-bottom-style: dotted;
-	/*color: #F55B0A;*/
+	color: #B8521D;
 }
 
 a:hover {

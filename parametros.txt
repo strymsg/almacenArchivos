@@ -6,7 +6,7 @@
 #
 # SIZE_10 1000000
 #
-# Los comentarios deben ir en lineas separadas, no es valida: 
+# Los comentarios deben ir en lineas separadas, NO es valida: 
 # 
 # TIME_TO_DEL_2 10#comentario
 
@@ -24,9 +24,10 @@ SIZE_2 222000000
 SIZE_MAX_TO_UPLOAD 5000000000
 
 # Tiempo para borrar los archivos después de que hayan sido subidos 
-# al servidor (bytes), corresponde a los niveles 1 y 2 definidos 
-# arriba.
+# al servidor (dias), corresponde a los niveles 1 y 2 definidos 
+# arriba, el nivel 0 es para archivos que ocupan menos que el nivel1
 
-TIME_TO_DEL_1 15
+TIME_TO_DEL_0 18
+TIME_TO_DEL_1 14
 TIME_TO_DEL_2 10
 
