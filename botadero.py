@@ -176,6 +176,6 @@ if __name__ == '__main__':
     print "[PARAMETERS] - Debug Level =%d" %ParametrosServer.DebugLevel
 
 
-    app.debug = True
+    #app.debug = True
 
-    app.run()
+    app.run(host='0.0.0.0')
