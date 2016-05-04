@@ -25,6 +25,7 @@ from jinja2 import Environment, PackageLoader
 
 from Estadisticas_Archivos import *
 from datos_archivo import *
+import random
 
 # cargar configuraciones del servidor
 EstadisticaArchivos = EstadisticaArchivos('parametros.txt', False)
@@ -33,17 +34,25 @@ ParametrosServer = EstadisticaArchivos.Parametros
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = ParametrosServer.UploadFolder
 
+# Develve el nombre de un esquema de colores al azar
+def esquema_colores_random():
+    # esquemas de colores definidos en static/
+    esquemas = ('neutral', 'verde1', 'azul1', 'amarillo1',\
+                'rojo1', 'cafe1')
+    return esquemas[random.randint(0, len(esquemas)-1)]
+
 ##### Rutas #######
 @app.route('/')
 def pag_principal():
     EstadisticaArchivos.Actualizar()
     return render_template("index.html", \
-                           borrar_1=EstadisticaArchivos.Parametros.TimeToDel1,\
+                           borrar_1=EstadisticaArchivos.Parametros.TimeToDel0,\
                            borrar_2=EstadisticaArchivos.Parametros.TimeToDel2,\
                            esp_disp=EstadisticaArchivos.AlmacenDisponible/1000000,\
                            p_disp=EstadisticaArchivos.PorcentajeAlmacenDisponible,\
                            num_arch=EstadisticaArchivos.NumArchivos,\
-                           lista_archivos=ls_archivos())
+                           lista_archivos=ls_archivos(),\
+                           esquema_colores=esquema_colores_random())
 
 ''' Peticiones para descarga de archivos subidos
 basado en:
@@ -93,7 +102,8 @@ def mostrar_estadisticas():
                            datos_archivos=EstadisticaArchivos.PilaArchivos,\
                            esp_disp=EstadisticaArchivos.AlmacenDisponible/1000000,\
                            p_disp=EstadisticaArchivos.PorcentajeAlmacenDisponible,\
-                           num_arch=EstadisticaArchivos.NumArchivos )
+                           num_arch=EstadisticaArchivos.NumArchivos,\
+                           esquema_colores=esquema_colores_random())
 
 @app.route('/info')
 def mostar_info():
@@ -103,7 +113,8 @@ def mostar_info():
                            td0=EstadisticaArchivos.Parametros.TimeToDel0,\
                            td1=EstadisticaArchivos.Parametros.TimeToDel1,\
                            td2=EstadisticaArchivos.Parametros.TimeToDel2,\
-                           ms=EstadisticaArchivos.Parametros.SizeMaxToUpload/1000000)
+                           ms=EstadisticaArchivos.Parametros.SizeMaxToUpload/1000000,\
+                           esquema_colores=esquema_colores_random())
     
 ######## Funciones Misc ##########
 # Devuelve una lista con nombre_archivo, tamanyo y dias_restantes 
@@ -154,7 +165,6 @@ def ls_archivos():
         i = i + 1
 
     return l_archivos
-
 
 ############## principal ########################
 if __name__ == '__main__':

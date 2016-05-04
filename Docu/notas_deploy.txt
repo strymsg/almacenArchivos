@@ -49,7 +49,6 @@ botadero.conf
 
    sudo start botadero
 
-
 NGINX config
 ============
 
@@ -60,6 +59,9 @@ NGINX config
 	#listen puerto;
 	listen 80;
 	server_name dominio_del_server_o_IP;
+	
+	# permite la subida de archivos de hasta 5000 MB
+	client_max_body_size 5000M; 
 
 	location / {
 		 include uwsgi_params;

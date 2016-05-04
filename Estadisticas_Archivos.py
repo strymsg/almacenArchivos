@@ -30,6 +30,8 @@ class EstadisticaArchivos:
         self.PilaArchivos = []
         self.PilaDiasRestantes = []
 
+        self.Inicializar()
+
     def GetIndexArchivo(self, Nombre_con_ruta):
         i = 0
         for pa in self.PilaArchivos:

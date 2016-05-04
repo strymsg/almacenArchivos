@@ -1,0 +1,113 @@
+/*
+  BOTADERO
+*/
+
+h1{
+	font-family: serif;
+	font-size: 24px;
+	color: #23261C;
+	text-align: center;
+}
+
+body {
+    padding-left: 10px;
+    padding-bottom: 20px;
+    padding-right: 15px;
+    padding-top: 10px;
+    background-color: #CABC9B;
+    background-image: url("botadero_resources/logo.png");
+    background-repeat: no-repeat;
+    background-size: 80px;
+    font-family: Helvetica;
+    font-size: 15px;
+}
+
+.qu {
+    padding: 3px;
+    font-size: 16px;
+    color: #313524;
+    font-family: serif;
+    font-style: italic;
+    text-align: center;
+}
+
+.nota {
+	font-size: 15px;
+	color: #58605A;
+	font-family: sans-serif;
+}
+
+.btn {
+	padding 5px;
+	font-weight: bold;
+}
+
+#lista_archivos{
+	/*position:  absolute;*/
+	padding: 2px;
+	word-wrap: break-word;
+	max-width: 98%;
+	line-height: 167%;	/* Interlineado */
+	/*background-color: #D1C7AE;*/
+	background-color: #D4C49B;
+	font-family: monospace;
+	font-size: 14px;
+	border-style: solid;
+	border-color: #C8B7A8;
+}
+
+
+td.nombres{
+	width: 79%;
+	word-wrap: break-word;
+	/*background-color: #CABFA3;*/
+	background-color: #C9B88B;
+	font-style: inherit;
+	max-width: 77%;
+	min-width: 11%;
+}
+
+td.tam{
+	width: 9%;
+	font-size: 14px;
+	font-family: sans-serif;
+	text-align: center;
+}
+
+td.dias_restantes{
+	width: 9%;
+	font-size: 14px;
+	font-weight: bold; 
+}
+
+#dias_muchos{
+	color: #3D713D;
+	font-weight: normal;
+}
+
+#dias_moderados{
+	color: #5C4C2B;
+	font-weight: bold;
+}
+
+#dias_pocos{
+	color: #DD1719;
+	font-weight: bolder;
+}
+
+a{
+	/*color: #1D1C14;*/
+	text-decoration: none;
+	font-weight: bold;
+	padding-bottom: 1px;
+	border-bottom: 1px #867F6E;
+	border-bottom-style: dotted;
+	/*color: #B8521D;*/
+	color: #2A2D23;
+}
+
+a:hover {
+	font-weight: bolder;
+	border-bottom-width: 2px;
+	border-bottom-style: solid;
+}

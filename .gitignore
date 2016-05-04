@@ -13,7 +13,7 @@
 almacen/
 
 # virtual env
-botadero/
+venv/
 
 # archivos log
 *.log

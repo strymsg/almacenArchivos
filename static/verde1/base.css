@@ -10,11 +10,14 @@ h1{
 }
 
 body {
-    padding-left: 20px;
-    padding-bottom: 15px;
-    padding-right: 20px;
-    padding-top: 5px;
-    background-color: #CABC9B;
+    padding-left: 10px;
+    padding-bottom: 20px;
+    padding-right: 15px;
+    padding-top: 10px;
+    background-color: #CEDAAF;
+    background-image: url("botadero_resources/logo.png");
+    background-repeat: no-repeat;
+    background-size: 80px;
     font-family: Helvetica;
     font-size: 15px;
 }
@@ -30,7 +33,7 @@ body {
 
 .nota {
 	font-size: 15px;
-	color: #58605A;
+	color: #39483D;
 	font-family: sans-serif;
 }
 
@@ -44,31 +47,19 @@ body {
 	padding: 2px;
 	max-width: 98%;
 	line-height: 167%;	/* Interlineado */
-	/*background-color: #D1C7AE;*/
-	background-color: #D4C49B;
+	word-wrap: break-word;
+	background-color: #A4D49B;
 	font-family: monospace;
 	font-size: 14px;
 	border-style: solid;
-	border-color: #C8B7A8;
-}
-
-
-table.ls_archivos{
-	padding: 2px;
-	position: absolute;
-	width: 97%;
-	border-style: dotted;
-	border-color: #C8B7A8;
-	line-height: 162%; /* Interlineado */
-	background-color: #D1C7AE;
-	font-family: monospace;
+	border-color: #A8C8BB;
 }
 
 td.nombres{
 	width: 79%;
 	word-wrap: break-word;
 	/*background-color: #CABFA3;*/
-	background-color: #C9B88B;
+	background-color: #89D179;
 	font-style: inherit;
 	max-width: 77%;
 	min-width: 11%;
@@ -107,9 +98,10 @@ a{
 	text-decoration: none;
 	font-weight: bold;
 	padding-bottom: 1px;
-	border-bottom: 1px #867F6E;
+	border-bottom: 1px #628464;
 	border-bottom-style: dotted;
-	color: #B8521D;
+	/*color: #B8521D;*/
+	color: #1E4933;
 }
 
 a:hover {
