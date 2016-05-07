@@ -15,7 +15,7 @@ body {
     padding-right: 15px;
     padding-top: 10px;
     background-color: #E9E8BB;/* c */
-    background-image: url("botadero_resources/logo.png");
+    background-image: url("../botadero_resources/logo.png");
     background-repeat: no-repeat;
     background-size: 80px;
     font-family: Helvetica;

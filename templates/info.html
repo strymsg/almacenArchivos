@@ -4,7 +4,6 @@
 	<head>
 		 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<title>Archivador temporal para compartir archivos</title>
-		<link rel="stylesheet" href="../static/base.css" type="text/css" />
 		<link rel="stylesheet" href="../static/{{ esquema_colores }}/base.css" type="text/css" />
 
 	</head>
@@ -36,7 +35,7 @@
 	
 	<p>Cuando un archivo se borra, sus registros en el servidor tambíen se eliminan.</p>	
 	
-	<h2>No se guardan archivos duplicados</h2>
+	<h2 id="duplicados">No se guardan archivos duplicados</h2>
 	<p>Si se trata de subir un archivo cuyo nombre existe entre los disponibles para descarga, se cancela la subida.</p>	
 	<p>Si el resultado de hacer sha1sum a un archivo que intentas subir coincide con el sha1sum de otro disponible
 	para su descarga, también se cancela la subida.</p>

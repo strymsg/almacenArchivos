@@ -62,6 +62,7 @@ Aqui se puede agregar algun mecanismo para acumular estadisticas
 '''
 @app.route('/almacen/<filename>')
 def donwload_file(filename):
+    # TODO: excepcion si el archivo no existe
     EstadisticaArchivos.IncrementarNumDescargas(os.path.join(app.config['UPLOAD_FOLDER'], filename))
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename, \
                                as_attachment=True)
@@ -69,6 +70,7 @@ def donwload_file(filename):
 ''' Funcion para subir archivos '''
 @app.route('/upload_file', methods=['GET', 'POST'])
 def upload_file():
+    # TODO: agregar captcha?
     if request.method == 'POST':
         file = request.files['file'] #devuelve tipo FileStorage
         filename = ''
@@ -87,7 +89,8 @@ def upload_file():
             aux = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             if EstadisticaArchivos.AgregarArchivo(aux, sha1sum, file) != 0:
                 # mostrar error en pantalla
-                return redirect('/estadisticas', code=302)
+                return mostrar_err_archivo_duplicado(sha1sum=sha1sum, nombre=filename)
+                #return redirect('/estadisticas', code=302)
 
         return redirect("/", code=302)
         # http://stackoverflow.com/questions/14343812/redirecting-to-url-in-flask
@@ -115,7 +118,12 @@ def mostar_info():
                            td2=EstadisticaArchivos.Parametros.TimeToDel2,\
                            ms=EstadisticaArchivos.Parametros.SizeMaxToUpload/1000000,\
                            esquema_colores=esquema_colores_random())
-    
+
+@app.route('/duplicado')
+def mostrar_err_archivo_duplicado(sha1sum=None, nombre=None):
+    return render_template("duplicado.html", sha1sum=sha1sum, nombre=nombre,\
+                           esquema_colores=esquema_colores_random())
+
 ######## Funciones Misc ##########
 # Devuelve una lista con nombre_archivo, tamanyo y dias_restantes 
 # para eliminacion del directorio del de subidas.
@@ -166,6 +174,8 @@ def ls_archivos():
 
     return l_archivos
 
+
+
 ############## principal ########################
 if __name__ == '__main__':
 
@@ -186,6 +196,6 @@ if __name__ == '__main__':
     print "[PARAMETERS] - Debug Level =%d" %ParametrosServer.DebugLevel
 
 
-    #app.debug = True
+    #app.debug = True # cuidado con esto a la hora de poner en produccion!
 
     app.run(host='0.0.0.0')
