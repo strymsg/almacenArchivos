@@ -72,6 +72,7 @@ class EstadisticaArchivos:
         return False
         
     def IncrementarNumDescargas(self, Nombre_con_ruta):
+        self.CargarDesdeArchivo()
         i = self.GetIndexArchivo(Nombre_con_ruta)
         if i != -1:
             self.PilaArchivos[i].NumDescargas = self.PilaArchivos[i].NumDescargas + 1
@@ -145,6 +146,7 @@ class EstadisticaArchivos:
     # crea nuevos registros si hay archivos nuevos. Llama a
     # ComprobarTiempoArchivos()
     def Actualizar(self):
+	self.CargarDesdeArchivo() # para evitar problemas de 'descronizacion'
         nombres = self.ArchOrdenadosFechaSubida(self.Parametros.UploadFolder)
         # comprueba si los archivos estan en los registros
         for nomb in nombres:
