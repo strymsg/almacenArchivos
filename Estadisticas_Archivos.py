@@ -122,8 +122,8 @@ class EstadisticaArchivos:
                 % {'na': self.PilaArchivos[-1].Nombre ,\
                    'sz': self.PilaArchivos[-1].Tam},\
                 '        created at', self.PilaArchivos[-1].FechaYHoraDeSubida
-            self.Actualizar()
-            file.close()
+            
+            self.GuardarCambiosEnArchivo()
             return 0
             
     def BorrarArchivo(self, Nombre_con_ruta):
@@ -132,32 +132,14 @@ class EstadisticaArchivos:
             os.remove(Nombre_con_ruta)
             # borra el registro del archivo del diccionario de registros
             del self.PilaArchivos[self.PilaArchivos.index(self.GetDatosArchivo(Nombre_con_ruta))]
+            self.GuardarCambiosEnArchivo()
 
     # Lee objeto guardado en archivo y si existe, copia sus configs
     # en si mismo y retorna True.
     # Llama tambien a la funcion ComprobarTiempoArchivos()
     def Inicializar(self):
-        try:
-            Eaf = open('EstadisticaArchivos.pkl', 'rb')
-            Ea = pickle.load(Eaf)
-            # copia el objeto guardado
-            self.PilaArchivos = Ea.PilaArchivos
-            self.AlmacenDisponible = Ea.AlmacenDisponible
-            self.PorcentajeAlmacenDisponible = Ea.PorcentajeAlmacenDisponible
-            self.NumArchivos = self.NumArchivos
-            
-            Eaf.close()
-            print '[REG] - Loaded: Data from object file '\
-                , '        EstadisticaArchivos.pkl'
-            self.Actualizar()
-            self.Parametros.Reload_configs()
-            return True
-        except:
-            print '[REG] - Warning: Not found object file '\
-                , '        EstadisticaArchivos.pkl. Creating registers.'
-            self.Actualizar()
-            return False
-
+        self.CargarDesdeArchivo()
+        self.Actualizar() # carga nuevos archivos si no estaban en el registro
 
     # comprueba las lista de archivos y si existen en el registro
     # crea nuevos registros si hay archivos nuevos. Llama a
@@ -180,6 +162,8 @@ class EstadisticaArchivos:
                     % {'na': nomb , 'sz': self.PilaArchivos[-1].Tam},\
                     'created at', self.PilaArchivos[-1].FechaYHoraDeSubida
 
+                self.GuardarCambiosEnArchivo()
+
         self.ComprobarTiempoArchivos()
 
         # determinacion de otros parametros estadisticos
@@ -193,7 +177,7 @@ class EstadisticaArchivos:
         self.NumArchivos = len(self.PilaArchivos)
         
         print '[REG] - Updated.' # log
-        self.GuardarCambiosEnArchivo() # log
+
     
 
     # comprueba si uno o mas archivos han estado almacenados por mas
@@ -232,7 +216,6 @@ class EstadisticaArchivos:
                   'surpassed allowed time.'
             self.BorrarArchivo(na)
 
-
     def ArchOrdenadosFechaSubida(self, ruta):
         # fuente http://stackoverflow.com/questions/168409/how-do-you-get-a-directory-listing-sorted-by-creation-date-in-python?lq=1
         files = filter(os.path.isfile, os.listdir(ruta))
@@ -257,4 +240,26 @@ class EstadisticaArchivos:
             return True
         except:
             print '[REG] - Error: Object file EstadisticaArchivos.pkl could not be writen.'
+            return False
+
+    # Carga el objeto con los datos guardados en archivo serializado en disco
+    def CargarDesdeArchivo(self):
+        try:
+            Eaf = open('EstadisticaArchivos.pkl', 'rb')
+            Ea = pickle.load(Eaf)
+            # copia el objeto guardado
+            self.PilaArchivos = Ea.PilaArchivos
+            self.AlmacenDisponible = Ea.AlmacenDisponible
+            self.PorcentajeAlmacenDisponible = Ea.PorcentajeAlmacenDisponible
+            self.NumArchivos = self.NumArchivos
+            
+            Eaf.close()
+            print '[REG] - Loaded: Data from object file '\
+                , '        EstadisticaArchivos.pkl'
+            self.Parametros.Reload_configs()
+            return True
+        except:
+            print '[REG] - Warning: Not found object file '\
+                , '        EstadisticaArchivos.pkl. Restarting, creating registers.'
+            self.Actualizar()
             return False

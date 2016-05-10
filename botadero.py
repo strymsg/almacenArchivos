@@ -182,7 +182,7 @@ if __name__ == '__main__':
     #app.run(host='0.0.0.0')
 
     # cargar configuraciones del servidor
-    loaded = EstadisticaArchivos.Inicializar()
+    EstadisticaArchivos.Inicializar()
     
     print "[PARAMETERS] - TOTAL_STORAGE=%d" %ParametrosServer.TotalStorage
     print "[PARAMETERS] - UPLOAD_FOLDER=%s" %ParametrosServer.UploadFolder
