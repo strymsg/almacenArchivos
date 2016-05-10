@@ -1,3 +1,4 @@
+
 '''
 Botadero, una aplicacion para compartir archivos libremente.
 Copyright (C) 2016 Rodrigo Garcia <strysg@riseup.net>
@@ -63,6 +64,12 @@ class EstadisticaArchivos:
             else:
                 return False
         return False
+
+    def ExisteArchivoConTamanyo(self, tam):
+        for da in self.PilaArchivos:
+            if tam == da.Tam:
+                return True
+        return False
         
     def IncrementarNumDescargas(self, Nombre_con_ruta):
         i = self.GetIndexArchivo(Nombre_con_ruta)
@@ -71,6 +78,7 @@ class EstadisticaArchivos:
             print "[REG] - Download: Count increased to %d" \
                 % self.PilaArchivos[i].NumDescargas,\
                 "        of file %s" % Nombre_con_ruta
+            self.GuardarCambiosEnArchivo()
         else:
             print "[REG] - Error: File %s" % Nombre_con_ruta,\
                 "        could not be found!"
@@ -93,12 +101,14 @@ class EstadisticaArchivos:
                 "            exists, not uploaded."
             file.close()
             return 2
-        # comprobacion de sha1sum
-        elif self.ExisteArchivo(Nombre_con_ruta, sha1sum):
-            print "[STORE] - Warn: sha1sum %s exists," % sha1sum, \
-                "            not uploaded."
-            file.close()
-            return 3
+        # comprobacion de tamanyo
+        elif self.ExisteArchivoConTamanyo(fsize):
+            # comprobacion de sha1sum
+            if self.ExisteArchivo(Nombre_con_ruta, sha1sum):
+                print "[STORE] - Warn: sha1sum %s exists," % sha1sum, \
+                    "            not uploaded."
+                file.close()
+                return 3
         else:
             # guarda el archivo en disco
             file.save(Nombre_con_ruta)
@@ -183,13 +193,7 @@ class EstadisticaArchivos:
         self.NumArchivos = len(self.PilaArchivos)
         
         print '[REG] - Updated.' # log
-        
-
-        Eaf = open('EstadisticaArchivos.pkl', 'wb')
-        pickle.dump(self ,Eaf)
-        Eaf.close()
-        
-        print '[REG] - Saved.' # log
+        self.GuardarCambiosEnArchivo() # log
     
 
     # comprueba si uno o mas archivos han estado almacenados por mas
@@ -241,3 +245,16 @@ class EstadisticaArchivos:
             files.sort(key=lambda x: os.path.getmtime(x)) 
         # queda ordenado con el archivo con mas antiguedad primero
         return files
+
+
+    # Guarda todas las modificaciones hechas al registro en un archivo serializado en disco
+    def GuardarCambiosEnArchivo(self):
+        try:
+            Eaf = open('EstadisticaArchivos.pkl', 'wb')
+            pickle.dump(self ,Eaf)
+            Eaf.close()
+            print '[REG] - Saved to file EstadisticaArchivos.pkl'
+            return True
+        except:
+            print '[REG] - Error: Object file EstadisticaArchivos.pkl could not be writen.'
+            return False
