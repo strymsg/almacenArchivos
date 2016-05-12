@@ -146,7 +146,6 @@ class EstadisticaArchivos:
     # crea nuevos registros si hay archivos nuevos. Llama a
     # ComprobarTiempoArchivos()
     def Actualizar(self):
-	#self.CargarDesdeArchivo() # para evitar problemas de 'descronizacion'
         nombres = self.ArchOrdenadosFechaSubida(self.Parametros.UploadFolder)
         # comprueba si los archivos estan en los registros
         for nomb in nombres:

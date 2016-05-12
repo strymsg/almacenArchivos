@@ -108,7 +108,7 @@ class ParametrosServidor:
                             print '[CONFIG_FILE] - Error: TOTAL_STORAGE parameter'
                     elif lis[0] == 'TIME_TO_DEL_0':
                         if lis[1] != '' and int(lis[1] > 0):
-                            self.TimeToDel1 = int(lis[1])
+                            self.TimeToDel0 = int(lis[1])
                         else:
                             err = err + 1
                             print '[CONFIG_FILE] - Error: TIME_TO_DEL_0 parameter'

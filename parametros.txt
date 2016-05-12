@@ -27,7 +27,7 @@ SIZE_MAX_TO_UPLOAD 5000000000
 # al servidor (dias), corresponde a los niveles 1 y 2 definidos 
 # arriba, el nivel 0 es para archivos que ocupan menos que el nivel1
 
-TIME_TO_DEL_0 18
+TIME_TO_DEL_0 17
 TIME_TO_DEL_1 14
 TIME_TO_DEL_2 10
 

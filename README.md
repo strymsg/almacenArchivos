@@ -14,15 +14,18 @@ La app optimiza el almacenamiento evitando que se suban archivos con el mismo no
 
 *Ejecucion de pruebas*
 
-Instalar virtualenv y python-pip,
+Instalar virtualenv y python-pip, activar el entorno virtual, luego:
 
-`pip install paq1 paq2` , donde paq son la lista de paquetes en [pip_install.txt](Docu/pip_install.txt)
+`pip install paq1 paq2` , donde paq son la lista de paquetes en [pip_install.txt](Docu/pip_install.txt), en general basta con:
+
+pip install Flask
+pip install uwsgi
 
 Después de activar el entorno virtual la app se ejecuta con:
 
 `python2.7 botadero.py` y puede probarse en localhost:5000
 
-*Despliegue en NGINX* ver [notas_deploy.txt](Docu/notas_deploy.txt)
+*Despliegue en NGINX* ver [deploy_debian](Docu/notas_deploy_niginx_debian.txt), [deploy_ubuntu](Docu/notas_deploy_nginx_ubuntu.txt)
 
 *Revisar logs* tail -f logs/botadero.log
 
@@ -35,6 +38,7 @@ Más urgentes primero.
 * Hacer una apariencia "responsive".
 * Implementar límites de subida por usuario, esto para prevenir que un usuario suba demasiados archivos.
 * Acelerar la comprobacion sha1sum y subida de archivos.
-* Hacer pruebas al despliegue del servicio documentado en [notas_deploy.txt](Docu/notas_deploy.txt)
+* Hacer pruebas al despliegue del servicio y documentar en Docu/
 * Implementar sistema detector de robots (captcha?).
 * Revisar disclaimer en info/
+* Agregar descarga/subida de archivos por categorías # 
