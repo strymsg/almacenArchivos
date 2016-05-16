@@ -47,10 +47,28 @@ class DatosDeArchivo:
         # sha1sum
         self.sha1sum = ''
         with open(self.Nombre, 'r') as fil:
-            self.sha1sum = hashlib.sha1(fil.read()).hexdigest()
+            self.sha1sum = self.arch_sha1sum(fil)
         # Fecha y hora simula creacion del archivo ahora.
         self.FechaYHoraDeSubida = datetime.datetime.now()
-    
+
+    # Recibe un objeto archivo y devulve el sha1sum
+    # Nota: No se restaura el puntero ni se cierra el archivo
+    def arch_sha1sum(self, archivo):
+        archivo.seek(0) # puntero en 0
+        t_ant = -1
+        t_act = archivo.tell()
+        pedazo_tam = 125*1024
+        h = hashlib.sha1()
+        # obtiene el sha1sum del archivo por pedazos de 125 MB a lo maximo
+        # esto la hace en caso de ser un archivo con tamanyo mas grande que 2GB
+        # por ser su contenido mayor que el maximo de una cadena (2^32)
+        while t_ant != t_act: 
+            cad = archivo.read(pedazo_tam)
+            h.update(cad)
+            t_ant = t_act
+            t_act = archivo.tell()
+        return h.hexdigest()
+
 # Nota acerca del nombre del archivo
 #  espcificar el archivo con la ruta completa
 # ejemplo para obtener ruta segura:

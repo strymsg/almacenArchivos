@@ -80,9 +80,11 @@ def upload_file():
             # TODO: Ver la forma de hacer el checksum a medida
             # los datos van llegando con haslib.update() para no
             # copiar el archivo (evitar duplicacion)
-            sha1sum = hashlib.sha1(file.read()).hexdigest()
+            da = DatosDeArchivo()
+            sha1sum = da.arch_sha1sum(file)
+            #sha1sum = hashlib.sha1(file.read()).hexdigest()
             print "[UPLOAD] - Request to upload File %s" %filename\
-                ,"           checksum %s" % sha1sum
+                ,"            checksum %s" % sha1sum
             
             # restaura el puntero
             file.seek(0)
