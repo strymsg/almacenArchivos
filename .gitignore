@@ -5,6 +5,7 @@
 
 # python
 *.pyc
+botadero/*.pyc
 
 # archivos serializados
 *.pkl
@@ -16,8 +17,8 @@ almacen/
 venv/
 
 # archivos log
-*.log
 *.log.*
+logs/
 
 # autosaves dia
 *.autosave

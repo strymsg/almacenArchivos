@@ -21,13 +21,13 @@ Instalar virtualenv y python-pip, activar el entorno virtual, luego:
 `pip install Flask`
 `pip install uwsgi`
 
-Después de activar el entorno virtual la app se ejecuta con:
+Se debe activar el entorno virtual: `. venv/bin/activate`, luego para ejectuar la app:
 
 `python2.7 botadero.py` y puede probarse en `localhost:5000`
 
-*Despliegue en NGINX* ver [deploy_debian](Docu/notas_deploy_niginx_debian.txt), [deploy_ubuntu](Docu/notas_deploy_nginx_ubuntu.txt)
+*Despliegue en NGINX (Actualizar)* ver [deploy_debian](botadero/Docu/notas_deploy_nginx_debian.txt), [deploy_ubuntu](botadero/Docu/notas_deploy_nginx_ubuntu.txt)
 
-*Revisar logs* `tail -f logs/botadero.log`
+*Revisar logs* `tail -f botadero/logs/botadero.log`
 
 Esta aplicación no usa bases de datos.
 
@@ -37,6 +37,7 @@ Más urgentes primero.
 
 * Hacer una apariencia "responsive".
 * Agregar descarga/subida de archivos por categorías #
+* Agregar eliminacion de registros al detectar un archivo borrado manualmente por administrador.
 * Implementar límites de subida por usuario, esto para prevenir que un usuario suba demasiados archivos.
 * Acelerar la comprobacion sha1sum y subida de archivos.
 * Hacer pruebas al despliegue del servicio y documentar en Docu/

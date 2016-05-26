@@ -17,8 +17,8 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 import pickle
-from Parametros_Servidor import *
-from datos_archivo import *
+from botadero.Parametros_Servidor import *
+from botadero.datos_archivo import *
 
 class EstadisticaArchivos:
     def __init__(self, NombreArchivoConfig, DebugLevel):

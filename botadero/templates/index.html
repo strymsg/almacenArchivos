@@ -18,7 +18,8 @@
 		
 	<!-- Subida de archivos -->		
 	<div class="nota">
-		<form method="post" id="upload_file" action="upload_file" enctype="multipart/form-data">			
+		<!-- <form method="post" id="upload_file" action="almacen/{{categoria}}/upload_file" enctype="multipart/form-data">			 -->
+		<form method="post" id="upload_file" action="almacen/upload_file" enctype="multipart/form-data">			
 			<input type="file" name="file"/>
 			<input type="submit", class="btn", value="Compartir archivo"/>
 				<p>Los archivos se eliminan después de {{ borrar_1 }} a {{ borrar_2 }} días, dependiendo su tamaño.

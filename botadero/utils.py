@@ -1,0 +1,81 @@
+'''
+Botadero, una aplicacion para compartir archivos libremente.
+Copyright (C) 2016 Rodrigo Garcia <strysg@riseup.net>
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+'''
+from botadero.Estadisticas_Archivos import *
+from botadero.datos_archivo import *
+import random
+
+EstadisticaArchivos = EstadisticaArchivos('parametros.txt', False)
+ParametrosServer = EstadisticaArchivos.Parametros
+
+# Develve el nombre de un esquema de colores al azar
+def esquema_colores_random():
+    '''
+    devuelve un esquema de colores random de los definidos en static/
+    '''
+    esquemas = ('neutral', 'verde1', 'azul1', 'amarillo1',\
+                'rojo1', 'cafe1')
+    return esquemas[random.randint(0, len(esquemas)-1)]
+
+def ls_archivos():
+    '''
+    Devuelve una lista con nombre_archivo, tamanyo y dias_restantes 
+    para eliminacion del directorio del de subidas.
+    '''
+    l_archivos = []
+    
+    upload_folder = ParametrosServer.UploadFolder
+    pila_archivos = EstadisticaArchivos.PilaArchivos
+    dias_restantes = EstadisticaArchivos.PilaDiasRestantes
+    # para mostrar los mas recientes primero
+    #pila_archivos.reverse()
+    
+    raw_nombres = []
+    for ra in pila_archivos:
+        raw_nombres.append(ra.Nombre)
+
+    nombres = []
+    # quitar la carpeta de los nombres
+    for nomb in raw_nombres:
+        #nombres.append(nomb)
+        nombres.append(nomb[len(ParametrosServer.UploadFolder)+1 :])
+    
+    # coloca cada archivo en la pantalla
+    i = 0
+    for arch in nombres:
+        # TODO: controlar excepcion
+        size_long = pila_archivos[i].Tam
+        unidades = "B"
+        if size_long > 1000 and size_long < 1000000:
+            tam = round(size_long/float(1000), 2)
+            unidades = "KB"
+        elif size_long > 1000000 and size_long < 1000000000:
+            tam = round(size_long/float(1000000), 2)
+            unidades = "MB"
+        elif size_long > 1000000000:
+            tam = round(size_long/float(1000000000), 2)
+            unidades = "GB"
+        else:
+            tam = float(size_long)
+
+        # lista a devolver
+        l_archivos.append([upload_folder, arch, str(tam)+" "+unidades, \
+                           str(dias_restantes[i])])
+
+        i = i + 1
+
+    return l_archivos

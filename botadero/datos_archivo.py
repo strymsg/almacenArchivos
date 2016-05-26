@@ -1,19 +1,5 @@
 '''
-Botadero, una aplicacion para compartir archivos libremente.
-Copyright (C) 2016 Rodrigo Garcia <strysg@riseup.net>
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+This file is part of Botadero
 '''
 import os, sys, datetime, hashlib
 
@@ -51,9 +37,9 @@ class DatosDeArchivo:
         # Fecha y hora simula creacion del archivo ahora.
         self.FechaYHoraDeSubida = datetime.datetime.now()
 
-    # Recibe un objeto archivo y devulve el sha1sum
-    # Nota: No se restaura el puntero ni se cierra el archivo
     def arch_sha1sum(self, archivo):
+        '''Recibe un objeto archivo y devulve el sha1sum
+        Nota: No se restaura el puntero ni se cierra el archivo'''
         archivo.seek(0) # puntero en 0
         t_ant = -1
         t_act = archivo.tell()
@@ -62,6 +48,7 @@ class DatosDeArchivo:
         # obtiene el sha1sum del archivo por pedazos de 125 MB a lo maximo
         # esto la hace en caso de ser un archivo con tamanyo mas grande que 2GB
         # por ser su contenido mayor que el maximo de una cadena (2^32)
+        print "[REG] - Getting sha1sum, wait please ..."
         while t_ant != t_act: 
             cad = archivo.read(pedazo_tam)
             h.update(cad)
