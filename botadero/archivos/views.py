@@ -9,6 +9,7 @@ from flask import url_for
 
 from botadero import app
 from botadero import utils
+from botadero import views
 
 from werkzeug import secure_filename
 from jinja2 import Environment, PackageLoader
@@ -19,8 +20,6 @@ mod = Blueprint('archivos', __name__, url_prefix='/almacen')
 
 @mod.route('/<path:filename>')
 def donwload_file(filename):
-    print "[REG] - UploadFolder: %s" %app.config['UPLOAD_FOLDER']
-    print "[REG] - filename: %s" %filename
     ''' Peticiones para descarga de archivos subidos
     TODO: excepcion si el archivo no existe
     TODO: Enviar los archivos en pedazos para no sobre cargar la memoria
@@ -51,6 +50,7 @@ def donwload_file(filename):
 def upload_file():
     ''' Funcion para subir archivos
     TODO: Subir los archivos por pedazos.
+    TODO: Evaluar la categoria para subir en el directorio correspondiente.
     TODO: agregar captcha? '''
 
     if request.method == 'POST':
@@ -63,7 +63,6 @@ def upload_file():
             # copiar el archivo (evitar duplicacion)
             da = utils.DatosDeArchivo()
             sha1sum = da.arch_sha1sum(file)
-            #sha1sum = hashlib.sha1(file.read()).hexdigest()
             print "[UPLOAD] - Request to upload File %s" %filename\
                 ,"            checksum %s" % sha1sum
             
@@ -72,7 +71,7 @@ def upload_file():
             aux = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             if utils.EstadisticaArchivos.AgregarArchivo(aux, sha1sum, file) != 0:
                 # mostrar error en pantalla
-                return mostrar_err_archivo_duplicado(sha1sum=sha1sum, nombre=filename)
+                return views.mostrar_err_archivo_duplicado(sha1sum=sha1sum, nombre=filename)
                 #return redirect('/estadisticas', code=302)
 
         return redirect("/", code=302)

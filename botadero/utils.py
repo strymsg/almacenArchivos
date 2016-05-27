@@ -41,18 +41,11 @@ def ls_archivos():
     upload_folder = ParametrosServer.UploadFolder
     pila_archivos = EstadisticaArchivos.PilaArchivos
     dias_restantes = EstadisticaArchivos.PilaDiasRestantes
-    # para mostrar los mas recientes primero
-    #pila_archivos.reverse()
-    
-    raw_nombres = []
-    for ra in pila_archivos:
-        raw_nombres.append(ra.Nombre)
 
+    # TODO: Filtrar solo mostrar los archivos correspondientes a la categoria acutal
     nombres = []
-    # quitar la carpeta de los nombres
-    for nomb in raw_nombres:
-        #nombres.append(nomb)
-        nombres.append(nomb[len(ParametrosServer.UploadFolder)+1 :])
+    for ra in pila_archivos:
+        nombres.append(ra.Nombre)
     
     # coloca cada archivo en la pantalla
     i = 0

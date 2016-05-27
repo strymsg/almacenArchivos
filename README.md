@@ -23,7 +23,7 @@ Instalar virtualenv y python-pip, activar el entorno virtual, luego:
 
 Se debe activar el entorno virtual: `. venv/bin/activate`, luego para ejectuar la app:
 
-`python2.7 botadero.py` y puede probarse en `localhost:5000`
+`python2.7 runserver.py` y puede probarse en `localhost:5000`
 
 *Despliegue en NGINX (Actualizar)* ver [deploy_debian](botadero/Docu/notas_deploy_nginx_debian.txt), [deploy_ubuntu](botadero/Docu/notas_deploy_nginx_ubuntu.txt)
 

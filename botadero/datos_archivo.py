@@ -10,6 +10,7 @@ class DatosDeArchivo:
     Extension = ''
     NumDescargas = 0
     sha1sum = ''
+    categoria = ''
 
     def __init__(self):
         self.Nombre = ''
@@ -18,10 +19,21 @@ class DatosDeArchivo:
         self.Extension = ''
         self.NumDescargas = 0
         self.sha1sum = ''
+        self.categoria = ''
 
     def auto_init(self, Nombre_con_ruta):
-        self.Nombre = Nombre_con_ruta
+        ''' Se guarda el nombre del archivo y su categoria si tiene:
+        ej: almacen/entrevista.ogg
+            Nombre=entrevista.ogg
+            categoria=''
+        ej: almacen/videos/inaguracion1_2015.ogv
+            Nombre=inaguracion1_2015.ogv
+            categoria=videos
+        '''
         ## determinacion de atributos
+        #self.Nombre = Nombre_con_ruta
+        self.Nombre = nombre_archivo(Nombre_con_ruta)
+        self.categoria = categoria_archivo(Nombre_con_ruta)
         # tamanyo
         self.Tam = os.stat(Nombre_con_ruta).st_size
         # Extension
@@ -32,7 +44,7 @@ class DatosDeArchivo:
         self.NumDescargas = 0
         # sha1sum
         self.sha1sum = ''
-        with open(self.Nombre, 'r') as fil:
+        with open(Nombre_con_ruta, 'r') as fil: # TODO: solo hacer sha1sum 1 vez?
             self.sha1sum = self.arch_sha1sum(fil)
         # Fecha y hora simula creacion del archivo ahora.
         self.FechaYHoraDeSubida = datetime.datetime.now()
@@ -67,14 +79,15 @@ class DatosDeArchivo:
         return (datetime.datetime.now() - self.FechaYHoraDeSubida).days
         #return (datetime.datetime.now() - self.FechaYHoraDeSubida).seconds
 
+def nombre_archivo(Nombre_con_ruta=None):
+    tupla = Nombre_con_ruta.split(os.sep)
+    return tupla[-1]
 
-
-
-
-
-
-
-
+def categoria_archivo(Nombre_con_ruta=None):
+    tupla = Nombre_con_ruta.split(os.sep)
+    if len(tupla)>2:
+        return tupla[-2]
+    return ''    
 
 '''
 Notas:

@@ -85,20 +85,23 @@ class EstadisticaArchivos:
                 "        could not be found!"
 
     def AgregarArchivo(self, Nombre_con_ruta, sha1sum, file):
-        
+        ''' Agrega un nuevo archivo comprobando condiciones
+        de tamanyo, espacio disponible, nombre, sha1sum.
+        Si se pasan estas pruebas el archivo se guarda en el disco
+        y se crea un nuevo registro'''
         # comprobacion de espacio disponible
         fsize = len(file.read())
         file.seek(0) # restarudando puntero
         if (self.Parametros.TotalStorage - self.AlmacenDisponible)\
            + fsize > self.Parametros.TotalStorage:
-            print "[STORAGE] - Error no free space: filesize %d"\
+            print "[STORAGE] - Error non free space: filesize %d"\
                 % fsize, " only %d(ts) " % self.AlmacenDisponible,\
                 " of space available."
             file.close()
             return 1
         # comprobacion de nombre
-        elif self.ExisteNombre(Nombre_con_ruta):
-            print "[STORE] - Warn: File %s " % Nombre_con_ruta, \
+        elif self.ExisteNombre(nombre_archivo(Nombre_con_ruta)):
+            print "[STORAGE] - Warning: File with name: %s " %nombre_archivo(Nombre_con_ruta), \
                 "            exists, not uploaded."
             file.close()
             return 2
@@ -106,7 +109,7 @@ class EstadisticaArchivos:
         elif self.ExisteArchivoConTamanyo(fsize):
             # comprobacion de sha1sum
             if self.ExisteArchivo(Nombre_con_ruta, sha1sum):
-                print "[STORE] - Warn: sha1sum %s exists," % sha1sum, \
+                print "[STORAGE] - Warning: sha1sum %s exists," % sha1sum, \
                     "            not uploaded."
                 file.close()
                 return 3
@@ -120,7 +123,7 @@ class EstadisticaArchivos:
             self.PilaArchivos.append(da)
 
             print '[REG] - New: File %(na)s size %(sz)d'\
-                % {'na': self.PilaArchivos[-1].Nombre ,\
+                % {'na': self.PilaArchivos[-1].categoria +'/'+ self.PilaArchivos[-1].Nombre ,\
                    'sz': self.PilaArchivos[-1].Tam},\
                 '        created at', self.PilaArchivos[-1].FechaYHoraDeSubida
             
@@ -146,21 +149,21 @@ class EstadisticaArchivos:
     # crea nuevos registros si hay archivos nuevos. Llama a
     # ComprobarTiempoArchivos()
     def Actualizar(self):
-        nombres = self.ArchOrdenadosFechaSubida(self.Parametros.UploadFolder)
+        nombres_rutas = self.ArchOrdenadosFechaSubida(self.Parametros.UploadFolder)
         # comprueba si los archivos estan en los registros
-        for nomb in nombres:
-            #self.GetDatosArchivo(nomb) 
-            if self.ExisteNombre(nomb) == False:
+        for nomb_ruta in nombres_rutas:
+            if self.ExisteNombre(nombre_archivo(nomb_ruta)) == False:
                 # actualizar registro del nuevo archivo 
                 # este caso se deberia dar cuando se copia manualmente
                 # archivos en la carpeta `UploadFolder'
                 dt_arch = DatosDeArchivo()
-                dt_arch.auto_init(nomb)
+                dt_arch.auto_init(nomb_ruta)
                 # agrega nuevo registro
                 self.PilaArchivos.append(dt_arch)
                     
                 print '[REG] - New: File %(na)s size %(sz)d'\
-                    % {'na': nomb , 'sz': self.PilaArchivos[-1].Tam},\
+                    % {'na': self.PilaArchivos[-1].categoria+'/'+self.PilaArchivos[-1].Nombre, \
+                       'sz': self.PilaArchivos[-1].Tam},\
                     'created at', self.PilaArchivos[-1].FechaYHoraDeSubida
 
                 self.GuardarCambiosEnArchivo()
@@ -218,6 +221,9 @@ class EstadisticaArchivos:
             self.BorrarArchivo(na)
 
     def ArchOrdenadosFechaSubida(self, ruta):
+        '''Devuelve la lista de los nonbres de archivos (con su ruta) 
+        ordenados por fecha de subida (los mas nuevos al final)
+        '''
         # fuente http://stackoverflow.com/questions/168409/how-do-you-get-a-directory-listing-sorted-by-creation-date-in-python?lq=1
         files = filter(os.path.isfile, os.listdir(ruta))
         try:
