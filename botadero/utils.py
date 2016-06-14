@@ -31,7 +31,7 @@ def esquema_colores_random():
                 'rojo1', 'cafe1')
     return esquemas[random.randint(0, len(esquemas)-1)]
 
-def ls_archivos():
+def ls_archivos(categoria=""):
     '''
     Devuelve una lista con nombre_archivo, tamanyo y dias_restantes 
     para eliminacion del directorio del de subidas.
@@ -42,10 +42,11 @@ def ls_archivos():
     pila_archivos = EstadisticaArchivos.PilaArchivos
     dias_restantes = EstadisticaArchivos.PilaDiasRestantes
 
-    # TODO: Filtrar solo mostrar los archivos correspondientes a la categoria acutal
     nombres = []
     for ra in pila_archivos:
-        nombres.append(ra.Nombre)
+        if ra.categoria == categoria:
+            # comprobando que el archivo listado pertenezca a la categoria actual
+            nombres.append(ra.Nombre)
     
     # coloca cada archivo en la pantalla
     i = 0
@@ -72,3 +73,26 @@ def ls_archivos():
         i = i + 1
 
     return l_archivos
+
+def categorias():
+    '''
+    Devuelve la lista categorias (carpetas) dentro el directorio almacen/
+    No realiza recursion solo devuelve carpetas en el nivel 1
+    '''
+    upload_folder = ParametrosServer.UploadFolder
+    pathf = os.path.abspath(upload_folder)
+    print "[DIRS] - abs path: %s" %pathf
+    
+    categorias = []
+    ow = os.walk(pathf) # apuntando a /alamacen
+    # por el momento solo se hace la comprobacion de un nivel
+    directorios = ow.next()[1]
+    for d in directorios:
+        categorias.append(d)
+        print "[DIRS] - folder found: %s" %d
+    
+    return categorias
+    #print "[DIRS] - List of folders: %s" %filter(os.path.isdir, os.listdir(pathf))
+    #return filter(os.path.isdir, os.listdir(pathf))
+
+

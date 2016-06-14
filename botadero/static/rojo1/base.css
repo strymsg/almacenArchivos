@@ -108,3 +108,12 @@ a:hover {
 	border-bottom-width: 2px;
 	border-bottom-style: solid;
 }
+
+#categorias{
+	padding-top: 5px;
+	padding-bottom: 7px;
+}
+
+.categoria{
+	font-size: 21px;
+}

@@ -4,6 +4,7 @@ This file is part of Botadero
 from botadero import app
 from botadero import utils
 
+from flask import Blueprint
 from flask import render_template
 from flask import request, redirect, send_from_directory, safe_join, send_file
 from flask import url_for
@@ -15,8 +16,12 @@ import os
 
 ##### Rutas #######
 @app.route('/')
-def pag_principal():
+def pag_inicio():
     utils.EstadisticaArchivos.Actualizar()
+    #categorias = ['Misc.', 'Musica', 'documentos', 'videos']
+    categorias = utils.categorias()
+    categoria_actual = 'Misc.' # dummy
+    categorias = [categoria_actual] + categorias # dummy
     return render_template("index.html", \
                            borrar_1=utils.EstadisticaArchivos.Parametros.TimeToDel0,\
                            borrar_2=utils.EstadisticaArchivos.Parametros.TimeToDel2,\
@@ -24,7 +29,29 @@ def pag_principal():
                            p_disp=utils.EstadisticaArchivos.PorcentajeAlmacenDisponible,\
                            num_arch=utils.EstadisticaArchivos.NumArchivos,\
                            lista_archivos=utils.ls_archivos(),\
-                           esquema_colores=utils.esquema_colores_random())
+                           esquema_colores=utils.esquema_colores_random(),\
+                           categoria_actual=categoria_actual, categorias=categorias)
+
+@app.route('/<cat>/')
+def pag_principal(cat):
+    utils.EstadisticaArchivos.Actualizar()
+    categorias = utils.categorias()
+    categoria_actual = ''
+    categorias = ["Misc."] + categorias # dummy
+    if cat in categorias:
+        categoria_actual = cat
+    else:
+        return cat # TODO: redirigir a pagina error en categoria
+
+    return render_template("index.html", \
+                           borrar_1=utils.EstadisticaArchivos.Parametros.TimeToDel0,\
+                           borrar_2=utils.EstadisticaArchivos.Parametros.TimeToDel2,\
+                           esp_disp=utils.EstadisticaArchivos.AlmacenDisponible/1000000,\
+                           p_disp=utils.EstadisticaArchivos.PorcentajeAlmacenDisponible,\
+                           num_arch=utils.EstadisticaArchivos.NumArchivos,\
+                           lista_archivos=utils.ls_archivos(categoria_actual),\
+                           esquema_colores=utils.esquema_colores_random(),\
+                           categoria_actual=categoria_actual, categorias=categorias)
 
 @app.route('/estadisticas')
 def mostrar_estadisticas():

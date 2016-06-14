@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
 This file is part of Botadero
 '''
@@ -7,7 +8,7 @@ from flask import render_template
 from flask import request, redirect, send_from_directory, safe_join, send_file
 from flask import url_for
 
-from botadero import app
+#from botadero import app
 from botadero import utils
 from botadero import views
 
@@ -21,6 +22,7 @@ mod = Blueprint('archivos', __name__, url_prefix='/almacen')
 @mod.route('/<path:filename>')
 def donwload_file(filename):
     ''' Peticiones para descarga de archivos subidos
+    TODO: Comprobar solo en categoria dada
     TODO: excepcion si el archivo no existe
     TODO: Enviar los archivos en pedazos para no sobre cargar la memoria
           * http://stackoverflow.com/questions/24318084/flask-make-response-with-large-files
@@ -34,6 +36,7 @@ def donwload_file(filename):
     utils.EstadisticaArchivos.IncrementarNumDescargas(os.path.join(app.config['UPLOAD_FOLDER'], \
                                                                    filename))
     
+
     pathf = os.path.join(os.path.abspath(app.config['UPLOAD_FOLDER']), filename)
     print "[DOWNLOAD] - abspath to file: %s" %pathf
     return send_file(pathf, as_attachment=True)

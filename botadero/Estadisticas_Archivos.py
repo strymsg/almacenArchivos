@@ -1,4 +1,3 @@
-
 '''
 Botadero, una aplicacion para compartir archivos libremente.
 Copyright (C) 2016 Rodrigo Garcia <strysg@riseup.net>
@@ -36,23 +35,29 @@ class EstadisticaArchivos:
     def GetIndexArchivo(self, Nombre_con_ruta):
         i = 0
         for pa in self.PilaArchivos:
-            if Nombre_con_ruta == pa.Nombre:
+            if Nombre_con_ruta == os.path.join(self.Parametros.UploadFolder, \
+                                               pa.categoria, pa.Nombre):
                 return i
-            i = i + 1
+            i += 1
         return -1
 
-    def GetDatosArchivo(self,  Nombre_con_ruta):
+    def GetDatosArchivo(self, Nombre_con_ruta):
         i = 0
         for pa in self.PilaArchivos:
-            if Nombre_con_ruta == pa.Nombre:
+            if Nombre_con_ruta == os.path.join(self.Parametros.UploadFolder,\
+                                               pa.categoria, pa.Nombre):
                 return self.PilaArchivos[i]
-            i = i + 1
-                #return self.PilaArchivos.index(Nombre_con_ruta)
+            i+=1
         return None
-
+    
     def ExisteNombre(self, Nombre_con_ruta):
+        '''
+        Comprueba si el nombre + la ruta de un archivo ya existe 
+        en los registros de archivos
+        '''
         for da in self.PilaArchivos:
-            if Nombre_con_ruta == da.Nombre:
+            if Nombre_con_ruta == os.path.join(self.Parametros.UploadFolder\
+                                               ,da.categoria, da.Nombre):
                 return True
         return False
             
@@ -65,6 +70,7 @@ class EstadisticaArchivos:
                 return False
         return False
 
+    # TODO: agregar filtro por categoria?
     def ExisteArchivoConTamanyo(self, tam):
         for da in self.PilaArchivos:
             if tam == da.Tam:
@@ -85,10 +91,13 @@ class EstadisticaArchivos:
                 "        could not be found!"
 
     def AgregarArchivo(self, Nombre_con_ruta, sha1sum, file):
-        ''' Agrega un nuevo archivo comprobando condiciones
+        '''
+        Agrega un nuevo archivo comprobando condiciones
         de tamanyo, espacio disponible, nombre, sha1sum.
-        Si se pasan estas pruebas el archivo se guarda en el disco
-        y se crea un nuevo registro'''
+        Si pasa estas pruebas el archivo se guarda en el disco
+        y se crea un nuevo registro
+        '''
+
         # comprobacion de espacio disponible
         fsize = len(file.read())
         file.seek(0) # restarudando puntero
@@ -100,7 +109,7 @@ class EstadisticaArchivos:
             file.close()
             return 1
         # comprobacion de nombre
-        elif self.ExisteNombre(nombre_archivo(Nombre_con_ruta)):
+        elif self.ExisteNombre(nombre_archivo(Nombre_con_ruta)): # TODO: comprobar nombre_archivo?
             print "[STORAGE] - Warning: File with name: %s " %nombre_archivo(Nombre_con_ruta), \
                 "            exists, not uploaded."
             file.close()
@@ -134,40 +143,65 @@ class EstadisticaArchivos:
         if self.ExisteNombre(Nombre_con_ruta):
             # borra el archivo de disco
             os.remove(Nombre_con_ruta)
-            # borra el registro del archivo del diccionario de registros
+            # borra el registro del archivo de la pila de registros
             del self.PilaArchivos[self.PilaArchivos.index(self.GetDatosArchivo(Nombre_con_ruta))]
             self.GuardarCambiosEnArchivo()
 
-    # Lee objeto guardado en archivo y si existe, copia sus configs
-    # en si mismo y retorna True.
-    # Llama tambien a la funcion ComprobarTiempoArchivos()
     def Inicializar(self):
+        '''
+        Lee el objeto serializado en disco y si existe, copia sus configs
+        en si mismo y retorna True.
+        LLama tambien a la funcion ComprobrarTiempoArchivos()
+        '''
+        print "[REG] - Initializating..."
         self.CargarDesdeArchivo()
         self.Actualizar() # carga nuevos archivos si no estaban en el registro
 
-    # comprueba las lista de archivos y si existen en el registro
-    # crea nuevos registros si hay archivos nuevos. Llama a
-    # ComprobarTiempoArchivos()
     def Actualizar(self):
-        nombres_rutas = self.ArchOrdenadosFechaSubida(self.Parametros.UploadFolder)
-        # comprueba si los archivos estan en los registros
-        for nomb_ruta in nombres_rutas:
-            if self.ExisteNombre(nombre_archivo(nomb_ruta)) == False:
-                # actualizar registro del nuevo archivo 
-                # este caso se deberia dar cuando se copia manualmente
-                # archivos en la carpeta `UploadFolder'
-                dt_arch = DatosDeArchivo()
-                dt_arch.auto_init(nomb_ruta)
-                # agrega nuevo registro
-                self.PilaArchivos.append(dt_arch)
+        '''
+        comprueba las lista de archivos viendo si existen en el registro,
+        crea nuevos registros si hay archivos nuevos. Llama a
+        ComprobarTiempoArchivos()
+        '''
+
+        ow = os.walk(self.Parametros.UploadFolder)
+        '''
+        NOTA: os.walk(top, topdown=True, onerror=None, followlinks=False)
+        Generate the file names in a directory tree by walking the tree either top-down or bottom-up. For each directory in the tree rooted at directory top (including top itself), it yields a 3-tuple (dirpath, dirnames, filenames).'''
+        p , directorios , archs = ow.next()
+        '''NOTA: Solo se listan los archivos en una profundidad de directorios = 1 '''
+        directorios += [p]
+        for direc in directorios:
+            print "[DIRS] - Checking directory: %s" %direc # temp
+
+            if direc != self.Parametros.UploadFolder:
+                direc = os.path.join(self.Parametros.UploadFolder, direc)
+                
+            nombres_con_rutas = self.ArchOrdenadosFechaSubida(direc)
+            for nomb_con_ruta in nombres_con_rutas:
+                if self.ExisteNombre(nomb_con_ruta) == False:
+                    '''actualizar registro del nuevo archivo 
+                    este caso se deberia dar cuando se copia manualmente
+                    archivos en la carpeta `UploadFolder' '''
+                    dt_arch = DatosDeArchivo()
+                    #dt_arch.auto_init(os.path.join(self.Parametros.UploadFolder, nomb_con_ruta))
+                    dt_arch.auto_init(nomb_con_ruta)
+                    # agrega nuevo registro
+                    self.PilaArchivos.append(dt_arch)
                     
-                print '[REG] - New: File %(na)s size %(sz)d'\
-                    % {'na': self.PilaArchivos[-1].categoria+'/'+self.PilaArchivos[-1].Nombre, \
-                       'sz': self.PilaArchivos[-1].Tam},\
-                    'created at', self.PilaArchivos[-1].FechaYHoraDeSubida
+                    print '[REG] - New: File %(na)s size %(sz)d'\
+                        % {'na': self.PilaArchivos[-1].categoria+'/'+self.PilaArchivos[-1].Nombre, \
+                           'sz': self.PilaArchivos[-1].Tam},\
+                        'created at', self.PilaArchivos[-1].FechaYHoraDeSubida
 
-                self.GuardarCambiosEnArchivo()
-
+                    self.GuardarCambiosEnArchivo()
+                # TODO: Solo mostrar lo siguiente de acuerdo a nivel alto de verbosidad
+                else:
+                    print '[REG] - Found: File %(na)s size %(sz)d'\
+                        % {'na': self.PilaArchivos[-1].categoria+'/'+self.PilaArchivos[-1].Nombre, \
+                           'sz': self.PilaArchivos[-1].Tam},\
+                        'created at', self.PilaArchivos[-1].FechaYHoraDeSubida
+        
         self.ComprobarTiempoArchivos()
 
         # determinacion de otros parametros estadisticos
@@ -181,13 +215,14 @@ class EstadisticaArchivos:
         self.NumArchivos = len(self.PilaArchivos)
         
         print '[REG] - Updated.' # log
+        #self.MostrarRegistros() # muy verboso
 
-    
 
-    # comprueba si uno o mas archivos han estado almacenados por mas
-    # dias de los especificados para su eliminacion.
-    # Los elimina automaticamente y los borra del registro
     def ComprobarTiempoArchivos(self):
+        ''' comprueba si uno o mas archivos han estado almacenados por mas
+        dias de los especificados para su eliminacion.
+        Los elimina automaticamente y los borra del registro'''
+
         self.PilaDiasRestantes = [] # borra la lista para actualizarla
         archivos_a_borrar = []
         for da in self.PilaArchivos:
@@ -221,24 +256,27 @@ class EstadisticaArchivos:
             self.BorrarArchivo(na)
 
     def ArchOrdenadosFechaSubida(self, ruta):
-        '''Devuelve la lista de los nonbres de archivos (con su ruta) 
-        ordenados por fecha de subida (los mas nuevos al final)
         '''
-        # fuente http://stackoverflow.com/questions/168409/how-do-you-get-a-directory-listing-sorted-by-creation-date-in-python?lq=1
-        files = filter(os.path.isfile, os.listdir(ruta))
+        Devuelve la lista de los nonbres de archivos (con su ruta) 
+        ordenados por fecha de subida (los mas nuevos al final)
+        --> basdado en http://stackoverflow.com/questions/168409/how-do-you-get-a-directory-listing-sorted-by-creation-date-in-python?lq=1
+        '''
         try:
-            files = os.listdir(ruta)
+            ow = os.walk(ruta)
+            p,d,files=ow.next()
         except OSError:
-            pass
+            print "[REG] - Error: Can't os.walk() on %s except OSError." %ruta
         else:
-            files = [os.path.join(ruta, f) for f in files] # add path to each file
-            files.sort(key=lambda x: os.path.getmtime(x)) 
-        # queda ordenado con el archivo con mas antiguedad primero
-        return files
+            nombs_rutas = [os.path.join(ruta, f) for f in files]
+            nombs_rutas.sort(key=lambda x: os.path.getmtime(x))
+        return nombs_rutas
 
 
-    # Guarda todas las modificaciones hechas al registro en un archivo serializado en disco
     def GuardarCambiosEnArchivo(self):
+        '''
+        Guarda todas las modificaciones hechas al registro en un archivo serializado 
+        en disco duro.
+        '''
         try:
             Eaf = open('EstadisticaArchivos.pkl', 'wb')
             pickle.dump(self ,Eaf)
@@ -249,8 +287,11 @@ class EstadisticaArchivos:
             print '[REG] - Error: Object file EstadisticaArchivos.pkl could not be writen.'
             return False
 
-    # Carga el objeto con los datos guardados en archivo serializado en disco
     def CargarDesdeArchivo(self):
+        '''
+        Carga el objeto con los datos guardados en el archivo serializado
+        en disco duro
+        '''
         try:
             Eaf = open('EstadisticaArchivos.pkl', 'rb')
             Ea = pickle.load(Eaf)
@@ -270,3 +311,21 @@ class EstadisticaArchivos:
                 , '        EstadisticaArchivos.pkl. Restarting, creating registers.'
             self.Actualizar()
             return False
+
+    def MostrarRegistros(self):
+        '''
+        Mostrar todos los registros, para propositos de debug
+        '''
+        print '[REG] - ---------------------'
+        print '[REG] - Showing all registers'
+        print '[REG] - ---------------------'
+        print 'Available: %s ' %self.AlmacenDisponible
+        print 'Porcentaje Available: %s ' %self.PorcentajeAlmacenDisponible
+        print 'Show: Number of files: %s ' %self.NumArchivos
+        for pa in self.PilaArchivos:
+            print 'File %(na)s size %(sz)d'\
+                % {'na': '#'+pa.categoria+' '+pa.Nombre, \
+                   'sz': pa.Tam},\
+                'created at', pa.FechaYHoraDeSubida
+            print '---'
+        

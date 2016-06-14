@@ -29,15 +29,16 @@ app.config['UPLOAD_FOLDER'] = utils.ParametrosServer.UploadFolder
 from botadero.archivos.views import mod as modulo_archivos
 app.register_blueprint(modulo_archivos)
 
-
-
-############## principal ########################
+# ############## principal ########################
 if __name__ == '__main__':
+    print "running from main"
+    print 
+    print "------"
 
-    #app.run(host='0.0.0.0')
+    app.run(host='0.0.0.0')
 
     # cargar configuraciones del servidor
-    EstadisticaArchivos.Inicializar()
+    utils.EstadisticaArchivos.Inicializar()
     
     print "[PARAMETERS] - TOTAL_STORAGE=%d" %ParametrosServer.TotalStorage
     print "[PARAMETERS] - UPLOAD_FOLDER=%s" %ParametrosServer.UploadFolder
@@ -49,5 +50,4 @@ if __name__ == '__main__':
     print "[PARAMETERS] - SIZE_MAX_TO_UPLOAD=%d" %ParametrosServer.SizeMaxToUpload
     print "[PARAMETERS] - Log File =%s" %ParametrosServer.LogFileName
     print "[PARAMETERS] - Debug Level =%d" %ParametrosServer.DebugLevel
-
 

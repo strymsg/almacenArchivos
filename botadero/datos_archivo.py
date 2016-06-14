@@ -51,14 +51,14 @@ class DatosDeArchivo:
 
     def arch_sha1sum(self, archivo):
         '''Recibe un objeto archivo y devulve el sha1sum
-        Nota: No se restaura el puntero ni se cierra el archivo'''
+        Nota: No se restaura el puntero ni se cierra el archivo.'''
         archivo.seek(0) # puntero en 0
         t_ant = -1
         t_act = archivo.tell()
         pedazo_tam = 125*1024
         h = hashlib.sha1()
         # obtiene el sha1sum del archivo por pedazos de 125 MB a lo maximo
-        # esto la hace en caso de ser un archivo con tamanyo mas grande que 2GB
+        # esto lo hace en caso de ser un archivo con tamanyo mas grande que 2GB
         # por ser su contenido mayor que el maximo de una cadena (2^32)
         print "[REG] - Getting sha1sum, wait please ..."
         while t_ant != t_act: 
