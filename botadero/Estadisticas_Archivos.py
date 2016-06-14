@@ -52,7 +52,7 @@ class EstadisticaArchivos:
     
     def ExisteNombre(self, Nombre_con_ruta):
         '''
-        Comprueba si el nombre + la ruta de un archivo ya existe 
+        Comprueba si el nombre de un archivo en la ruta dada ya existe 
         en los registros de archivos
         '''
         for da in self.PilaArchivos:
@@ -60,8 +60,23 @@ class EstadisticaArchivos:
                                                ,da.categoria, da.Nombre):
                 return True
         return False
-            
+        
+    def ExisteNombreEstricto(self, Nombre):
+        '''
+        Comprueba si solamente el nombre del archivo ya existe en los
+        registros de archivos
+        '''
+        for da in self.PilaArchivos:
+            if Nombre == da.Nombre:
+                return True
+        return False
+
     def ExisteArchivo(self, Nombre_con_ruta, sha1sum):
+        '''
+        Comprueba si existe el archivo de un archivo en la ruta dada existe
+        ademas comprueba si el sha1sum corresponde a otro archivo,
+        en los registros de archivos
+        '''
         if self.ExisteNombre(Nombre_con_ruta):
             if self.GetDatosArchivo(Nombre_con_ruta).sha1sum == \
                 sha1sum:
@@ -70,7 +85,19 @@ class EstadisticaArchivos:
                 return False
         return False
 
-    # TODO: agregar filtro por categoria?
+    def ExisteArchivoEstricto(self, Nombre, sha1sum):
+        '''
+        Comprueba si existe el nombre del archivo y si el sha1sum,
+        corresponde a otro archivo en los registros de archivos.
+        '''
+        if self.ExisteNombreEstricto(Nombre):
+            if self.GetDatosArchivo(Nombre_con_ruta).sha1sum == \
+               sha1sum:
+                return True
+            else:
+                return False
+        return False
+
     def ExisteArchivoConTamanyo(self, tam):
         for da in self.PilaArchivos:
             if tam == da.Tam:
@@ -81,7 +108,7 @@ class EstadisticaArchivos:
         self.CargarDesdeArchivo()
         i = self.GetIndexArchivo(Nombre_con_ruta)
         if i != -1:
-            self.PilaArchivos[i].NumDescargas = self.PilaArchivos[i].NumDescargas + 1
+            self.PilaArchivos[i].NumDescargas += 1
             print "[REG] - Download: Count increased to %d" \
                 % self.PilaArchivos[i].NumDescargas,\
                 "        of file %s" % Nombre_con_ruta
@@ -97,7 +124,6 @@ class EstadisticaArchivos:
         Si pasa estas pruebas el archivo se guarda en el disco
         y se crea un nuevo registro
         '''
-
         # comprobacion de espacio disponible
         fsize = len(file.read())
         file.seek(0) # restarudando puntero
@@ -109,7 +135,7 @@ class EstadisticaArchivos:
             file.close()
             return 1
         # comprobacion de nombre
-        elif self.ExisteNombre(nombre_archivo(Nombre_con_ruta)): # TODO: comprobar nombre_archivo?
+        elif self.ExisteNombreEstricto(nombre_archivo(Nombre_con_ruta)):  # comprobacion de no duplicados
             print "[STORAGE] - Warning: File with name: %s " %nombre_archivo(Nombre_con_ruta), \
                 "            exists, not uploaded."
             file.close()
@@ -117,13 +143,12 @@ class EstadisticaArchivos:
         # comprobacion de tamanyo
         elif self.ExisteArchivoConTamanyo(fsize):
             # comprobacion de sha1sum
-            if self.ExisteArchivo(Nombre_con_ruta, sha1sum):
+            if self.ExisteArchivoEstricto(nombre_archivo(Nombre_con_ruta), sha1sum):
                 print "[STORAGE] - Warning: sha1sum %s exists," % sha1sum, \
                     "            not uploaded."
                 file.close()
                 return 3
         else:
-            # guarda el archivo en disco
             file.save(Nombre_con_ruta)
             file.close()
             # agrega el nuevo registro a las estadisticas
@@ -140,6 +165,10 @@ class EstadisticaArchivos:
             return 0
             
     def BorrarArchivo(self, Nombre_con_ruta):
+        '''
+        Borra un archivo dado el nombre + ruta, del disco
+        y del registro de archivos.
+        '''
         if self.ExisteNombre(Nombre_con_ruta):
             # borra el archivo de disco
             os.remove(Nombre_con_ruta)

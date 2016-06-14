@@ -25,7 +25,7 @@ Se debe activar el entorno virtual: `. venv/bin/activate`, luego para ejectuar l
 
 `python2.7 runserver.py` y puede probarse en `localhost:5000`
 
-*Despliegue en NGINX (Actualizar)* ver [deploy_debian](botadero/Docu/notas_deploy_nginx_debian.txt), [deploy_ubuntu](botadero/Docu/notas_deploy_nginx_ubuntu.txt)
+*Despliegue en NGINX (Actualizar)* ver [deploy_debian](Docu/notas_deploy_nginx_debian.txt), [deploy_ubuntu](Docu/notas_deploy_nginx_ubuntu.txt)
 
 *Revisar logs* `tail -f botadero/logs/botadero.log`
 
