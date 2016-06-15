@@ -28,7 +28,12 @@
 	<div id="lista_archivos">
 		<ul>
 			{% for da in datos_archivos | reverse %}
-			<li>{{ da.Nombre }}	</li>
+			<li>
+			{% if da.categoria != "" %}
+			{{ da.categoria }} /
+			{% endif %}
+			{{ da.Nombre }}
+			</li>
 			<dd><b>tam:</b> {{ da.Tam/1000 }} (KB) </dd>
 			<dd><b>descargas:</b> {{ da.NumDescargas }} </dd>
 			<dd><b>checksum:</b> {{ da.sha1sum }}  </dd>

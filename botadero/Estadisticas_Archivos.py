@@ -190,9 +190,8 @@ class EstadisticaArchivos:
         '''
         comprueba las lista de archivos viendo si existen en el registro,
         crea nuevos registros si hay archivos nuevos. Llama a
-        ComprobarTiempoArchivos()
+        ComprobarTiempoArchivos() 
         '''
-
         ow = os.walk(self.Parametros.UploadFolder)
         '''
         NOTA: os.walk(top, topdown=True, onerror=None, followlinks=False)
@@ -201,7 +200,6 @@ class EstadisticaArchivos:
         '''NOTA: Solo se listan los archivos en una profundidad de directorios = 1 '''
         directorios += [p]
         for direc in directorios:
-            print "[DIRS] - Checking directory: %s" %direc # temp
 
             if direc != self.Parametros.UploadFolder:
                 direc = os.path.join(self.Parametros.UploadFolder, direc)
@@ -224,12 +222,12 @@ class EstadisticaArchivos:
                         'created at', self.PilaArchivos[-1].FechaYHoraDeSubida
 
                     self.GuardarCambiosEnArchivo()
-                # TODO: Solo mostrar lo siguiente de acuerdo a nivel alto de verbosidad
                 else:
-                    print '[REG] - Found: File %(na)s size %(sz)d'\
-                        % {'na': self.PilaArchivos[-1].categoria+'/'+self.PilaArchivos[-1].Nombre, \
-                           'sz': self.PilaArchivos[-1].Tam},\
-                        'created at', self.PilaArchivos[-1].FechaYHoraDeSubida
+                    # print '[REG] - Found: File %(na)s size %(sz)d'\
+                    #     % {'na': self.PilaArchivos[-1].categoria+'/'+self.PilaArchivos[-1].Nombre, \
+                    #        'sz': self.PilaArchivos[-1].Tam},\
+                    #     'created at', self.PilaArchivos[-1].FechaYHoraDeSubida
+                    pass
         
         self.ComprobarTiempoArchivos()
 

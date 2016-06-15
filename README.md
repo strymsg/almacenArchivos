@@ -12,7 +12,7 @@ La app optimiza el almacenamiento evitando que se suban archivos con el mismo no
 
 *Requiere* [Python-flask](http://flask.pocoo.org/docs/0.10/installation/#installation)
 
-*Ejecucion de pruebas*
+**Ejecucion de pruebas**
 
 Instalar virtualenv y python-pip, activar el entorno virtual, luego:
 
@@ -36,7 +36,6 @@ Esta aplicación no usa bases de datos.
 Más urgentes primero.
 
 * Hacer una apariencia "responsive".
-* Agregar descarga/subida de archivos por categorías #
 * Agregar eliminacion de registros al detectar un archivo borrado manualmente por administrador.
 * Implementar límites de subida por usuario, esto para prevenir que un usuario suba demasiados archivos.
 * Acelerar la comprobacion sha1sum y subida de archivos.
