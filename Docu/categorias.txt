@@ -1,0 +1,67 @@
+Para facilitar encontrar y subir archivos en el sitio,
+el botadero soporta #categorías.
+
+Una categoría es básicamente un directorio dentro la carpeta
+"almacen" que es el directorio principal donde
+se guardan los archivos.
+
+Por ejemplo, la organización de directorios podría quedar asi:
+
+almacen/
+   Musica/
+	cancion.ogg
+	...
+	album.ogg
+   Documentos/
+	documento1.pdf
+	prueba.odt
+	..
+   Otra_categoria/
+	archivo.algo
+	...
+   varios.txt
+   ArchivoGigante.otracosa
+   ...
+
+La aplicación mostrará las categorías disponibles , es decir
+las carpetas dentro "almacen". Un@ visitante podrá navegar en
+estas categorías y descargar los archivos dentro de cada una,
+si un usuario quiere compartir un archivo este se subirá en
+la categoría actual.
+
+Crear una categoría
+===================
+
+Basta con crear una carpeta dentro del directorio "almacen".
+
+Algo más?
+=========
+
+Luego de crear las carpetas la aplicación detectará 
+automáticamente los nuevos directorios y los mostrará
+como nuevas categorías.
+
+Solo administradores del sitio pueden crear categorías.
+
+Si no hay carpetas dentro de "almacen" se crea una categoría
+virtual llamada "Misc." (para evitar problemas, no crees una
+carpeta llamada "Misc." dentro de almaceń)
+
+Actualmente sólo se soportan categorías de profunidad 1, esto
+significa que el siguiente esquema no será detectado como
+categoría y causará problemas:
+
+almacen/
+    Documentos/
+	Documentales/
+		...
+
+La carpeta "Documentales" está dentro de "Documentos" y desde
+"alamcen" tiene una profundidad mayor que 1.
+
+Para evitar fallos en la aplicación al agregar categorías o
+archivos nuevos manualmente es mejor apagar la aplicación,
+una vez terminada la copia de archivos al reiniciar la aplicación
+se agregará al registro los cambios en la carpeta "almacen", 
+revisa los logs en logs/botadero.log para ver como va el proceso.
+

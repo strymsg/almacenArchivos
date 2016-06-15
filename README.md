@@ -7,6 +7,7 @@ La idea es compartir archivos, si alguien sube un archivo este se lista en la p�
 Los parámetros como espacio de alamcenamiento reservado para la aplicación, tiempo para eliminación de archivos, máximo tamaño de archivos y otros, son configurables desde un archivo de configuracion [parametros.txt](parametros.txt).
 
 La app optimiza el almacenamiento evitando que se suban archivos con el mismo nombre o contenido.
+El botadero soporta categorías (que son directorios dentro la carpeta almacen/) ver [Docu/categorias.txt](Docu/categorias.txt)
 
 *LICENCIA* **AGPL**
 
