@@ -41,11 +41,14 @@ class EstadisticaArchivos:
             i += 1
         return -1
 
-    def GetDatosArchivo(self, Nombre_con_ruta):
+    def GetDatosArchivo(self, Nombre):
+        '''
+        Devuelve el objeto datos_archivo correspondiente al Nombre de archivo dado
+        NOTA: Se supone que ningun otro archivo tiene el mismo nombre.
+        '''
         i = 0
         for pa in self.PilaArchivos:
-            if Nombre_con_ruta == os.path.join(self.Parametros.UploadFolder,\
-                                               pa.categoria, pa.Nombre):
+            if Nombre == pa.Nombre:
                 return self.PilaArchivos[i]
             i+=1
         return None
@@ -71,6 +74,7 @@ class EstadisticaArchivos:
                 return True
         return False
 
+    # TODO: analizar necesidad de esta funcion
     def ExisteArchivo(self, Nombre_con_ruta, sha1sum):
         '''
         Comprueba si existe el archivo de un archivo en la ruta dada existe
@@ -91,7 +95,7 @@ class EstadisticaArchivos:
         corresponde a otro archivo en los registros de archivos.
         '''
         if self.ExisteNombreEstricto(Nombre):
-            if self.GetDatosArchivo(Nombre_con_ruta).sha1sum == \
+            if self.GetDatosArchivo(Nombre).sha1sum == \
                sha1sum:
                 return True
             else:
@@ -103,6 +107,18 @@ class EstadisticaArchivos:
             if tam == da.Tam:
                 return True
         return False
+
+    def ListaArchivosCategoria(self, categoria):
+        '''
+        Devuelve una lista con los nombres de los archivos 
+        del registro de archivos que coincidan con la categoria dada
+        '''
+        lista_nombres = []
+        for da in self.PilaArchivos:
+            if da.categoria == categoria:
+                lista_nombres.append(da.Nombre)
+        #print "cat: %s |" %categoria , "la= %s" %lista_nombres
+        return lista_nombres
         
     def IncrementarNumDescargas(self, Nombre_con_ruta):
         self.CargarDesdeArchivo()
@@ -164,16 +180,18 @@ class EstadisticaArchivos:
             self.GuardarCambiosEnArchivo()
             return 0
             
-    def BorrarArchivo(self, Nombre_con_ruta):
+    def BorrarArchivo(self, Nombre):
         '''
-        Borra un archivo dado el nombre + ruta, del disco
-        y del registro de archivos.
+        Borra un archivo dado el nombre, del disco y del registro de archivos.
         '''
-        if self.ExisteNombre(Nombre_con_ruta):
+        if self.ExisteNombreEstricto(Nombre):
+            da = self.GetDatosArchivo(Nombre)
+            cat = da.categoria
+            pathf = os.path.abspath(self.Parametros.UploadFolder)
             # borra el archivo de disco
-            os.remove(Nombre_con_ruta)
+            os.remove(os.path.join(pathf, cat, Nombre))
             # borra el registro del archivo de la pila de registros
-            del self.PilaArchivos[self.PilaArchivos.index(self.GetDatosArchivo(Nombre_con_ruta))]
+            del self.PilaArchivos[self.PilaArchivos.index(self.GetDatosArchivo(Nombre))]
             self.GuardarCambiosEnArchivo()
 
     def Inicializar(self):
@@ -228,7 +246,27 @@ class EstadisticaArchivos:
                     #        'sz': self.PilaArchivos[-1].Tam},\
                     #     'created at', self.PilaArchivos[-1].FechaYHoraDeSubida
                     pass
-        
+
+            '''comprobacion si un archivo lo ha borrado un administrador
+            esto se detecta cuando existe un archivo en el registro pero 
+            no se encuentra en el directorio despues de listar archivos'''
+            #TODO: Corregir borrado de archivos
+            # `direc' tiene el formato: almacen/categoria | almacen
+            categoria = "" 
+            if len(direc.split(os.path.sep)) > 1: # ej: almacen/Imagenes
+                categoria = direc.split(os.path.sep)[-1]
+
+            for nombre_arch in self.ListaArchivosCategoria(categoria):
+                # se hace join por que `nombres_con_rutas' es del formato: 
+                # almacen/categoria/nombre_arch | almacen/nombre_arch
+                if os.path.join(self.Parametros.UploadFolder, categoria, nombre_arch)\
+                   not in nombres_con_rutas:
+                    print '[REG] - Delete: File %(ca)s/%(na)s , because it was manually deleted!'\
+                        % {'ca':categoria , 'na': nombre_arch }
+                    # borra el registro del archivo de la pila de registros
+                    del self.PilaArchivos[self.PilaArchivos.index(self.GetDatosArchivo(nombre_arch))]
+                    self.GuardarCambiosEnArchivo()
+            
         self.ComprobarTiempoArchivos()
 
         # determinacion de otros parametros estadisticos
@@ -278,8 +316,8 @@ class EstadisticaArchivos:
             # log
             print '[REG] - Delete: File %(na)s size %(sz)d'\
                   % {'na': na , 'sz': self.GetDatosArchivo(na).Tam} , \
-                  'created at',self.GetDatosArchivo(na).FechaYHoraDeSubida , \
-                  'surpassed allowed time.'
+                  'created at: %s' %self.GetDatosArchivo(na).FechaYHoraDeSubida , \
+                  'passed allowed time.'
             self.BorrarArchivo(na)
 
     def ArchOrdenadosFechaSubida(self, ruta):

@@ -81,7 +81,7 @@ def categorias():
     '''
     upload_folder = ParametrosServer.UploadFolder
     pathf = os.path.abspath(upload_folder)
-    print "[DIRS] - abs path: %s" %pathf
+    #print "[DIRS] - abs path: %s" %pathf
     
     categorias = []
     ow = os.walk(pathf) # apuntando a /alamacen
