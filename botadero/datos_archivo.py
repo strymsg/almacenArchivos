@@ -11,6 +11,7 @@ class DatosDeArchivo:
     NumDescargas = 0
     sha1sum = ''
     categoria = ''
+    DiasRestantes = 100
 
     def __init__(self):
         self.Nombre = ''
@@ -20,8 +21,9 @@ class DatosDeArchivo:
         self.NumDescargas = 0
         self.sha1sum = ''
         self.categoria = ''
+        self.DiasRestantes = 100
 
-    def auto_init(self, Nombre_con_ruta):
+    def auto_init(self, Nombre_con_ruta, sha1sum=None):
         ''' Se guarda el nombre del archivo y su categoria si tiene:
         ej: almacen/entrevista.ogg
             Nombre=entrevista.ogg
@@ -43,11 +45,15 @@ class DatosDeArchivo:
         # NumDescargas
         self.NumDescargas = 0
         # sha1sum
-        self.sha1sum = ''
-        with open(Nombre_con_ruta, 'r') as fil: # TODO: solo hacer sha1sum 1 vez?
-            self.sha1sum = self.arch_sha1sum(fil)
+        if sha1sum is None:
+            with open(Nombre_con_ruta, 'r') as fil:
+                self.sha1sum = self.arch_sha1sum(fil)
+        else:
+            self.sha1sum = sha1sum
         # Fecha y hora simula creacion del archivo ahora.
         self.FechaYHoraDeSubida = datetime.datetime.now()
+        # DiasRestantes
+        self.DiasRestantes = 100 # dummy
 
     def arch_sha1sum(self, archivo):
         '''Recibe un objeto archivo y devulve el sha1sum

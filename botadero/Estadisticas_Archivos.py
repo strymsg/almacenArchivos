@@ -28,7 +28,6 @@ class EstadisticaArchivos:
         self.NumArchivos = 0
 
         self.PilaArchivos = []
-        self.PilaDiasRestantes = []
 
         self.Inicializar()
 
@@ -169,7 +168,7 @@ class EstadisticaArchivos:
             file.close()
             # agrega el nuevo registro a las estadisticas
             da = DatosDeArchivo()
-            da.auto_init(Nombre_con_ruta)
+            da.auto_init(Nombre_con_ruta, sha1sum)
             self.PilaArchivos.append(da)
 
             print '[REG] - New: File %(na)s size %(sz)d'\
@@ -265,6 +264,7 @@ class EstadisticaArchivos:
                         % {'ca':categoria , 'na': nombre_arch }
                     # borra el registro del archivo de la pila de registros
                     del self.PilaArchivos[self.PilaArchivos.index(self.GetDatosArchivo(nombre_arch))]
+
                     self.GuardarCambiosEnArchivo()
             
         self.ComprobarTiempoArchivos()
@@ -284,11 +284,11 @@ class EstadisticaArchivos:
 
 
     def ComprobarTiempoArchivos(self):
-        ''' comprueba si uno o mas archivos han estado almacenados por mas
+        '''Comprueba si uno o mas archivos han estado almacenados por mas
         dias de los especificados para su eliminacion.
-        Los elimina automaticamente y los borra del registro'''
+        Si los elimina automaticamente y los borra del registro, si no actualiza
+        el registro de dias restantes'''
 
-        self.PilaDiasRestantes = [] # borra la lista para actualizarla
         archivos_a_borrar = []
         for da in self.PilaArchivos:
             edad = da.edad()
@@ -309,7 +309,7 @@ class EstadisticaArchivos:
             if vt - edad < 0:
                 archivos_a_borrar.append(da.Nombre)
             else:
-                self.PilaDiasRestantes.append(vt - edad)
+                da.DiasRestantes = vt - edad
 
         # borrado
         for na in archivos_a_borrar:

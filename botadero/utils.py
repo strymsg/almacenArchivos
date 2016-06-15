@@ -40,19 +40,22 @@ def ls_archivos(categoria=""):
     
     upload_folder = ParametrosServer.UploadFolder
     pila_archivos = EstadisticaArchivos.PilaArchivos
-    dias_restantes = EstadisticaArchivos.PilaDiasRestantes
 
     nombres = []
+    indices = []
+    i = 0
     for ra in pila_archivos:
         if ra.categoria == categoria:
             # comprobando que el archivo listado pertenezca a la categoria actual
             nombres.append(ra.Nombre)
-    
+            indices.append(i)
+        i += 1
+
     # coloca cada archivo en la pantalla
     i = 0
     for arch in nombres:
         # TODO: controlar excepcion
-        size_long = pila_archivos[i].Tam
+        size_long = pila_archivos[indices[i]].Tam
         unidades = "B"
         if size_long > 1000 and size_long < 1000000:
             tam = round(size_long/float(1000), 2)
@@ -65,12 +68,16 @@ def ls_archivos(categoria=""):
             unidades = "GB"
         else:
             tam = float(size_long)
-
+        '''
+        TODO: Agregar para modo verboso
+        print "[LS] - arch: %(n)s  %(t)s Quedan:%(dr)s " %{'n':arch, 't':str(tam)+" "+unidades,\
+                                                 'dr':pila_archivos[indices[i].DiasRestantes}
+        '''
         # lista a devolver
         l_archivos.append([upload_folder, arch, str(tam)+" "+unidades, \
-                           str(dias_restantes[i])])
+                           str(pila_archivos[i].DiasRestantes)])
 
-        i = i + 1
+        i += 1
 
     return l_archivos
 
