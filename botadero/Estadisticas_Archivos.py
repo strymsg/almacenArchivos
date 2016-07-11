@@ -170,6 +170,8 @@ class EstadisticaArchivos:
             da = DatosDeArchivo()
             da.auto_init(Nombre_con_ruta, sha1sum)
             self.PilaArchivos.append(da)
+            self.GuardarCambiosEnArchivo()
+            self.ComprobarTiempoArchivos()
 
             print '[REG] - New: File %(na)s size %(sz)d'\
                 % {'na': self.PilaArchivos[-1].categoria +'/'+ self.PilaArchivos[-1].Nombre ,\
@@ -200,7 +202,6 @@ class EstadisticaArchivos:
         LLama tambien a la funcion ComprobrarTiempoArchivos()
         '''
         print "[REG] - Initializating..."
-        self.CargarDesdeArchivo()
         self.Actualizar() # carga nuevos archivos si no estaban en el registro
 
     def Actualizar(self):
@@ -209,6 +210,7 @@ class EstadisticaArchivos:
         crea nuevos registros si hay archivos nuevos. Llama a
         ComprobarTiempoArchivos() 
         '''
+        self.CargarDesdeArchivo()
         ow = os.walk(self.Parametros.UploadFolder)
         '''
         NOTA: os.walk(top, topdown=True, onerror=None, followlinks=False)
@@ -228,7 +230,6 @@ class EstadisticaArchivos:
                     este caso se deberia dar cuando se copia manualmente
                     archivos en la carpeta `UploadFolder' '''
                     dt_arch = DatosDeArchivo()
-                    #dt_arch.auto_init(os.path.join(self.Parametros.UploadFolder, nomb_con_ruta))
                     dt_arch.auto_init(nomb_con_ruta)
                     # agrega nuevo registro
                     self.PilaArchivos.append(dt_arch)
@@ -240,10 +241,6 @@ class EstadisticaArchivos:
 
                     self.GuardarCambiosEnArchivo()
                 else:
-                    # print '[REG] - Found: File %(na)s size %(sz)d'\
-                    #     % {'na': self.PilaArchivos[-1].categoria+'/'+self.PilaArchivos[-1].Nombre, \
-                    #        'sz': self.PilaArchivos[-1].Tam},\
-                    #     'created at', self.PilaArchivos[-1].FechaYHoraDeSubida
                     pass
 
             '''comprobacion si un archivo lo ha borrado un administrador
@@ -266,7 +263,7 @@ class EstadisticaArchivos:
                     del self.PilaArchivos[self.PilaArchivos.index(self.GetDatosArchivo(nombre_arch))]
 
                     self.GuardarCambiosEnArchivo()
-            
+
         self.ComprobarTiempoArchivos()
 
         # determinacion de otros parametros estadisticos
@@ -281,7 +278,6 @@ class EstadisticaArchivos:
         
         print '[REG] - Updated.' # log
         #self.MostrarRegistros() # muy verboso
-
 
     def ComprobarTiempoArchivos(self):
         '''Comprueba si uno o mas archivos han estado almacenados por mas
@@ -374,7 +370,6 @@ class EstadisticaArchivos:
         except:
             print '[REG] - Warning: Not found object file '\
                 , '        EstadisticaArchivos.pkl. Restarting, creating registers.'
-            self.Actualizar()
             return False
 
     def MostrarRegistros(self):

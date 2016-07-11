@@ -16,6 +16,7 @@ Prerequisitos
  * Es necesario activar crear y activar el entorno virtual python:
 
    $ virtualenv venv
+   $ . venv/bin/activate
  
  * Para poder ejecutar la app se debe instalar los paquetes listados en
    Docu/pip_install.txt con:

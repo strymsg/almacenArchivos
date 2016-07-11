@@ -5,7 +5,7 @@ This file is part of Botadero
 
 from flask import Blueprint
 from flask import render_template
-from flask import request, redirect, send_from_directory, safe_join, send_file
+from flask import request, redirect, send_from_directory, safe_join, send_file, abort
 from flask import url_for
 
 #from botadero import app
@@ -29,15 +29,17 @@ def donwload_file(filename):
           * http://stackoverflow.com/questions/24318084/flask-make-response-with-large-files
           * http://stackoverflow.com/questions/5166129/how-do-i-stream-a-file-using-werkzeug/5166423#5166423
     '''
+    pathf = os.path.join(os.path.abspath(UploadFolder), filename)
+
     # para no permitir descargar archivos no permitidos
-    if '..' in filename or filename.startswith('/'):
+    if '..' in filename or filename.startswith('/'): #or pathf.index(os.sep) >= 0:
         print "[DOWNLOAD] - Not allowed download detected: %s" %filename
         abort(404)
-
+    
     utils.EstadisticaArchivos.IncrementarNumDescargas(os.path.join(UploadFolder,\
                                                                    filename))
 
-    pathf = os.path.join(os.path.abspath(UploadFolder), filename)
+
     print "[DOWNLOAD] - abspath to file: %s" %pathf
     return send_file(pathf, as_attachment=True)
     '''
@@ -56,6 +58,7 @@ def upload_file():
     TODO: Subir los archivos por pedazos.
     TODO: agregar captcha? '''
 
+    utils.EstadisticaArchivos.Actualizar()
     if request.method == 'POST':
         file = request.files['file'] #devuelve tipo FileStorage
         filename = ''

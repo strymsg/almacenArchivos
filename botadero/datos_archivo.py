@@ -82,8 +82,8 @@ class DatosDeArchivo:
 #     DatosArchivo = DatosDeArchivo(os.path.join(ruta, nombre))
 
     def edad(self):
-        return (datetime.datetime.now() - self.FechaYHoraDeSubida).days
-        #return (datetime.datetime.now() - self.FechaYHoraDeSubida).seconds
+        #return (datetime.datetime.now() - self.FechaYHoraDeSubida).days
+        return (datetime.datetime.now() - self.FechaYHoraDeSubida).seconds
 
 def nombre_archivo(Nombre_con_ruta=None):
     tupla = Nombre_con_ruta.split(os.sep)

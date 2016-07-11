@@ -16,8 +16,8 @@ TOTAL_STORAGE 11000000000
 
 # Niveles de tamaño de archivos (bytes)
 
-SIZE_1 70000000
-SIZE_2 222000000
+SIZE_1 62000000
+SIZE_2 218700000
 
 # Tamaño máximo de archivos (bytes)
 
