@@ -11,30 +11,31 @@
 	</head>
 	<body>
 
-		<h1>"El botadero"</h1>
+	<h1>"El botadero"</h1>
 		<div class="qu">
 			Un sitio <b>público</b> para compartir archivos	
 		</div>
-		
+
 	<!-- Categorias -->	
 	<div id="categorias">
-		{% for cat in categorias %}
-			{% if cat == categoria_actual %}
-				{% if cat == "Misc." %} <!-- Dummy -->
-					<span class="categoria"><a href="/" > #Misc.</a></span>
-				{% else %}
-					<span class="categoria"><a href="/{{ categoria_actual }}/" > #{{ categoria_actual }}</a></span>
-				{% endif %}			
-			{% else %}
-				{% if cat == "Misc." %} <!-- Dummy -->
-					<a href="/" > #Misc.</a>
-				{% else %}
-					<a href="/{{ cat }}/" > #{{ cat }}</a>
-				{% endif %}
-			{% endif %}
-			,
-		{% endfor %}
+	  {% for cat_na in categorias_con_nums %}
+		{% if cat_na[0] == categoria_actual %}
+		  {% if cat_na[0] == "" %} <!-- Dummy -->
+	            <span class="categoria"><a href="/" > #Misc.</a>({{ cat_na[1] }})</span>
+		  {% else %}
+  		    <span class="categoria"><a href="/{{ categoria_actual }}/" > #{{ categoria_actual }}</a>({{ cat_na[1] }})</span>
+		  {% endif %}			
+		{% else %}
+		    {% if cat_na[0] == "" %} <!-- Dummy -->
+	               <a href="/" > #Misc.</a>({{ cat_na[1] }})</span>
+		    {% else %}
+  		       <a href="/{{ cat_na[0] }}/" > #{{ cat_na[0] }}</a>({{ cat_na[1] }})</span>
+		    {% endif %}			
+		{% endif%}
+	  {% endfor %}
 	</div>
+
+		
 	
 	<!-- Subida de archivos -->		
 	<div class="nota"> 

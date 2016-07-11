@@ -19,9 +19,9 @@ import os
 def pag_inicio():
     utils.EstadisticaArchivos.Actualizar()
     #categorias = ['Misc.', 'Musica', 'documentos', 'videos']
-    categorias = utils.categorias()
-    categoria_actual = 'Misc.' # dummy
-    categorias = [categoria_actual] + categorias # dummy
+    categoria_actual = ''
+    categorias_con_nums = utils.categorias_y_nums_archivos()
+
     return render_template("index.html", \
                            borrar_1=utils.EstadisticaArchivos.Parametros.TimeToDel0,\
                            borrar_2=utils.EstadisticaArchivos.Parametros.TimeToDel2,\
@@ -30,18 +30,20 @@ def pag_inicio():
                            num_arch=utils.EstadisticaArchivos.NumArchivos,\
                            lista_archivos=utils.ls_archivos(),\
                            esquema_colores=utils.esquema_colores_random(),\
-                           categoria_actual=categoria_actual, categorias=categorias)
+                           categoria_actual=categoria_actual,\
+                           categorias_con_nums=categorias_con_nums)
 
 @app.route('/<cat>/')
 def pag_principal(cat):
     utils.EstadisticaArchivos.Actualizar()
     categorias = utils.categorias()
     categoria_actual = ''
-    categorias = ["Misc."] + categorias # dummy
     if cat in categorias:
         categoria_actual = cat
     else:
         return cat # TODO: redirigir a pagina error en categoria
+
+    categorias_con_nums = utils.categorias_y_nums_archivos()
 
     return render_template("index.html", \
                            borrar_1=utils.EstadisticaArchivos.Parametros.TimeToDel0,\
@@ -51,7 +53,8 @@ def pag_principal(cat):
                            num_arch=utils.EstadisticaArchivos.NumArchivos,\
                            lista_archivos=utils.ls_archivos(categoria_actual),\
                            esquema_colores=utils.esquema_colores_random(),\
-                           categoria_actual=categoria_actual, categorias=categorias)
+                           categoria_actual=categoria_actual,\
+                           categorias_con_nums=categorias_con_nums)
 
 @app.route('/estadisticas')
 def mostrar_estadisticas():

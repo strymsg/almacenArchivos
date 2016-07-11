@@ -34,7 +34,7 @@ def esquema_colores_random():
 def ls_archivos(categoria=""):
     '''
     Devuelve una lista con nombre_archivo, tamanyo y dias_restantes 
-    para eliminacion del directorio del de subidas.
+    para eliminacion del directorio de subidas.
     '''
     l_archivos = []
     
@@ -102,4 +102,28 @@ def categorias():
     #print "[DIRS] - List of folders: %s" %filter(os.path.isdir, os.listdir(pathf))
     #return filter(os.path.isdir, os.listdir(pathf))
 
+def num_archivos_por_categoria(categoria):
+    '''Devuelve el numero de archivos segun la categoria
+    dada'''
+    num = 0
+    for da in EstadisticaArchivos.PilaArchivos:
+        if da.categoria == categoria:
+           num += 1
+    return num
 
+def categorias_y_nums_archivos():
+    '''Devuelve una lista con (categria, num_archivos)
+    de cada categoria de archivos'''
+    cats = []
+    cats.append("") # para el directorio principal
+    cats = cats + categorias()
+    cat_y_nums = []
+    for cat in cats:
+        cat_y_nums.append((cat, num_archivos_por_categoria(cat)))
+
+    print cat_y_nums
+    return cat_y_nums
+    
+
+
+    
