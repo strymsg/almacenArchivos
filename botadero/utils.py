@@ -121,7 +121,6 @@ def categorias_y_nums_archivos():
     for cat in cats:
         cat_y_nums.append((cat, num_archivos_por_categoria(cat)))
 
-    print cat_y_nums
     return cat_y_nums
     
 
