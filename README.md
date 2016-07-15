@@ -37,8 +37,8 @@ Esta aplicación no usa bases de datos.
 Más urgentes primero.
 
 * Hacer una apariencia "responsive".
-* Implementar límites de subida por usuario, esto para prevenir que un usuario suba demasiados archivos.
+* Agregar barra de progreso al subir archivos.
 * Acelerar la comprobacion sha1sum y subida de archivos.
-* Hacer pruebas al despliegue del servicio y documentar en Docu/
+* Implementar límites de subida por usuario, esto para prevenir que un usuario suba demasiados archivos.
 * Implementar sistema detector de robots (captcha?).
 * Revisar disclaimer en info/

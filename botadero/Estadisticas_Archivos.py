@@ -19,6 +19,18 @@ import pickle
 from botadero.Parametros_Servidor import *
 from botadero.datos_archivo import *
 
+'''
+Nota acerca de 'descincronizacion' cuando esta en produccion
+
+Si no se usa self.CargarDesdeArchivo() , self.GuardarCambiosEnArchivo()
+El objeto EstadisticaArchivos toma valores distintos a cada actualizacion
+en el server web (por ejemplo NGINX) , como si el objeto estuviese siendo
+compartido por varios procesos o hilos.
+
+TODO: Averiguar como manejar un unico objeto en RAM comun a todos los hilos
+      para no tener que cargarlo y guardarlo en disco duro como se hace
+      actualmente.
+'''
 class EstadisticaArchivos:
     def __init__(self, NombreArchivoConfig, DebugLevel):
         self.Parametros = ParametrosServidor(NombreArchivoConfig \
@@ -139,9 +151,10 @@ class EstadisticaArchivos:
         Si pasa estas pruebas el archivo se guarda en el disco
         y se crea un nuevo registro
         '''
+        self.CargarDesdeArchivo()
         # comprobacion de espacio disponible
         fsize = len(file.read())
-        file.seek(0) # restarudando puntero
+        file.seek(0) # restuarando puntero
         if (self.Parametros.TotalStorage - self.AlmacenDisponible)\
            + fsize > self.Parametros.TotalStorage:
             print "[STORAGE] - Error non free space: filesize %d"\
@@ -151,7 +164,8 @@ class EstadisticaArchivos:
             return 1
         # comprobacion de nombre
         elif self.ExisteNombreEstricto(nombre_archivo(Nombre_con_ruta)):  # comprobacion de no duplicados
-            print "[STORAGE] - Warning: File with name: %s " %nombre_archivo(Nombre_con_ruta), \
+            print "[STORAGE] - Warning: File with name: %s "\
+                %nombre_archivo(Nombre_con_ruta), \
                 "            exists, not uploaded."
             file.close()
             return 2
@@ -190,7 +204,10 @@ class EstadisticaArchivos:
             cat = da.categoria
             pathf = os.path.abspath(self.Parametros.UploadFolder)
             # borra el archivo de disco
-            os.remove(os.path.join(pathf, cat, Nombre))
+            try:
+                os.remove(os.path.join(pathf, cat, Nombre))
+            except:
+                print "[DEL] File %s Not Found" %Nombre
             # borra el registro del archivo de la pila de registros
             del self.PilaArchivos[self.PilaArchivos.index(self.GetDatosArchivo(Nombre))]
             self.GuardarCambiosEnArchivo()
@@ -246,8 +263,6 @@ class EstadisticaArchivos:
             '''comprobacion si un archivo lo ha borrado un administrador
             esto se detecta cuando existe un archivo en el registro pero 
             no se encuentra en el directorio despues de listar archivos'''
-            #TODO: Corregir borrado de archivos
-            # `direc' tiene el formato: almacen/categoria | almacen
             categoria = "" 
             if len(direc.split(os.path.sep)) > 1: # ej: almacen/Imagenes
                 categoria = direc.split(os.path.sep)[-1]
@@ -279,34 +294,43 @@ class EstadisticaArchivos:
         print '[REG] - Updated.' # log
         #self.MostrarRegistros() # muy verboso
 
+    def ComprobarTiempoArchivo(self, Nombre):
+        '''Comprueba si el registro del Nombre de archivo ha sobrepasado
+        el tiempo permitido.
+        Calcula los dias restantes del archivo.
+        Retorna True si se ha sobrepasado y False si no.
+        '''
+        da = self.GetDatosArchivo(Nombre)
+        edad = da.edad()
+        vt = 0            
+        tamanyo = da.Tam
+        if tamanyo <  self.Parametros.Size1:
+            vt = self.Parametros.TimeToDel0
+        elif tamanyo >= self.Parametros.Size1 and \
+             tamanyo <= self.Parametros.Size2:
+            vt = self.Parametros.TimeToDel1 
+        elif tamanyo > self.Parametros.Size2:
+            vt = self.Parametros.TimeToDel2
+        elif tamanyo >= self.Parametros.SizeMaxToUpload:
+            vt = -1 # para borrar inmediatamente
+        
+        # marca si se ha excedido el tiempo
+        if vt - edad < 0:
+            return True
+        else:
+            da.DiasRestantes = vt - edad
+            return False
+
     def ComprobarTiempoArchivos(self):
         '''Comprueba si uno o mas archivos han estado almacenados por mas
         dias de los especificados para su eliminacion.
-        Si los elimina automaticamente y los borra del registro, si no actualiza
+        Los elimina automaticamente y los borra del registro, si no actualiza
         el registro de dias restantes'''
-
+        self.CargarDesdeArchivo()
         archivos_a_borrar = []
         for da in self.PilaArchivos:
-            edad = da.edad()
-            vt = 0            
-            # tamanyo
-            tamanyo = da.Tam
-            if tamanyo <  self.Parametros.Size1:
-                vt = self.Parametros.TimeToDel0
-            elif tamanyo >= self.Parametros.Size1 and \
-               tamanyo <= self.Parametros.Size2:
-                vt = self.Parametros.TimeToDel1 
-            elif tamanyo > self.Parametros.Size2:
-                vt = self.Parametros.TimeToDel2
-            elif tamanyo >= self.Parametros.SizeMaxToUpload:
-                vt = 999999 # para borrar inmediatamente
-        
-            # marca si se ha excedido el tiempo
-            if vt - edad < 0:
+            if self.ComprobarTiempoArchivo(da.Nombre):
                 archivos_a_borrar.append(da.Nombre)
-            else:
-                da.DiasRestantes = vt - edad
-
         # borrado
         for na in archivos_a_borrar:
             # log
@@ -315,6 +339,7 @@ class EstadisticaArchivos:
                   'created at: %s' %self.GetDatosArchivo(na).FechaYHoraDeSubida , \
                   'passed allowed time.'
             self.BorrarArchivo(na)
+        self.GuardarCambiosEnArchivo()
 
     def ArchOrdenadosFechaSubida(self, ruta):
         '''

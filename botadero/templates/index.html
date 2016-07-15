@@ -39,7 +39,7 @@
 	
 	<!-- Subida de archivos -->		
 	<div class="nota"> 
-	{% if categoria_actual == "Misc." %}
+	{% if categoria_actual == "" %}
 		<form method="post" id="upload_file" action="/almacen/upload_file" enctype="multipart/form-data">
 	{% else %}
 		<form method="post" id="upload_file" action="/almacen/{{ categoria_actual }}/upload_file" enctype="multipart/form-data">	
@@ -64,7 +64,7 @@
 		</tr>
 		{% for reg_arch in lista_archivos|reverse %}
 		<tr>
-			{% if categoria_actual != "Misc." %}
+			{% if categoria_actual != "" %}
 				<td class="nombres"><a href="/{{ reg_arch[0] }}/{{ categoria_actual }}/{{ reg_arch[1] }}">{{ reg_arch[1] }}</a>
 			{% else %}
 				<td class="nombres"><a href="/{{ reg_arch[0] }}/{{ reg_arch[1] }}">{{ reg_arch[1] }}</a>
@@ -83,26 +83,26 @@
 		{% endfor %}
 
 	</table>
+
 	<!-- Categorias -->	
 	<div id="categorias">
-		{% for cat in categorias %}
-			{% if cat == categoria_actual %}
-				{% if cat == "Misc." %} <!-- Dummy -->
-					<span class="categoria"><a href="/" > #Misc.</a></span>
-				{% else %}
-					<span class="categoria"><a href="/{{ categoria_actual }}/" > #{{ categoria_actual }}</a></span>
-				{% endif %}			
-			{% else %}
-				{% if cat == "Misc." %} <!-- Dummy -->
-					<a href="/" > #Misc.</a>
-				{% else %}
-					<a href="/{{ cat }}/" > #{{ cat }}</a>
-				{% endif %}
-			{% endif %}
-			,
-		{% endfor %}
+	  {% for cat_na in categorias_con_nums %}
+		{% if cat_na[0] == categoria_actual %}
+		  {% if cat_na[0] == "" %} <!-- Dummy -->
+	            <span class="categoria"><a href="/" > #Misc.</a>({{ cat_na[1] }})</span>
+		  {% else %}
+  		    <span class="categoria"><a href="/{{ categoria_actual }}/" > #{{ categoria_actual }}</a>({{ cat_na[1] }})</span>
+		  {% endif %}			
+		{% else %}
+		    {% if cat_na[0] == "" %} <!-- Dummy -->
+	               <a href="/" > #Misc.</a>({{ cat_na[1] }})</span>
+		    {% else %}
+  		       <a href="/{{ cat_na[0] }}/" > #{{ cat_na[0] }}</a>({{ cat_na[1] }})</span>
+		    {% endif %}			
+		{% endif%}
+	  {% endfor %}
 	</div>
-	
+
 	<!-- Notas al pie -->
 	<div class="nota">
 	<p>Revisa las <a href="/estadisticas" > estadisticas </a> de los archivos.

@@ -42,20 +42,15 @@ def ls_archivos(categoria=""):
     pila_archivos = EstadisticaArchivos.PilaArchivos
 
     nombres = []
-    indices = []
-    i = 0
     for ra in pila_archivos:
         if ra.categoria == categoria:
             # comprobando que el archivo listado pertenezca a la categoria actual
             nombres.append(ra.Nombre)
-            indices.append(i)
-        i += 1
 
     # coloca cada archivo en la pantalla
-    i = 0
     for arch in nombres:
         # TODO: controlar excepcion
-        size_long = pila_archivos[indices[i]].Tam
+        size_long = EstadisticaArchivos.GetDatosArchivo(arch).Tam
         unidades = "B"
         if size_long > 1000 and size_long < 1000000:
             tam = round(size_long/float(1000), 2)
@@ -68,16 +63,9 @@ def ls_archivos(categoria=""):
             unidades = "GB"
         else:
             tam = float(size_long)
-        '''
-        TODO: Agregar para modo verboso
-        print "[LS] - arch: %(n)s  %(t)s Quedan:%(dr)s " %{'n':arch, 't':str(tam)+" "+unidades,\
-                                                 'dr':pila_archivos[indices[i].DiasRestantes}
-        '''
         # lista a devolver
         l_archivos.append([upload_folder, arch, str(tam)+" "+unidades, \
-                           str(pila_archivos[i].DiasRestantes)])
-
-        i += 1
+                           str(EstadisticaArchivos.GetDatosArchivo(arch).DiasRestantes)])
 
     return l_archivos
 
@@ -96,7 +84,7 @@ def categorias():
     directorios = ow.next()[1]
     for d in directorios:
         categorias.append(d)
-        print "[DIRS] - folder found: %s" %d
+    print "[DIRS] - folders found: %s" %str(directorios)
     
     return categorias
     #print "[DIRS] - List of folders: %s" %filter(os.path.isdir, os.listdir(pathf))
