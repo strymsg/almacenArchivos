@@ -78,7 +78,6 @@ def upload_file():
             if utils.EstadisticaArchivos.AgregarArchivo(aux, sha1sum, file) != 0:
                 # mostrar error en pantalla
                 return views.mostrar_err_archivo_duplicado(sha1sum=sha1sum, nombre=filename)
-                #return redirect('/estadisticas', code=302)
 
         return redirect("/", code=302)
         # http://stackoverflow.com/questions/14343812/redirecting-to-url-in-flask
@@ -120,7 +119,6 @@ def upload_file_cat(cat):
             if utils.EstadisticaArchivos.AgregarArchivo(aux, sha1sum, file) != 0:
                 # mostrar error en pantalla
                 return views.mostrar_err_archivo_duplicado(sha1sum=sha1sum, nombre=filename)
-                #return redirect('/estadisticas', code=302)
 
         return redirect("/"+cat, code=302)
         # http://stackoverflow.com/questions/14343812/redirecting-to-url-in-flask

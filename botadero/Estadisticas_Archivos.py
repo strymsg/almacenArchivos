@@ -291,6 +291,8 @@ class EstadisticaArchivos:
                                            / self.AlmacenDisponible
         self.NumArchivos = len(self.PilaArchivos)
         
+        self.GuardarCambiosEnArchivo()
+
         print '[REG] - Updated.' # log
         #self.MostrarRegistros() # muy verboso
 
