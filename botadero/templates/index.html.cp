@@ -9,10 +9,9 @@
 		<link rel="stylesheet" href="../static/{{ esquema_colores }}/base.css" type="text/css" />
 
 	</head>
-	
 	<body>
 
-	<h1>"El botadero"</h1>
+	<h1><a href="/">"El botadero"</a></h1>
 		<div class="qu">
 			Un sitio <b>público</b> para compartir archivos	
 		</div>
@@ -36,6 +35,8 @@
 	  {% endfor %}
 	</div>
 
+		
+	<div class="container">
 	<!-- Subida de archivos -->		
 	<div class="nota"> 
 	{% if categoria_actual == "" %}
@@ -44,48 +45,57 @@
 		<form method="post" id="upload_file" action="/almacen/{{ categoria_actual }}/upload_file" enctype="multipart/form-data">	
 	{% endif %}
 			<input type="file" name="file"/>
-			<input type="submit", class="btn large", value="Compartir archivo"/>
+			<input type="submit", class="btn", value="Compartir archivo"/>
 				<p>Los archivos se eliminan después de {{ borrar_1 }} a {{ borrar_2 }} días, dependiendo su tamaño.
 					 <a href="/info" >ver información</a>
 				 </p>
 		</form>	
 	</div>	
 
-	<div class="container">
 	<!-- Estadisticas generales -->
 	{{ esp_disp }} MB disponibles (<b>{{ p_disp }} %</b>) Total de <b>{{ num_arch }}</b> archivos
-	</div>
 	
-	<!-- Listado de Archivos -->	
-	<div class="caja_lista_archivos">
-	{% for reg_arch in lista_archivos|reverse %}
-			<p class="lista_archivos_elemento">
-				{% if categoria_actual != "" %}
-					<a href="/{{ reg_arch[0] }}/{{ categoria_actual }}/{{ reg_arch[1] }}">
-					{# Puede servir para partir archivos con nombre grande #}				
-					{# {% for c in reg_arch[1] %}{% if loop.index % 37 == 0 %}<br>{% endif %}{{ c }}{% endfor %} #}
-				{% else %}
-					<a href="/{{ reg_arch[0] }}/{{ reg_arch[1] }}">
-					{# Puede servir para partir archivos con nombre grande #}				
-					{# {% for c in reg_arch[1] %}{% if loop.index % 37 == 0 %}<br>{% endif %}{{ c }}{% endfor %} #}
-				{% endif %}
-				{{ reg_arch[1] }}
-				</a>
-			<span class="label">{{ reg_arch[2] }}</span>
-			
-			{% if reg_arch[3]|int >= 10 %}
-				<span class="label success" > {{ reg_arch[3] }} días</span>
-			{% elif reg_arch[3]|int < 10 and reg_arch[3]|int > 3 %}
-				<span clas="label warning" > {{ reg_arch[3] }} </span>
-			{% elif reg_arch[3]|int <= 3 %}
-				<span class="label notice" > {{ reg_arch[3] }} </span>
-			{% endif %}
 
-			</p>	
+	<!-- Listado de Archivos -->	
 		
-	{% endfor %}
-	</div>
 	
+	<table 	<div class="class="table">
+		<tr>
+			<th>Archivos compartidos en <i>{{ categoria_actual }}</i></th>	
+			<th>TAMAÑO</th>
+			<th>Días para borrado</th>
+		</tr>
+		{% for reg_arch in lista_archivos|reverse %}
+		<tr>
+			<td>
+			{% if categoria_actual != "" %}
+				<a href="/{{ reg_arch[0] }}/{{ categoria_actual }}/{{ reg_arch[1] }}">
+				{# Agregado para partir archivos con nombre grande #}				
+					{% for c in reg_arch[1] %}{% if loop.index % 37 == 0 %}<br>{% endif %}{{ c }}{% endfor %}
+				</a>
+			{% else %}
+				<a href="/{{ reg_arch[0] }}/{{ reg_arch[1] }}">
+				{# Agregado para partir archivos con nombre grande #}				
+					{% for c in reg_arch[1] %}{% if loop.index % 37 == 0 %}<br>{% endif %}{{ c }}{% endfor %}
+				</a>
+			{% endif %}		
+			</td>
+			
+			<td > {{ reg_arch[2] }} </td>
+			<td class="dias_restantes">
+			{% if reg_arch[3]|int >= 10 %}
+				<span id="dias_muchos" > {{ reg_arch[3] }} </span>
+			{% elif reg_arch[3]|int < 10 and reg_arch[3]|int > 3 %}
+				<span id="dias_moderados" > {{ reg_arch[3] }} </span>
+			{% elif reg_arch[3]|int <= 3 %}
+				<span id="dias_pocos" > {{ reg_arch[3] }} </span>
+			{% endif %}
+			</td>
+		</tr>
+		{% endfor %}
+
+	</table>
+	</div>
 	<!-- Categorias -->	
 	<div id="categorias">
 	  {% for cat_na in categorias_con_nums %}
@@ -104,7 +114,6 @@
 		{% endif%}
 	  {% endfor %}
 	</div>
-
 
 	<!-- Notas al pie -->
 	<div class="nota">

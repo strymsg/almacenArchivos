@@ -27,8 +27,8 @@ def esquema_colores_random():
     '''
     devuelve un esquema de colores random de los definidos en static/
     '''
-    esquemas = ('neutral', 'verde1', 'azul1', 'amarillo1',\
-                'rojo1', 'cafe1')
+    esquemas = ('gris1', 'neutral','verde1','azul1','amarillo1', 'rojo1','cafe1')
+
     return esquemas[random.randint(0, len(esquemas)-1)]
 
 def ls_archivos(categoria=""):
@@ -44,7 +44,6 @@ def ls_archivos(categoria=""):
     nombres = []
     for ra in pila_archivos:
         if ra.categoria == categoria:
-            # comprobando que el archivo listado pertenezca a la categoria actual
             nombres.append(ra.Nombre)
 
     # coloca cada archivo en la pantalla

@@ -40,7 +40,7 @@ form, label, legend, button, table, caption, tbody, tfoot, thead, tr, th, td {
 	font-size: 100%;
 	line-height: 1;
 	font-family: inherit;
-v}
+}
 
 abbr[title], acronym[title] {
 	border-bottom: 1px dotted;
@@ -139,16 +139,16 @@ textarea {
  * ------------------------------------------------------------------------------------------- */
 body {
 	/* -C- */
-	background-color: #C1AE94;
-	color: #1D1810;
+	background-color: #DEDADE;
+	color: #444437;
 	
-    background-size: 80px;
-    margin: 0;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-size: 15px;
-    font-weight: normal;
-    line-height: 18px;
-    padding-top: 38px;
+   background-size: 80px;
+	margin: 0;
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size: 15px;
+	font-weight: normal;
+	line-height: 18px;
+	padding-top: 38px;
 }
 
 .container {
@@ -171,9 +171,9 @@ body {
 
 a {
 	/* -C- */
-	color: #211107;
-	border-bottom: 1px #2F1d12;
+	color: #1C1C12;
 	
+	border-bottom: 1px #7A7852;
 	border-bottom-style: dotted;
 	text-decoration: none;
 	font-weight: bold;
@@ -182,12 +182,9 @@ a {
 }
 
 a:hover {
-	/* -C- */
-	color: #150D03;
+	/* -C */
+	color: #0E0E03;
 	
-	font-weight: bolder;
-	border-bottom-width: 2px;
-	border-bottom-style: solid;
 	text-decoration: none;
 }
 
@@ -225,7 +222,7 @@ h6 {
 	font-weight: bold;
 	
 	/* -C- */
-	color: #433625;
+	color: #232312;
 }
 
 h1 small,
@@ -882,7 +879,7 @@ footer {
 	background-image: linear-gradient(top, #049cdb, #0064cd);
 	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#049cdb', endColorstr='#0064cd', GradientType=0);
 	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
-	border-color: #0064cd #003f81;
+	border-color: #0064cd #0064cd #003f81;
 	border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
 }
 
@@ -1043,7 +1040,7 @@ button.btn::-moz-focus-inner, input[type=submit].btn::-moz-focus-inner {
 	white-space: nowrap;
 	
 	/* -C- */
-	background-color: #746249;
+	background-color: #878779;
 	color: #ffffff !important;
 	
 	-webkit-border-radius: 3px;
@@ -1088,7 +1085,7 @@ a.label:hover {
 .qu {
     padding: 3px;
     font-size: 16px;
-	color: #3C2714; /*  -C- */
+    color: #3C3914; /*  -C- */
     font-family: serif;
     font-style: italic;
     text-align: center;
@@ -1096,9 +1093,7 @@ a.label:hover {
 
 .nota {
 	font-size: 15px;
-	/* -C- */
-	color: #524529;
-
+	color: #43412B;
 	font-family: sans-serif;
 }
 
@@ -1108,11 +1103,11 @@ a.label:hover {
 	padding: 10px;
 	
 	/* -C- */
-	background-color: #A8874A;
-	outline-color: #614E33;
-	-webkit-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1), 0 0 8px rgba(95, 72, 39, 0.82);
-	-moz-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1), 0 0 8px rgba(95, 72, 39, 0.82);
-	box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1), 0 0 8px rgba(95, 72, 39, 0.82);
+	background-color: #D4D2C7;
+	outline-color: #B2B1AB;
+	-webkit-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1), 0 0 8px rgba(151, 151, 145, 0.82);
+	-moz-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1), 0 0 8px rgba(151, 151, 145, 0.82);
+	box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1), 0 0 8px rgba(151, 151, 145, 0.82);
 }
 
 .lista_archivos_elemento {
@@ -1126,7 +1121,7 @@ a.label:hover {
 	font-size: 14px;
 	
 	/* -C- */
-	background-color: #98835D;
+	background-color: #C7C5B7; 
 }
 
 #dias_muchos{
@@ -1152,4 +1147,3 @@ a.label:hover {
 .categoria{
 	font-size: 22px;
 }
-
