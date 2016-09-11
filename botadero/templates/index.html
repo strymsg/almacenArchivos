@@ -51,11 +51,11 @@
 		</form>	
 	</div>	
 
-	<div class="container">
+	<p>
 	<!-- Estadisticas generales -->
 	{{ esp_disp }} MB disponibles (<b>{{ p_disp }} %</b>) Total de <b>{{ num_arch }}</b> archivos
-	</div>
-	
+	</p>
+
 	<!-- Listado de Archivos -->	
 	<div class="caja_lista_archivos">
 	{% for reg_arch in lista_archivos|reverse %}
@@ -79,14 +79,14 @@
 			{% elif reg_arch[3]|int < 10 and reg_arch[3]|int > 3 %}
 				<span class="label warning" > {{ reg_arch[3] }}  días</span>
 			{% elif reg_arch[3]|int <= 3 %}
-				<span class="label notice" > {{ reg_arch[3] }}  días</span>
+				<span class="label important" > {{ reg_arch[3] }}  días</span>
 			{% endif %}
 
 			</p>	
 		
 	{% endfor %}
 	</div>
-	
+	<br>
 	<!-- Categorias -->	
 	<div id="categorias">
 	  {% for cat_na in categorias_con_nums %}
@@ -115,9 +115,11 @@
 	
 	<!-- Notas al pie -->
 	<div class="qu">
-		<p>Compartir es bueno</p>
-		<p> <a href="https://notabug.org/r00thouse/botadero">Código fuente</a> de esta aplicación.  </p>
+		Compartir es bueno
+		<p> <a href="https://notabug.org/r00thouse/botadero">Código fuente</a> de esta aplicación.</p>
 	</div>
+
+
 	</body>
 
 </html>

@@ -1078,7 +1078,11 @@ a.label:hover {
 
 .label.notice {
 	/* -C */
-	background-color: #62cffc;
+	background-color: #8E7953;
+	
+	white-space: normal;
+	font-weight: normal;
+	text-transform: none;
 }
 
 /*
