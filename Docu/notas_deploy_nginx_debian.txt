@@ -95,8 +95,47 @@ sin activar el entorno virtual se puede usar:
 Al abrir un navegador en la ruta y puerto especificada en el archivo de config
 de Nginx se deberia poder usar la app.
 
-Ejecutar al inicio
-==================
+Ejecutar al inicio con systemd
+==============================
+
+Aprovechando el archivo botadero.ini para decirle a uwsgi como ejecutar la app se puede hacer un archivo para que systemd lo ejecute.
+
+En este ejemplo el archivo puede ir en 
+
+  /etc/systemd/system/uwsgi.service 
+
+Con contenido:
+
+  [Unit]
+  Description=uwsgi deamon
+  After=network.target
+
+  [Service]
+  User=www-data
+  Group=www-data
+  WorkingDirectory=/srv/botadero/
+  ExecStart=/srv/botadero/venv/bin/uwsgi --ini botadero.ini
+
+  [Install]
+  WantedBy=multi-user.target
+
+
+Se puede probar que se ejecuta con:
+
+   $ sudo systemctl start uwsgi.service
+   
+Si al ejecutar:
+   
+   $ sudo systemctl status uwsgi.service
+
+La app esta corriendo se puede habilitar para que se ejecute al inicion con:
+
+   $ sudo systemctl enable uwsgi.service
+
+Ejecutar al inicio con script 
+=============================
+
+Si no se tiene systemd  o el paso anterior no funciona, se puede hacer un script tipico de inicio.
 
 Se deberia agregar un script para hacer ejecutar 
   sudo -u www-data vevn/bin/uwsgi --ini botadero.ini

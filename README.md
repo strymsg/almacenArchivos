@@ -26,13 +26,20 @@ Ejecutar la app con:
 
 `python2.7 runserver.py` y puede probarse en `localhost:5000`
 
-*Despliegue en NGINX* ver [deploy_ubuntu](Docu/notas_deploy_nginx_ubuntu.txt), [deploy_debian](Docu/notas_deploy_nginx_debian.txt) (no actualizado).
+*Revisar logs* `tail -f logs/botadero.log`
+
+## Despliegue con NGINX ##
+
+* [debian](Docu/notas_deploy_nginx_debian.txt)
+* [ubuntu](Docu/notas_deploy_nginx_ubuntu.txt)
+
+*NOTA:* ajustar `application.debug` del archivo [runserver.py](runserver.py) adecuadamente para desarrollo o produccion.
 
 *Revisar logs* `tail -f logs/botadero.log`
 
 Esta aplicación no usa bases de datos.
 
-## Tareas por hacer
+## Tareas por hacer ##
 
 Más urgentes primero.
 
