@@ -150,7 +150,7 @@ Ejemplo del script muy basico (por ejemplo en: /etc/init.d/botadero-init.sh)
 	echo "debe ser superusuario"
 	exit 1
   fi
-
+  RUTA=/srv/botadero/
   RUTA_ENTORNO_VIRTUAL=/srv/botadero/venv
   cd $RUTA
 
