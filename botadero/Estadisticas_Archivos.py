@@ -132,14 +132,14 @@ class EstadisticaArchivos:
         return lista_nombres
         
     def IncrementarNumDescargas(self, Nombre_con_ruta):
-        self.CargarDesdeArchivo()
+        self.CargarDesdeDisco()
         i = self.GetIndexArchivo(Nombre_con_ruta)
         if i != -1:
             self.PilaArchivos[i].NumDescargas += 1
             print "[REG] - Download: Count increased to %d" \
                 % self.PilaArchivos[i].NumDescargas,\
                 "        of file %s" % Nombre_con_ruta
-            self.GuardarCambiosEnArchivo()
+            self.GuardarCambiosEnDisco()
         else:
             print "[REG] - Error: File %s" % Nombre_con_ruta,\
                 "        could not be found!"
@@ -151,7 +151,7 @@ class EstadisticaArchivos:
         Si pasa estas pruebas el archivo se guarda en el disco
         y se crea un nuevo registro
         '''
-        self.CargarDesdeArchivo()
+        self.CargarDesdeDisco()
         # comprobacion de espacio disponible
         fsize = len(file.read())
         file.seek(0) # restuarando puntero
@@ -184,7 +184,7 @@ class EstadisticaArchivos:
             da = DatosDeArchivo()
             da.auto_init(Nombre_con_ruta, sha1sum)
             self.PilaArchivos.append(da)
-            self.GuardarCambiosEnArchivo()
+            self.GuardarCambiosEnDisco()
             self.ComprobarTiempoArchivos()
 
             print '[REG] - New: File %(na)s size %(sz)d'\
@@ -192,7 +192,7 @@ class EstadisticaArchivos:
                    'sz': self.PilaArchivos[-1].Tam},\
                 '        created at', self.PilaArchivos[-1].FechaYHoraDeSubida
             
-            self.GuardarCambiosEnArchivo()
+            self.GuardarCambiosEnDisco()
             return 0
             
     def BorrarArchivo(self, Nombre):
@@ -210,7 +210,7 @@ class EstadisticaArchivos:
                 print "[DEL] File %s Not Found" %Nombre
             # borra el registro del archivo de la pila de registros
             del self.PilaArchivos[self.PilaArchivos.index(self.GetDatosArchivo(Nombre))]
-            self.GuardarCambiosEnArchivo()
+            self.GuardarCambiosEnDisco()
 
     def Inicializar(self):
         '''
@@ -223,11 +223,11 @@ class EstadisticaArchivos:
 
     def Actualizar(self):
         '''
-        comprueba las lista de archivos viendo si existen en el registro,
+        Comprueba las lista de archivos viendo si existen en el registro,
         crea nuevos registros si hay archivos nuevos. Llama a
         ComprobarTiempoArchivos() 
         '''
-        self.CargarDesdeArchivo()
+        self.CargarDesdeDisco()
         ow = os.walk(self.Parametros.UploadFolder)
         '''
         NOTA: os.walk(top, topdown=True, onerror=None, followlinks=False)
@@ -256,7 +256,7 @@ class EstadisticaArchivos:
                            'sz': self.PilaArchivos[-1].Tam},\
                         'created at', self.PilaArchivos[-1].FechaYHoraDeSubida
 
-                    self.GuardarCambiosEnArchivo()
+                    self.GuardarCambiosEnDisco()
                 else:
                     pass
 
@@ -277,7 +277,7 @@ class EstadisticaArchivos:
                     # borra el registro del archivo de la pila de registros
                     del self.PilaArchivos[self.PilaArchivos.index(self.GetDatosArchivo(nombre_arch))]
 
-                    self.GuardarCambiosEnArchivo()
+                    self.GuardarCambiosEnDisco()
 
         self.ComprobarTiempoArchivos()
 
@@ -291,7 +291,7 @@ class EstadisticaArchivos:
                                            / self.AlmacenDisponible
         self.NumArchivos = len(self.PilaArchivos)
         
-        self.GuardarCambiosEnArchivo()
+        self.GuardarCambiosEnDisco()
 
         print '[REG] - Updated.' # log
         #self.MostrarRegistros() # muy verboso
@@ -328,7 +328,7 @@ class EstadisticaArchivos:
         dias de los especificados para su eliminacion.
         Los elimina automaticamente y los borra del registro, si no actualiza
         el registro de dias restantes'''
-        self.CargarDesdeArchivo()
+        self.CargarDesdeDisco()
         archivos_a_borrar = []
         for da in self.PilaArchivos:
             if self.ComprobarTiempoArchivo(da.Nombre):
@@ -341,7 +341,7 @@ class EstadisticaArchivos:
                   'created at: %s' %self.GetDatosArchivo(na).FechaYHoraDeSubida , \
                   'passed allowed time.'
             self.BorrarArchivo(na)
-        self.GuardarCambiosEnArchivo()
+        self.GuardarCambiosEnDisco()
 
     def ArchOrdenadosFechaSubida(self, ruta):
         '''
@@ -359,8 +359,8 @@ class EstadisticaArchivos:
             nombs_rutas.sort(key=lambda x: os.path.getmtime(x))
         return nombs_rutas
 
-
-    def GuardarCambiosEnArchivo(self):
+        
+    def GuardarCambiosEnDisco(self):
         '''
         Guarda todas las modificaciones hechas al registro en un archivo serializado 
         en disco duro.
@@ -375,10 +375,10 @@ class EstadisticaArchivos:
             print '[REG] - Error: Object file EstadisticaArchivos.pkl could not be writen.'
             return False
 
-    def CargarDesdeArchivo(self):
+    def CargarDesdeDisco(self):
         '''
         Carga el objeto con los datos guardados en el archivo serializado
-        en disco duro
+        en disco duro.
         '''
         try:
             Eaf = open('EstadisticaArchivos.pkl', 'rb')

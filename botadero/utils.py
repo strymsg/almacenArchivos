@@ -109,7 +109,3 @@ def categorias_y_nums_archivos():
         cat_y_nums.append((cat, num_archivos_por_categoria(cat)))
 
     return cat_y_nums
-    
-
-
-    
