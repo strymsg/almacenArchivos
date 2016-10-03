@@ -178,7 +178,7 @@ a {
 	text-decoration: none;
 	font-weight: bold;
 	line-height: inherit;
-	font-weight: inherit;
+	font-weight: bold;
 }
 
 a:hover {
@@ -370,7 +370,7 @@ code, pre {
 }
 
 code {
-	background-color: #fee9cc;
+	background-color: #E4E4ED; /* -C- */
 	color: rgba(0, 0, 0, 0.75);
 	padding: 1px 3px;
 }
