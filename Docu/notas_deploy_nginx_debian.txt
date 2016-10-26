@@ -128,7 +128,7 @@ Si al ejecutar:
    
    $ sudo systemctl status uwsgi.service
 
-La app esta corriendo se puede habilitar para que se ejecute al inicion con:
+La app esta corriendo se puede habilitar para que se ejecute al inicio con:
 
    $ sudo systemctl enable uwsgi.service
 

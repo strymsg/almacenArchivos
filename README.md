@@ -16,7 +16,7 @@ El botadero soporta categorías (que son directorios dentro la carpeta almacen/)
 **Ejecucion de pruebas**
 
 * `mkdir botadero_pruebas; cd botadero_pruebas`
-* `git clone https://notabug.org/r00thouse/botadero` o descoprimir si se ha descargado en .zip 
+* `git clone https://notabug.org/r00thouse/botadero` o descomprimir si se ha descargado en .zip 
 * Instalar `virtualenv` , `python-pip` , crear un entorno virtual python2.7, luego:
 * Activar el entorno virtual de la carpeta actual: `. venv/bin/activate`
 * `pip install Flask`
