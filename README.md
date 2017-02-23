@@ -46,6 +46,6 @@ Más urgentes primero.
 * Arreglar soporte para descargar archivos mas grandes que 2GB en servidor web.
 * Agregar barra de progreso al subir archivos.
 * Acelerar la comprobacion sha1sum y subida de archivos.
-* Implementar límites de subida por usuario, esto para prevenir que un usuario suba demasiados archivos.
+* Implementar límites de subida por visitante, esto para prevenir que un@ visitante suba demasiados archivos.
 * Implementar sistema detector de robots (captcha?).
 * Revisar disclaimer en info/

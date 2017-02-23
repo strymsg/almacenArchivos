@@ -164,23 +164,25 @@ Incluir en inicio:
 
     sudo update-rc.d botadero-init.sh defaults 99
 
-TODO: (AVISO! configuracion no funcional) Supervisor
-====================================================
+Supervisor
+==========
 
-Para hacer que la aplicacion se ejecute al inicio se puede usar supervisord
+Para hacer que la aplicacion se ejecute y sea vigilada por supervisord
 
   $ sudo apt-get install supervisor
 
 Se debe crear un archivo para indicarle a supervisor como actuar este un
-ejemplo en :
+ejemplo basico en:
 
+/etc/supervisor/conf.d/botadero.conf
 
 [unix_http_server]
-file=/tmp/supervisor.sock   ; (the path to the socket file)
+file=/var/run/supervisor.sock   ; (the path to the socket file)
+
 [supervisord]
 logfile=/tmp/supervisord.log ; (main log file;default $CWD/supervisord.log)
 logfile_maxbytes=50MB       ; (max main logfile bytes b4 rotation;default 50MB)
-logfile_backups=10          ; (num of main logfile rotation backups;default 10)
+logfile_backups=5          ; (num of main logfile rotation backups;default 10)
 loglevel=info               ; (log level;default info; others: debug,warn,trace)
 pidfile=/tmp/supervisord.pid ; (supervisord pidfile;default supervisord.pid)
 nodaemon=false              ; (start in foreground if true;default false)
@@ -188,23 +190,24 @@ minfds=1024                 ; (min. avail startup file descriptors;default 1024)
 minprocs=200                ; (min. avail process descriptors;default 200)
 
 [supervisorctl]
-serverurl=unix:///tmp/supervisor.sock ; use a unix:// URL  for a unix socket
+serverurl=unix:///srv/botadero/botadero.sock
 
 [program:botadero]
-command=/srv/botadero/venv/bin/uwsgi --ini /srv/botadero/botadero.ini
+command=/srv/botadero/venv/bin/uwsgi --ini botadero.ini
 directory=/srv/botadero
+user=www-data
 autostart=true
 autorestart=true
-stdout_logfile=/srv/botadero/logs/uwsgi.log
+stdout_logfile=/srv/botadero/uwsgi.log ; log file
 redirect_stderr=true
-stopsignal=QUIT 
+stopsignal=QUIT
 
+Luego se puede probar con:
 
-Luego terminar los procesos de supervisor
+  $ sudo supervisorctl reload
+  $ sudo supervisorctl start botadero
+  $ sudo killall uwsgi
 
-ps -A | grep supervisor
-kill <id>
-sudo supervisord -c /etc/supervisord.conf
-
+Lo ultimo es requerido por un bug de uwsgi descrito en https://github.com/unbit/uwsgi/issues/296
 
 Mas referencia revisar: http://supervisord.org/configuration.html

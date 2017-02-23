@@ -1,0 +1,38 @@
+## Idea de captcha texto ##
+
+El botadero deberia ser accesible y usable tambien con navegadores en modo texto como lynx y w3m, entonces colocar captchas en forma de imagenes puede ser un limitante para es@s usuari@s.
+
+El captcha deberia ser opcional y activable escribiendo una line en el archivo **parametros.txt**
+
+### Captcha ###
+
+Algunas ideas:
+
+#### Aritmeticos ####
+
+¿Cuánto suma si a 12 le adicionas 8 ?
+> 20
+
+¿Cúanto es DOCE dividido entre TRES?
+> 4
+
+Pon el resultado de VEINTE mas 11
+> 31
+
+#### Palabras ####
+
+De que color era el sombrero rojo de Martin?
+> Rojo
+
+Los seres humanos respiran ...
+> aire
+
+El rio amazonas tiene mucha ...
+> agua
+
+escriba cinco veces la letra e
+> eeeee
+
+
+
+
