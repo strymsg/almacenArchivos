@@ -37,7 +37,7 @@
 			</li>
 			<dd><b>tam:</b> {{ da.Tam/1000 }} (KB) </dd>
 			<dd><b>descargas:</b> <code>{{ da.NumDescargas }}</code> </dd>
-			<dd><b>subida:</b> {{ da.FechaYHoraDeSubida }}</dd>
+			<dd><b>subida:</b> {{ da.FechaYHoraDeSubida|string|truncate(19, True, end='') }}</dd>
 			<dd><b>checksum:</b> {{ da.sha1sum }}  </dd>
 			{% endfor %}
 		</ul>

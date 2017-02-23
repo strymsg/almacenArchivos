@@ -190,7 +190,7 @@ class EstadisticaArchivos:
             print '[REG] - New: File %(na)s size %(sz)d'\
                 % {'na': self.PilaArchivos[-1].categoria +'/'+ self.PilaArchivos[-1].Nombre ,\
                    'sz': self.PilaArchivos[-1].Tam},\
-                '        created at', self.PilaArchivos[-1].FechaYHoraDeSubida
+                '        created at', str(self.PilaArchivos[-1].FechaYHoraDeSubida)
             
             self.GuardarCambiosEnDisco()
             return 0
