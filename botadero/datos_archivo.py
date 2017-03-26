@@ -9,7 +9,7 @@ class DatosDeArchivo:
     FechaYHoraDeSubida = datetime.datetime.now()
     Extension = ''
     NumDescargas = 0
-    sha1sum = ''
+    HashCheck = ''
     categoria = ''
     DiasRestantes = 100
 
@@ -19,11 +19,11 @@ class DatosDeArchivo:
         self.FechaYHoraDeSubida = datetime.datetime.now()
         self.Extension = ''
         self.NumDescargas = 0
-        self.sha1sum = ''
+        self.HashCheck = ''
         self.categoria = ''
         self.DiasRestantes = 100
 
-    def auto_init(self, Nombre_con_ruta, sha1sum=None):
+    def auto_init(self, Nombre_con_ruta, HashAlgorithm, AccelerateHash, HashCheck=None):
         ''' Se guarda el nombre del archivo y su categoria si tiene:
         ej: almacen/entrevista.ogg
             Nombre=entrevista.ogg
@@ -44,19 +44,20 @@ class DatosDeArchivo:
             self.Extension = Nombre_con_ruta.rsplit('.', 1 )[1]
         # NumDescargas
         self.NumDescargas = 0
-        # sha1sum
-        if sha1sum is None:
+        # HashCheck
+        if HashCheck is None:
             with open(Nombre_con_ruta, 'r') as fil:
-                self.sha1sum = self.arch_sha1sum(fil)
+                self.HashCheck = self.arch_hash(fil, HashAlgorithm, AccelerateHash)
         else:
-            self.sha1sum = sha1sum
+            self.HashCheck = HashCheck
         # Fecha y hora simula creacion del archivo ahora.
         self.FechaYHoraDeSubida = datetime.datetime.now()
         # DiasRestantes
         self.DiasRestantes = 100 # dummy
 
     def arch_sha1sum(self, archivo):
-        '''Recibe un objeto archivo y devulve el sha1sum
+        '''  XXX Metodo no utilizado XXX (pronto se borrara)
+        Recibe un objeto archivo y devulve el sha1sum
         Nota: No se restaura el puntero ni se cierra el archivo.'''
         archivo.seek(0) # puntero en 0
         t_ant = -1
@@ -74,16 +75,73 @@ class DatosDeArchivo:
             t_act = archivo.tell()
         return h.hexdigest()
 
-# Nota acerca del nombre del archivo
-#  espcificar el archivo con la ruta completa
-# ejemplo para obtener ruta segura:
-#     ruta = almacen  ,  nombre = tatoo.png
-# se puede crear de forma segura con:
-#     DatosArchivo = DatosDeArchivo(os.path.join(ruta, nombre))
+    def arch_hash(self, archivo, hash_algorithm=None, accelerate=False):
+        ''' Recibe un objeto archivo y aplica el algoritmo `hash_algorithm'
+        que puede ser: 'md5', 'sha1', 'sha224', 'sha256', 'sha384', 'sha512'
+
+        Devuelve el hexdigest resultado del algoritmo aplicado
+
+        Si acc=True, se acelera la comprobacion aplicando el algoritmo solo
+        a algunas partes del archivo, esto no asegura que se evite colision 
+        hash.
+        '''
+        if hash_algorithm not in \
+           ('md5', 'sha1', 'sha224', 'sha256', 'sha384', 'sha512'):
+            hash_algorithm = 'sha1'
+            
+        h=None
+        if hash_algorithm == 'sha1':
+            h = hashlib.sha1()
+        elif hash_algorithm == 'sha224':
+            h = hashlig.sha224()
+        elif hash_algorithm == 'sha256':
+            h = hashlig.sha256()
+        elif hash_algorithm == 'sha384':
+            h = hashlig.sha384()
+        elif hash_algorithm == 'sha512':
+            h = hashlig.sha512()
+        elif hash_algorithm == 'md5':
+            h = hashlig.md5()
+            
+        archivo.seek(0) # puntero en 0
+        t_ant = -1
+        t_act = archivo.tell()
+
+        if accelerate: # comprobacion acelerada
+            i = 0
+            t_ant = t_act
+            t_act = archivo.tell()
+            puntero = 0
+            print "[REG] - Getting "+hash_algorithm+"(accelerated) ..."
+            while t_ant != t_act:
+                puntero += file.seek(i*11*1024*1024)
+                i += 1
+                # se lee en pedazos que crecen a razon de 1 MiB
+                cad = archivo.read(i*1024*1024)
+                h.update(cad)
+                t_ant = t_act
+                t_act = archivo.tell()
+        else:
+            pedazo_tam = 125*1024*1024
+            cad = archivo.read(pedazo_tam)
+            h.update(cad)
+            print "[REG] - Getting "+hash_algorithm+" ..."
+            while t_ant != t_act: 
+                t_ant = t_act
+                t_act = archivo.tell()
+        return h.hexdigest()
 
     def edad(self):
         return (datetime.datetime.now() - self.FechaYHoraDeSubida).days
         #return (datetime.datetime.now() - self.FechaYHoraDeSubida).seconds
+
+    # Nota acerca del nombre del archivo
+    #  espcificar el archivo con la ruta completa
+    # ejemplo para obtener ruta segura:
+    #     ruta = almacen  ,  nombre = tatoo.png
+    # se puede crear de forma segura con:
+    #     DatosArchivo = DatosDeArchivo(os.path.join(ruta, nombre))
+    
 
 def nombre_archivo(Nombre_con_ruta=None):
     tupla = Nombre_con_ruta.split(os.sep)

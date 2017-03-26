@@ -18,6 +18,7 @@ import os
 @app.route('/')
 def pag_inicio():
     utils.EstadisticaArchivos.Actualizar()
+    #utils.EstadisticaArchivos.MostrarRegistros()
     #categorias = ['Misc.', 'Musica', 'documentos', 'videos']
     categoria_actual = ''
     categorias_con_nums = utils.categorias_y_nums_archivos()
@@ -79,7 +80,7 @@ def mostar_info():
                            esquema_colores=utils.esquema_colores_random())
 
 @app.route('/duplicado')
-def mostrar_err_archivo_duplicado(sha1sum=None, nombre=None):
-    return render_template("duplicado.html", sha1sum=sha1sum, nombre=nombre,\
+def mostrar_err_archivo_duplicado(hash_check=None, nombre=None):
+    return render_template("duplicado.html", hash_check=hash_check, nombre=nombre,\
                            esquema_colores=utils.esquema_colores_random())
 

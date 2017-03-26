@@ -86,28 +86,28 @@ class EstadisticaArchivos:
         return False
 
     # TODO: analizar necesidad de esta funcion
-    def ExisteArchivo(self, Nombre_con_ruta, sha1sum):
+    def ExisteArchivo(self, Nombre_con_ruta, hash_check):
         '''
         Comprueba si existe el archivo de un archivo en la ruta dada existe
-        ademas comprueba si el sha1sum corresponde a otro archivo,
+        ademas comprueba si la comprobacion hash corresponde a otro archivo,
         en los registros de archivos
         '''
         if self.ExisteNombre(Nombre_con_ruta):
-            if self.GetDatosArchivo(Nombre_con_ruta).sha1sum == \
-                sha1sum:
+            if self.GetDatosArchivo(Nombre_con_ruta).HashCheck == \
+                hash_check:
                 return True
             else:
                 return False
         return False
 
-    def ExisteArchivoEstricto(self, Nombre, sha1sum):
+    def ExisteArchivoEstricto(self, Nombre, hash_check):
         '''
-        Comprueba si existe el nombre del archivo y si el sha1sum,
+        Comprueba si existe el nombre del archivo y si el hash_check
         corresponde a otro archivo en los registros de archivos.
         '''
         if self.ExisteNombreEstricto(Nombre):
-            if self.GetDatosArchivo(Nombre).sha1sum == \
-               sha1sum:
+            if self.GetDatosArchivo(Nombre).HashCheck == \
+               hash_check:
                 return True
             else:
                 return False
@@ -144,10 +144,10 @@ class EstadisticaArchivos:
             print "[REG] - Error: File %s" % Nombre_con_ruta,\
                 "        could not be found!"
 
-    def AgregarArchivo(self, Nombre_con_ruta, sha1sum, file):
+    def AgregarArchivo(self, Nombre_con_ruta, hash_check, file):
         '''
         Agrega un nuevo archivo comprobando condiciones
-        de tamanyo, espacio disponible, nombre, sha1sum.
+        de tamanyo, espacio disponible, nombre, comprobacion hash.
         Si pasa estas pruebas el archivo se guarda en el disco
         y se crea un nuevo registro
         '''
@@ -155,15 +155,15 @@ class EstadisticaArchivos:
         # comprobacion de espacio disponible
         fsize = len(file.read())
         file.seek(0) # restuarando puntero
-        if (self.Parametros.TotalStorage - self.AlmacenDisponible)\
+        if (self.Parametros.TotalStorage - self.AlmacenDisponible) \
            + fsize > self.Parametros.TotalStorage:
-            print "[STORAGE] - Error non free space: filesize %d"\
-                % fsize, " only %d(ts) " % self.AlmacenDisponible,\
+            print "[STORAGE] - Error non free space: filesize %d" \
+                % fsize, " only %d(ts) " % self.AlmacenDisponible, \
                 " of space available."
             file.close()
             return 1
         # comprobacion de nombre
-        elif self.ExisteNombreEstricto(nombre_archivo(Nombre_con_ruta)):  # comprobacion de no duplicados
+        elif self.ExisteNombreEstricto(Nombre_con_ruta):  # comprobacion de no duplicados
             print "[STORAGE] - Warning: File with name: %s "\
                 %nombre_archivo(Nombre_con_ruta), \
                 "            exists, not uploaded."
@@ -171,9 +171,9 @@ class EstadisticaArchivos:
             return 2
         # comprobacion de tamanyo
         elif self.ExisteArchivoConTamanyo(fsize):
-            # comprobacion de sha1sum
-            if self.ExisteArchivoEstricto(nombre_archivo(Nombre_con_ruta), sha1sum):
-                print "[STORAGE] - Warning: sha1sum %s exists," % sha1sum, \
+            # comprobacion de hash_check
+            if self.ExisteArchivoEstricto(nombre_archivo(Nombre_con_ruta), hash_check):
+                print "[STORAGE] - Warning: hash check %s exists," % hash_check, \
                     "            not uploaded."
                 file.close()
                 return 3
@@ -182,12 +182,15 @@ class EstadisticaArchivos:
             file.close()
             # agrega el nuevo registro a las estadisticas
             da = DatosDeArchivo()
-            da.auto_init(Nombre_con_ruta, sha1sum)
+            da.auto_init(Nombre_con_ruta, \
+                         self.Parametros.HashAlgorithm,\
+                         self.Parametros.AccelerateHash,\
+                         HashCheck=hash_check)
             self.PilaArchivos.append(da)
             self.GuardarCambiosEnDisco()
             self.ComprobarTiempoArchivos()
 
-            print '[REG] - New: File %(na)s size %(sz)d'\
+            print '[REG] - New File: %(na)s size %(sz)d'\
                 % {'na': self.PilaArchivos[-1].categoria +'/'+ self.PilaArchivos[-1].Nombre ,\
                    'sz': self.PilaArchivos[-1].Tam},\
                 '        created at', str(self.PilaArchivos[-1].FechaYHoraDeSubida)
@@ -247,7 +250,9 @@ class EstadisticaArchivos:
                     este caso se deberia dar cuando se copia manualmente
                     archivos en la carpeta `UploadFolder' '''
                     dt_arch = DatosDeArchivo()
-                    dt_arch.auto_init(nomb_con_ruta)
+                    dt_arch.auto_init(nomb_con_ruta, \
+                                      self.Parametros.HashAlgorithm,\
+                                      self.Parametros.AccelerateHash)
                     # agrega nuevo registro
                     self.PilaArchivos.append(dt_arch)
                     
@@ -392,7 +397,7 @@ class EstadisticaArchivos:
             Eaf.close()
             print '[REG] - Loaded: Data from object file '\
                 , '        EstadisticaArchivos.pkl'
-            self.Parametros.Reload_configs()
+            #self.Parametros.Reload_configs()
             return True
         except:
             print '[REG] - Warning: Not found object file '\
@@ -410,9 +415,9 @@ class EstadisticaArchivos:
         print 'Porcentaje Available: %s ' %self.PorcentajeAlmacenDisponible
         print 'Show: Number of files: %s ' %self.NumArchivos
         for pa in self.PilaArchivos:
-            print 'File %(na)s size %(sz)d'\
+            print 'File %(na)s size %(sz)d , hash_check %(hash)s'\
                 % {'na': '#'+pa.categoria+' '+pa.Nombre, \
-                   'sz': pa.Tam},\
+                   'sz': pa.Tam, 'hash': pa.HashCheck},\
                 'created at', pa.FechaYHoraDeSubida
             print '---'
         

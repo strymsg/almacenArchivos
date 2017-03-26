@@ -18,12 +18,30 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 # cargar configuraciones del servidor
 from flask import Flask
 
+print ("Inicializando app")
+print (" registros en archivo: logs/botadero.log")
 app = Flask(__name__, static_url_path='/static')
 
 import botadero.views
-import botadero.utils
+#import botadero.utils
 
 app.config['UPLOAD_FOLDER'] = utils.ParametrosServer.UploadFolder
+app.config['MAX_CONTENT_LENGTH'] = utils.ParametrosServer.SizeMaxToUpload
+
+
+print("[PARAMETERS] - TOTAL_STORAGE=%d" %utils.ParametrosServer.TotalStorage)
+print("[PARAMETERS] - UPLOAD_FOLDER=%s" %utils.ParametrosServer.UploadFolder)
+print("[PARAMETERS] - SIZE_1=%d" %utils.ParametrosServer.Size1)
+print("[PARAMETERS] - SIZE_2=%d" %utils.ParametrosServer.Size2)
+print("[PARAMETERS] - TIME_TO_DEL_0=%d" %utils.ParametrosServer.TimeToDel0)
+print("[PARAMETERS] - TIME_TO_DEL_1=%d" %utils.ParametrosServer.TimeToDel1)
+print("[PARAMETERS] - TIME_TO_DEL_2=%d" %utils.ParametrosServer.TimeToDel2)
+print("[PARAMETERS] - SIZE_MAX_TO_UPLOAD=%d" %utils.ParametrosServer.SizeMaxToUpload)
+print("[PARAMETERS] - Log File =%s" %utils.ParametrosServer.LogFileName)
+print("[PARAMETERS] - Debug Level =%d" %utils.ParametrosServer.DebugLevel)
+print("[PARAMETERS] - HASH_ALGORITHM =%s" %utils.ParametrosServer.HashAlgorithm)
+print("[PARAMETERS] - ACCELERATE_HASH =%s" %utils.ParametrosServer.AccelerateHash)
+
 
 # blueprints
 from botadero.archivos.views import mod as modulo_archivos
@@ -39,15 +57,16 @@ if __name__ == '__main__':
 
     # cargar configuraciones del servidor
     utils.EstadisticaArchivos.Inicializar()
-    
-    print "[PARAMETERS] - TOTAL_STORAGE=%d" %ParametrosServer.TotalStorage
-    print "[PARAMETERS] - UPLOAD_FOLDER=%s" %ParametrosServer.UploadFolder
-    print "[PARAMETERS] - SIZE_1=%d" %ParametrosServer.Size1
-    print "[PARAMETERS] - SIZE_2=%d" %ParametrosServer.Size2
-    print "[PARAMETERS] - TIME_TO_DEL_0=%d" %ParametrosServer.TimeToDel0
-    print "[PARAMETERS] - TIME_TO_DEL_1=%d" %ParametrosServer.TimeToDel1
-    print "[PARAMETERS] - TIME_TO_DEL_2=%d" %ParametrosServer.TimeToDel2
-    print "[PARAMETERS] - SIZE_MAX_TO_UPLOAD=%d" %ParametrosServer.SizeMaxToUpload
-    print "[PARAMETERS] - Log File =%s" %ParametrosServer.LogFileName
-    print "[PARAMETERS] - Debug Level =%d" %ParametrosServer.DebugLevel
 
+    print("[PARAMETERS] - TOTAL_STORAGE=%d" %utils.ParametrosServer.TotalStorage)
+    print("[PARAMETERS] - UPLOAD_FOLDER=%s" %utils.ParametrosServer.UploadFolder)
+    print("[PARAMETERS] - SIZE_1=%d" %utils.ParametrosServer.Size1)
+    print("[PARAMETERS] - SIZE_2=%d" %utils.ParametrosServer.Size2)
+    print("[PARAMETERS] - TIME_TO_DEL_0=%d" %utils.ParametrosServer.TimeToDel0)
+    print("[PARAMETERS] - TIME_TO_DEL_1=%d" %utils.ParametrosServer.TimeToDel1)
+    print("[PARAMETERS] - TIME_TO_DEL_2=%d" %utils.ParametrosServer.TimeToDel2)
+    print("[PARAMETERS] - SIZE_MAX_TO_UPLOAD=%d" %utils.ParametrosServer.SizeMaxToUpload)
+    print("[PARAMETERS] - Log File =%s" %utils.ParametrosServer.LogFileName)
+    print("[PARAMETERS] - Debug Level =%d" %utils.ParametrosServer.DebugLevel)
+    print("[PARAMETERS] - HASH_ALGORITHM =%s" %utils.ParametrosServer.HashAlgorithm)
+    print("[PARAMETERS] - ACCELERATE_HASH =%s" %utils.ParametrosServer.AccelerateHash)

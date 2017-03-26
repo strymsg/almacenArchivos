@@ -20,6 +20,8 @@ import os
 mod = Blueprint('archivos', __name__, url_prefix='/almacen')
 
 UploadFolder = utils.EstadisticaArchivos.Parametros.UploadFolder
+HashAlgorithm = utils.EstadisticaArchivos.Parametros.HashAlgorithm
+AccelerateHash = utils.EstadisticaArchivos.Parametros.AccelerateHash
 
 @mod.route('/<path:filename>')
 def donwload_file(filename):
@@ -60,6 +62,7 @@ def upload_file():
 
     utils.EstadisticaArchivos.Actualizar()
     if request.method == 'POST':
+        print ("[UPLOAD] - Request to Upload file at: /")
         file = request.files['file'] #devuelve tipo FileStorage
         filename = ''
         if file:
@@ -68,16 +71,18 @@ def upload_file():
             # los datos van llegando con haslib.update() para no
             # copiar el archivo (evitar duplicacion)
             da = utils.DatosDeArchivo()
-            sha1sum = da.arch_sha1sum(file)
+            print ("[UPLOAD] - Perparing to Apply: "+HashAlgorithm)
+            hash_chk = da.arch_hash(file, hash_algorithm=HashAlgorithm,
+                                    accelerate=AccelerateHash)
             print "[UPLOAD] - Request to upload File %s" %filename\
-                ,"            checksum %s" % sha1sum
+                ,"            hash_check %s" % hash_chk
             
             # restaura el puntero
             file.seek(0)
             aux = os.path.join(UploadFolder, filename)
-            if utils.EstadisticaArchivos.AgregarArchivo(aux, sha1sum, file) != 0:
+            if utils.EstadisticaArchivos.AgregarArchivo(aux, hash_chk, file) != 0:
                 # mostrar error en pantalla
-                return views.mostrar_err_archivo_duplicado(sha1sum=sha1sum, nombre=filename)
+                return views.mostrar_err_archivo_duplicado(hash_check=hash_chk, nombre=filename)
 
         return redirect("/", code=302)
         # http://stackoverflow.com/questions/14343812/redirecting-to-url-in-flask
@@ -101,6 +106,7 @@ def upload_file_cat(cat):
     
     if request.method == 'POST':
         file = request.files['file'] #devuelve tipo FileStorage
+        print ("[UPLOAD] - Request to Upload file at: "+cat+"/")
         filename = ''
         if file:
             filename = secure_filename(file.filename)
@@ -108,17 +114,19 @@ def upload_file_cat(cat):
             # los datos van llegando con haslib.update() para no
             # copiar el archivo (evitar duplicacion)
             da = utils.DatosDeArchivo()
-            sha1sum = da.arch_sha1sum(file)
+            print ("[UPLOAD] - Perparing to Apply: "+HashAlgorithm)
+            hash_chk = da.arch_hash(file, hash_algorithm=HashAlgorithm,\
+                                    accelerate=AccelerateHash)
             print "[UPLOAD] - Request to upload File %s" %filename ,\
                 " to category #%s" %cat \
-                ,"            checksum %s" % sha1sum
+                ,"            hash check %s" % hash_chk
             
             # restaura el puntero
             file.seek(0)
             aux = os.path.join(UploadFolder, cat, filename)
-            if utils.EstadisticaArchivos.AgregarArchivo(aux, sha1sum, file) != 0:
+            if utils.EstadisticaArchivos.AgregarArchivo(aux, hash_chk, file) != 0:
                 # mostrar error en pantalla
-                return views.mostrar_err_archivo_duplicado(sha1sum=sha1sum, nombre=filename)
+                return views.mostrar_err_archivo_duplicado(hash_check=hash_chk, nombre=filename)
 
         return redirect("/"+cat, code=302)
         # http://stackoverflow.com/questions/14343812/redirecting-to-url-in-flask

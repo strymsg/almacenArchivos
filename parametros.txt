@@ -1,4 +1,4 @@
-# Parametros para "botadero"
+# Parametros para "el botadero"
 
 # NOMBRE<espacio_en_blaco>PARAMETRO
 #   solo es valido *un espacio en blanco*
@@ -12,12 +12,12 @@
 
 # Almacenamiento total en el servidor reservado para la app (bytes)
 
-TOTAL_STORAGE 11000000000
+TOTAL_STORAGE 10500000000
 
 # Niveles de tamaño de archivos (bytes)
 
-SIZE_1 62000000
-SIZE_2 218700000
+SIZE_1 61000000
+SIZE_2 205700000
 
 # Tamaño máximo de archivos (bytes)
 
@@ -31,3 +31,13 @@ TIME_TO_DEL_0 17
 TIME_TO_DEL_1 14
 TIME_TO_DEL_2 10
 
+# Algoritmo de comprobación de archivos
+# sólo se soportan: md5, sha1, sha224, sha256, sha384, sha512
+
+HASH_ALGORITHM sha1
+
+# Comprobación de archivos acelerada (True, False)
+# Si es True la comprobación de archivos nuevos subidos es 10 veces
+# más rápida, pero sólo se examina una décima parte de los archivos
+
+ACCELERATE_HASH True

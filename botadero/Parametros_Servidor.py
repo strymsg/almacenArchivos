@@ -30,6 +30,8 @@ class ParametrosServidor:
     SizeMaxToUpload = 0
     LogFileName = ''
     DebugLevel = 0
+    HashAlgorithm = ''
+    AccelerateHash = True
         
     def __init__(self):
         self.NombreArchivoConfig = 'parametros.txt'
@@ -42,7 +44,9 @@ class ParametrosServidor:
         self.TimeToDel2 = 0
         self.SizeMaxToUpload = 0
         self.LogFileName = os.path.join('logs', 'botadero.log')
-        self.DebugLevel = 0        
+        self.DebugLevel = 0
+        self.HashAlgorithm = 'sha1'
+        self.AccelerateHash = True
 
     def __init__(self, nombre_archivo_config, DebugLevel):
         self.init(nombre_archivo_config, DebugLevel)
@@ -60,6 +64,8 @@ class ParametrosServidor:
         self.SizeMaxToUpload = 650000000000 # aprox 6.5 GB
         self.LogFileName = os.path.join('logs', 'botadero.log')
         self.DebugLevel = 20 # info
+        self.HashAlgorithm = 'sha1'
+        self.AccelerateHash = True
 
         # Inicializa el logueo
         initLogs(self.LogFileName , self.DebugLevel)
@@ -124,4 +130,22 @@ class ParametrosServidor:
                         else:
                             err = err + 1
                             print '[CONFIG_FILE] - Error: TIME_TO_DEL_2 parameter'
+                    elif lis[0] == 'HASH_ALGORITHM':
+                        cad = lis[1][0:-1] # quitando \n
+                        if cad != '' and \
+                           cad in ('md5', 'sha1', 'sha224', 'sha256', 'sha384', 'sha512'):
+                            self.HashAlgorithm = cad
+                        else:
+                            err = err + 1
+                            print '[CONFIG_FILE] - Error: HASH_ALGORITHM:'+cad+"--"
+                    elif lis[0] == 'ACCELERATE_HASH':
+                        if lis[1] != '':
+                            if lis[1] == "True":
+                                self.AccelerateHash = True
+                            if lis[1] == "False":
+                                self.AccelerateHash = False
+                        else:
+                            err = err + 1
+                            print '[CONFIG_FILE] - Error: ACCELERATE_HASH'
+
         return err
