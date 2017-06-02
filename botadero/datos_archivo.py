@@ -114,7 +114,8 @@ class DatosDeArchivo:
             puntero = 0
             print "[REG] - Getting "+hash_algorithm+"(accelerated) ..."
             while t_ant != t_act:
-                puntero += file.seek(i*11*1024*1024)
+                puntero += file.seek(i*11*1024*1024 , \
+                                     whence=os.SEEK_CUR)
                 i += 1
                 # se lee en pedazos que crecen a razon de 1 MiB
                 cad = archivo.read(i*1024*1024)

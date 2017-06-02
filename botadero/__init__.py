@@ -29,7 +29,7 @@ app.config['UPLOAD_FOLDER'] = utils.ParametrosServer.UploadFolder
 app.config['MAX_CONTENT_LENGTH'] = utils.ParametrosServer.SizeMaxToUpload
 
 
-print("[PARAMETERS] - TOTAL_STORAGE=%d" %utils.ParametrosServer.TotalStorage)
+print(">[PARAMETERS] - TOTAL_STORAGE=%d" %utils.ParametrosServer.TotalStorage)
 print("[PARAMETERS] - UPLOAD_FOLDER=%s" %utils.ParametrosServer.UploadFolder)
 print("[PARAMETERS] - SIZE_1=%d" %utils.ParametrosServer.Size1)
 print("[PARAMETERS] - SIZE_2=%d" %utils.ParametrosServer.Size2)

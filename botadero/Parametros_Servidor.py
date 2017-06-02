@@ -140,9 +140,9 @@ class ParametrosServidor:
                             print '[CONFIG_FILE] - Error: HASH_ALGORITHM:'+cad+"--"
                     elif lis[0] == 'ACCELERATE_HASH':
                         if lis[1] != '':
-                            if lis[1] == "True":
+                            if lis[1][0:-1] == "True":
                                 self.AccelerateHash = True
-                            if lis[1] == "False":
+                            if lis[1][0:-1] == "False":
                                 self.AccelerateHash = False
                         else:
                             err = err + 1
