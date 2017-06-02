@@ -153,7 +153,11 @@ class EstadisticaArchivos:
         '''
         self.CargarDesdeDisco()
         # comprobacion de espacio disponible
-        fsize = len(file.read())
+        ### OJO file.read() lee el archivo, se debe reemplazar esto
+        #fsize = len(file.read())
+        fsize = file.tell()
+        ####
+        
         file.seek(0) # restuarando puntero
         if (self.Parametros.TotalStorage - self.AlmacenDisponible) \
            + fsize > self.Parametros.TotalStorage:
@@ -178,7 +182,7 @@ class EstadisticaArchivos:
                 file.close()
                 return 3
         else:
-            file.save(Nombre_con_ruta)
+            file.save(Nombre_con_ruta)  # save es un metodo propio de Flask
             file.close()
             # agrega el nuevo registro a las estadisticas
             da = DatosDeArchivo()

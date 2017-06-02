@@ -83,7 +83,7 @@ def upload_file():
             if utils.EstadisticaArchivos.AgregarArchivo(aux, hash_chk, file) != 0:
                 # mostrar error en pantalla
                 return views.mostrar_err_archivo_duplicado(hash_check=hash_chk, nombre=filename)
-
+            
         return redirect("/", code=302)
         # http://stackoverflow.com/questions/14343812/redirecting-to-url-in-flask
     else:
