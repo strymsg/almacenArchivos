@@ -72,15 +72,14 @@ def upload_file():
             # copiar el archivo (evitar duplicacion)
             da = utils.DatosDeArchivo()
             print ("[UPLOAD] - Perparing to Apply: "+HashAlgorithm)
-            hash_chk = da.arch_hash(file, hash_algorithm=HashAlgorithm,
+            hash_chk = da.arch_hash(file, hash_algorithm=HashAlgorithm, \
                                     accelerate=AccelerateHash)
-            print "[UPLOAD] - Request to upload File %s" %filename\
+            print "[UPLOAD] - Upload File: %s" \
+                %filename\
                 ,"            hash_check %s" % hash_chk
             
-            # restaura el puntero
-            file.seek(0)
-            aux = os.path.join(UploadFolder, filename)
-            if utils.EstadisticaArchivos.AgregarArchivo(aux, hash_chk, file) != 0:
+            name = os.path.join(UploadFolder, filename)
+            if utils.EstadisticaArchivos.AgregarArchivo(name, hash_chk, file) != 0:
                 # mostrar error en pantalla
                 return views.mostrar_err_archivo_duplicado(hash_check=hash_chk, nombre=filename)
             
@@ -122,7 +121,7 @@ def upload_file_cat(cat):
                 ,"            hash check %s" % hash_chk
             
             # restaura el puntero
-            file.seek(0)
+            #file.seek(0)
             aux = os.path.join(UploadFolder, cat, filename)
             if utils.EstadisticaArchivos.AgregarArchivo(aux, hash_chk, file) != 0:
                 # mostrar error en pantalla

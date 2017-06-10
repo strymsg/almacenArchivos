@@ -85,11 +85,18 @@ class EstadisticaArchivos:
                 return True
         return False
 
+    def ExisteHash(self, Hash):
+        ''' Comprueba si existe el hash en el registro de archivos'''
+        for da in self.PilaArchivos:
+            if Hash == da.HashCheck:
+                return True
+        return False
+
     # TODO: analizar necesidad de esta funcion
     def ExisteArchivo(self, Nombre_con_ruta, hash_check):
         '''
-        Comprueba si existe el archivo de un archivo en la ruta dada existe
-        ademas comprueba si la comprobacion hash corresponde a otro archivo,
+        Comprueba si existe el archivo en la ruta dada existe.
+        Ademas comprueba si la comprobacion hash corresponde a otro archivo,
         en los registros de archivos
         '''
         if self.ExisteNombre(Nombre_con_ruta):
@@ -106,11 +113,10 @@ class EstadisticaArchivos:
         corresponde a otro archivo en los registros de archivos.
         '''
         if self.ExisteNombreEstricto(Nombre):
-            if self.GetDatosArchivo(Nombre).HashCheck == \
-               hash_check:
+            return True
+        else:
+            if self.ExisteHash(hash_check):
                 return True
-            else:
-                return False
         return False
 
     def ExisteArchivoConTamanyo(self, tam):
@@ -158,7 +164,7 @@ class EstadisticaArchivos:
         fsize = file.tell()
         ####
         
-        file.seek(0) # restuarando puntero
+        file.seek(0)
         if (self.Parametros.TotalStorage - self.AlmacenDisponible) \
            + fsize > self.Parametros.TotalStorage:
             print "[STORAGE] - Error non free space: filesize %d" \

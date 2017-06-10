@@ -43,10 +43,12 @@ Esta aplicación no usa bases de datos.
 
 Más urgentes primero.
 
+* [BUG] Arreglar la comprobacion de archivos duplicados
 * [BUG] Arreglar el problema cuando se suben archivos estos se copian en al parecer un buffer, luego una vez se comprueba no duplicacion se copia el archivo nuevamente al directorio, analizar si es necesario moverlo o establecer el directorio destino como "buffer". (Para profundizar eso, se debe estudiar flask (metodo save() en flask_uploads.py) y werkzeug (datastructures.py) para dominar forma que que guardan los archivos subidos.
-* [BUG] Averiguar por que los `hash_check` se van repitiendo al subir los archivos.
+* [IMPROVE] Comprobar si el nombre del archivo que se quiere subir ya existe (antes de hacer el hash o siquiea empezar a recibir el archivo)
 * Arreglar soporte para descargar archivos mas grandes que 2GB en servidor web.
-* Agregar barra de progreso al subir archivos.
+* [IMPROVE] Agregar barra de progreso al subir archivos.
+* [IMPROVE] Agregar caja para arrastrar archivos hacia el navegador (drag and drop)
 * Implementar límites de subida por visitante, esto para prevenir que un@ visitante suba demasiados archivos.
 * Implementar sistema detector de robots (captcha?).
 * Revisar disclaimer en info/
