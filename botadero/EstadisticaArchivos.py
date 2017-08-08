@@ -96,7 +96,9 @@ class EstadisticaArchivos:
 
     def ExisteHash(self, Hash):
         ''' Comprueba si existe el hash en el registro de archivos'''
+        print ("hash.... %s" % Hash)
         for da in self.PilaArchivos:
+            print("nombre: %s  hash: %s" % [da.Nombre, da.HashCheck])
             if Hash == da.HashCheck:
                 return True
         return False
@@ -129,7 +131,9 @@ class EstadisticaArchivos:
         return False
 
     def ExisteArchivoConTamanyo(self, tam):
+        print ("-- tamanyo: %s" % tam)
         for da in self.PilaArchivos:
+            print(da.Tam)
             if tam == da.Tam:
                 return True
         return False
@@ -168,10 +172,9 @@ class EstadisticaArchivos:
         '''
         self.CargarDesdeDisco()
         # comprobacion de espacio disponible
-        ### OJO file.read() lee el archivo, se debe reemplazar esto
-        #fsize = len(file.read())
+        #TODO: Al parecer file.tell() no esta devolviendo el tamanyo exacto
+        #      del archivo
         fsize = file.tell()
-        ####
         
         file.seek(0)
         if (self.Parametros.TotalStorage - self.almacenDisponible) \
@@ -182,16 +185,17 @@ class EstadisticaArchivos:
             file.close()
             return 1
         # comprobacion de nombre
-        elif self.ExisteNombreEstricto(Nombre_con_ruta):  # comprobacion de no duplicados
+        elif self.ExisteNombre(Nombre_con_ruta):  # comprobacion de no duplicados
             print "[STORAGE] - Warning: File with name: %s "\
-                %nombre_archivo(Nombre_con_ruta), \
+                % self.NombreSinRuta(Nombre_con_ruta), \
                 "            exists, not uploaded."
             file.close()
             return 2
         # comprobacion de tamanyo
+        #TODO: corregir esta comprobacion
         elif self.ExisteArchivoConTamanyo(fsize):
             # comprobacion de hash_check
-            if self.ExisteArchivoEstricto(nombre_archivo(Nombre_con_ruta), hash_check):
+            if self.ExisteArchivoEstricto(self.NombreSinRuta(Nombre_con_ruta), hash_check):
                 print "[STORAGE] - Warning: hash check %s exists," % hash_check, \
                     "            not uploaded."
                 file.close()
@@ -440,3 +444,7 @@ class EstadisticaArchivos:
                 'created at', pa.FechaYHoraDeSubida
             print '---'
         
+    def NombreSinRuta(self, Nombre_con_ruta):
+        ''' Retorna el nombre del archivo sin la ruta
+        '''
+        return Nombre_con_ruta.split(os.path.sep)[-1]

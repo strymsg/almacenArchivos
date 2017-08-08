@@ -105,9 +105,9 @@ class DatosDeArchivo:
                 puntero = archivo.tell()
 
                 i += 1
-                print ("pos:", str(archivo.tell()))
-                print ("pedazo", str(len(cad)))
-                print ("hash:", h.hexdigest())
+                # print ("pos:", str(archivo.tell()))
+                # print ("pedazo", str(len(cad)))
+                # print ("hash:", h.hexdigest())
         else:
             pedazo_tam = 125*1024*1024
             cad = archivo.read(pedazo_tam)
