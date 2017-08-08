@@ -3,6 +3,7 @@ This file is part of Botadero
 '''
 from botadero import app
 from botadero import utils
+#from botadero.utils import *
 
 from flask import Blueprint
 from flask import render_template
@@ -17,18 +18,18 @@ import os
 ##### Rutas #######
 @app.route('/')
 def pag_inicio():
-    utils.EstadisticaArchivos.Actualizar()
+    utils.Ea.Actualizar()
     #utils.EstadisticaArchivos.MostrarRegistros()
     #categorias = ['Misc.', 'Musica', 'documentos', 'videos']
     categoria_actual = ''
     categorias_con_nums = utils.categorias_y_nums_archivos()
 
     return render_template("index.html", \
-                           borrar_1=utils.EstadisticaArchivos.Parametros.TimeToDel0,\
-                           borrar_2=utils.EstadisticaArchivos.Parametros.TimeToDel2,\
-                           esp_disp=utils.EstadisticaArchivos.AlmacenDisponible/1000000,\
-                           p_disp=utils.EstadisticaArchivos.PorcentajeAlmacenDisponible,\
-                           num_arch=utils.EstadisticaArchivos.NumArchivos,\
+                           borrar_1=utils.Ea.Parametros.TimeToDel0,\
+                           borrar_2=utils.Ea.Parametros.TimeToDel2,\
+                           esp_disp=utils.Ea.almacenDisponible/1000000,\
+                           p_disp=utils.Ea.porcentajeAlmacenDisponible,\
+                           num_arch=utils.Ea.numArchivos,\
                            lista_archivos=utils.ls_archivos(),\
                            esquema_colores=utils.esquema_colores_random(),\
                            categoria_actual=categoria_actual,\
@@ -36,7 +37,7 @@ def pag_inicio():
 
 @app.route('/<cat>/')
 def pag_principal(cat):
-    utils.EstadisticaArchivos.Actualizar()
+    utils.Ea.Actualizar()
     categorias = utils.categorias()
     categoria_actual = ''
     if cat in categorias:
@@ -47,11 +48,11 @@ def pag_principal(cat):
     categorias_con_nums = utils.categorias_y_nums_archivos()
 
     return render_template("index.html", \
-                           borrar_1=utils.EstadisticaArchivos.Parametros.TimeToDel0,\
-                           borrar_2=utils.EstadisticaArchivos.Parametros.TimeToDel2,\
-                           esp_disp=utils.EstadisticaArchivos.AlmacenDisponible/1000000,\
-                           p_disp=utils.EstadisticaArchivos.PorcentajeAlmacenDisponible,\
-                           num_arch=utils.EstadisticaArchivos.NumArchivos,\
+                           borrar_1=utils.Ea.Parametros.TimeToDel0,\
+                           borrar_2=utils.Ea.Parametros.TimeToDel2,\
+                           esp_disp=utils.Ea.almacenDisponible/1000000,\
+                           p_disp=utils.Ea.porcentajeAlmacenDisponible,\
+                           num_arch=utils.Ea.numArchivos,\
                            lista_archivos=utils.ls_archivos(categoria_actual),\
                            esquema_colores=utils.esquema_colores_random(),\
                            categoria_actual=categoria_actual,\
@@ -59,24 +60,24 @@ def pag_principal(cat):
 
 @app.route('/estadisticas')
 def mostrar_estadisticas():
-    utils.EstadisticaArchivos.Actualizar()
+    utils.Ea.Actualizar()
 
     return render_template("estadisticas.html", \
-                           datos_archivos=utils.EstadisticaArchivos.PilaArchivos,\
-                           esp_disp=utils.EstadisticaArchivos.AlmacenDisponible/1000000,\
-                           p_disp=utils.EstadisticaArchivos.PorcentajeAlmacenDisponible,\
-                           num_arch=utils.EstadisticaArchivos.NumArchivos,\
+                           datos_archivos=utils.Ea.PilaArchivos,\
+                           esp_disp=utils.Ea.almacenDisponible/1000000,\
+                           p_disp=utils.Ea.porcentajeAlmacenDisponible,\
+                           num_arch=utils.Ea.numArchivos,\
                            esquema_colores=utils.esquema_colores_random())
 
 @app.route('/info')
 def mostar_info():
-    return render_template("info.html", dm=utils.EstadisticaArchivos.Parametros.TotalStorage/1000000,\
-                           sz1=utils.EstadisticaArchivos.Parametros.Size1/1000000,\
-                           sz2=utils.EstadisticaArchivos.Parametros.Size2/1000000,\
-                           td0=utils.EstadisticaArchivos.Parametros.TimeToDel0,\
-                           td1=utils.EstadisticaArchivos.Parametros.TimeToDel1,\
-                           td2=utils.EstadisticaArchivos.Parametros.TimeToDel2,\
-                           ms=utils.EstadisticaArchivos.Parametros.SizeMaxToUpload/1000000,\
+    return render_template("info.html", dm=utils.Ea.Parametros.TotalStorage/1000000,\
+                           sz1=utils.Ea.Parametros.Size1/1000000,\
+                           sz2=utils.Ea.Parametros.Size2/1000000,\
+                           td0=utils.Ea.Parametros.TimeToDel0,\
+                           td1=utils.Ea.Parametros.TimeToDel1,\
+                           td2=utils.Ea.Parametros.TimeToDel2,\
+                           ms=utils.Ea.Parametros.SizeMaxToUpload/1000000,\
                            esquema_colores=utils.esquema_colores_random())
 
 @app.route('/duplicado')

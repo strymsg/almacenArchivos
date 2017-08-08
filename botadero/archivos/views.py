@@ -11,6 +11,7 @@ from flask import url_for
 #from botadero import app
 from botadero import utils
 from botadero import views
+from botadero import DatosDeArchivo
 
 from werkzeug import secure_filename
 from jinja2 import Environment, PackageLoader
@@ -19,9 +20,9 @@ import os
 
 mod = Blueprint('archivos', __name__, url_prefix='/almacen')
 
-UploadFolder = utils.EstadisticaArchivos.Parametros.UploadFolder
-HashAlgorithm = utils.EstadisticaArchivos.Parametros.HashAlgorithm
-AccelerateHash = utils.EstadisticaArchivos.Parametros.AccelerateHash
+UploadFolder = utils.Ea.Parametros.UploadFolder
+HashAlgorithm = utils.Ea.Parametros.HashAlgorithm
+AccelerateHash = utils.Ea.Parametros.AccelerateHash
 
 @mod.route('/<path:filename>')
 def donwload_file(filename):
@@ -38,7 +39,7 @@ def donwload_file(filename):
         print "[DOWNLOAD] - Not allowed download detected: %s" %filename
         abort(404)
     
-    utils.EstadisticaArchivos.IncrementarNumDescargas(os.path.join(UploadFolder,\
+    utils.Ea.IncrementarNumDescargas(os.path.join(UploadFolder,\
                                                                    filename))
 
 
@@ -60,7 +61,7 @@ def upload_file():
     TODO: Subir los archivos por pedazos.
     TODO: agregar captcha? '''
 
-    utils.EstadisticaArchivos.Actualizar()
+    utils.Ea.Actualizar()
     if request.method == 'POST':
         print ("[UPLOAD] - Request to Upload file at: /")
         file = request.files['file'] #devuelve tipo FileStorage
@@ -70,7 +71,8 @@ def upload_file():
             # TODO: Ver la forma de hacer el checksum a medida
             # los datos van llegando con haslib.update() para no
             # copiar el archivo (evitar duplicacion)
-            da = utils.DatosDeArchivo()
+            #da = utils.DatosDeArchivo()
+            da = DatosDeArchivo.DatosDeArchivo()
             print ("[UPLOAD] - Perparing to Apply: "+HashAlgorithm)
             hash_chk = da.arch_hash(file, hash_algorithm=HashAlgorithm, \
                                     accelerate=AccelerateHash)
@@ -79,7 +81,7 @@ def upload_file():
                 ,"            hash_check %s" % hash_chk
             
             name = os.path.join(UploadFolder, filename)
-            if utils.EstadisticaArchivos.AgregarArchivo(name, hash_chk, file) != 0:
+            if utils.Ea.AgregarArchivo(name, hash_chk, file) != 0:
                 # mostrar error en pantalla
                 return views.mostrar_err_archivo_duplicado(hash_check=hash_chk, nombre=filename)
             
@@ -94,7 +96,7 @@ def upload_file_cat(cat):
     TODO: Subir los archivos por pedazos.
     TODO: agregar captcha? '''
 
-    utils.EstadisticaArchivos.Actualizar()
+    utils.Ea.Actualizar()
     categorias = utils.categorias()
     categoria_actual = ''
     categorias = [""] + categorias # dummy
@@ -123,7 +125,7 @@ def upload_file_cat(cat):
             # restaura el puntero
             #file.seek(0)
             aux = os.path.join(UploadFolder, cat, filename)
-            if utils.EstadisticaArchivos.AgregarArchivo(aux, hash_chk, file) != 0:
+            if utils.Ea.AgregarArchivo(aux, hash_chk, file) != 0:
                 # mostrar error en pantalla
                 return views.mostrar_err_archivo_duplicado(hash_check=hash_chk, nombre=filename)
 

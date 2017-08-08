@@ -16,8 +16,10 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 import pickle
-from botadero.Parametros_Servidor import *
-from botadero.datos_archivo import *
+import os
+
+from botadero import ParametrosServidor
+from botadero import DatosDeArchivo 
 
 '''
 Nota acerca de 'descincronizacion' cuando esta en produccion
@@ -32,12 +34,19 @@ TODO: Averiguar como manejar un unico objeto en RAM comun a todos los hilos
       actualmente.
 '''
 class EstadisticaArchivos:
+    Parametros = ParametrosServidor.ParametrosServidor("parametros.txt", "")
+    almacenDisponible = 0
+    numArchivos = 0
+    porcentajeAlmacenDisponible = 0
+    PilaArchivos = []
+
     def __init__(self, NombreArchivoConfig, DebugLevel):
-        self.Parametros = ParametrosServidor(NombreArchivoConfig \
-                                             , DebugLevel)
-        self.AlmacenDisponible = 0
-        self.PorcentajeAlmacenDisponible = 0
-        self.NumArchivos = 0
+        self.Parametros = ParametrosServidor.\
+                          ParametrosServidor(NombreArchivoConfig \
+                                     , DebugLevel)
+        self.almacenDisponible = 0
+        self.porcentajealmacenDisponible = 0
+        self.numArchivos = 0
 
         self.PilaArchivos = []
 
@@ -165,10 +174,10 @@ class EstadisticaArchivos:
         ####
         
         file.seek(0)
-        if (self.Parametros.TotalStorage - self.AlmacenDisponible) \
+        if (self.Parametros.TotalStorage - self.almacenDisponible) \
            + fsize > self.Parametros.TotalStorage:
             print "[STORAGE] - Error non free space: filesize %d" \
-                % fsize, " only %d(ts) " % self.AlmacenDisponible, \
+                % fsize, " only %d(ts) " % self.almacenDisponible, \
                 " of space available."
             file.close()
             return 1
@@ -191,7 +200,7 @@ class EstadisticaArchivos:
             file.save(Nombre_con_ruta)  # save es un metodo propio de Flask
             file.close()
             # agrega el nuevo registro a las estadisticas
-            da = DatosDeArchivo()
+            da = DatosDeArchivo.DatosDeArchivo()
             da.auto_init(Nombre_con_ruta, \
                          self.Parametros.HashAlgorithm,\
                          self.Parametros.AccelerateHash,\
@@ -259,7 +268,7 @@ class EstadisticaArchivos:
                     '''actualizar registro del nuevo archivo 
                     este caso se deberia dar cuando se copia manualmente
                     archivos en la carpeta `UploadFolder' '''
-                    dt_arch = DatosDeArchivo()
+                    dt_arch = DatosDeArchivo.DatosDeArchivo()
                     dt_arch.auto_init(nomb_con_ruta, \
                                       self.Parametros.HashAlgorithm,\
                                       self.Parametros.AccelerateHash)
@@ -301,10 +310,10 @@ class EstadisticaArchivos:
         for da in self.PilaArchivos:
             tam_total = tam_total + da.Tam
             
-        self.AlmacenDisponible = self.Parametros.TotalStorage - tam_total
-        self.PorcentajeAlmacenDisponible = 100 - (tam_total * 100)\
-                                           / self.AlmacenDisponible
-        self.NumArchivos = len(self.PilaArchivos)
+        self.almacenDisponible = self.Parametros.TotalStorage - tam_total
+        self.porcentajealmacenDisponible = 100 - (tam_total * 100)\
+                                           / self.almacenDisponible
+        self.numArchivos = len(self.PilaArchivos)
         
         self.GuardarCambiosEnDisco()
 
@@ -400,9 +409,9 @@ class EstadisticaArchivos:
             Ea = pickle.load(Eaf)
             # copia el objeto guardado
             self.PilaArchivos = Ea.PilaArchivos
-            self.AlmacenDisponible = Ea.AlmacenDisponible
-            self.PorcentajeAlmacenDisponible = Ea.PorcentajeAlmacenDisponible
-            self.NumArchivos = self.NumArchivos
+            self.almacenDisponible = Ea.almacenDisponible
+            self.porcentajealmacenDisponible = Ea.porcentajealmacenDisponible
+            self.numArchivos = self.numArchivos
             
             Eaf.close()
             print '[REG] - Loaded: Data from object file '\
@@ -421,9 +430,9 @@ class EstadisticaArchivos:
         print '[REG] - ---------------------'
         print '[REG] - Showing all registers'
         print '[REG] - ---------------------'
-        print 'Available: %s ' %self.AlmacenDisponible
-        print 'Porcentaje Available: %s ' %self.PorcentajeAlmacenDisponible
-        print 'Show: Number of files: %s ' %self.NumArchivos
+        print 'Available: %s ' %self.almacenDisponible
+        print 'Porcentaje Available: %s ' %self.porcentajeAlmacenDisponible
+        print 'Show: Number of files: %s ' %self.numArchivos
         for pa in self.PilaArchivos:
             print 'File %(na)s size %(sz)d , hash_check %(hash)s'\
                 % {'na': '#'+pa.categoria+' '+pa.Nombre, \

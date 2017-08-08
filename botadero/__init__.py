@@ -28,45 +28,41 @@ import botadero.views
 app.config['UPLOAD_FOLDER'] = utils.ParametrosServer.UploadFolder
 app.config['MAX_CONTENT_LENGTH'] = utils.ParametrosServer.SizeMaxToUpload
 
-
-print(">[PARAMETERS] - TOTAL_STORAGE=%d" %utils.ParametrosServer.TotalStorage)
-print("[PARAMETERS] - UPLOAD_FOLDER=%s" %utils.ParametrosServer.UploadFolder)
-print("[PARAMETERS] - SIZE_1=%d" %utils.ParametrosServer.Size1)
-print("[PARAMETERS] - SIZE_2=%d" %utils.ParametrosServer.Size2)
-print("[PARAMETERS] - TIME_TO_DEL_0=%d" %utils.ParametrosServer.TimeToDel0)
-print("[PARAMETERS] - TIME_TO_DEL_1=%d" %utils.ParametrosServer.TimeToDel1)
-print("[PARAMETERS] - TIME_TO_DEL_2=%d" %utils.ParametrosServer.TimeToDel2)
-print("[PARAMETERS] - SIZE_MAX_TO_UPLOAD=%d" %utils.ParametrosServer.SizeMaxToUpload)
-print("[PARAMETERS] - Log File =%s" %utils.ParametrosServer.LogFileName)
-print("[PARAMETERS] - Debug Level =%d" %utils.ParametrosServer.DebugLevel)
-print("[PARAMETERS] - HASH_ALGORITHM =%s" %utils.ParametrosServer.HashAlgorithm)
-print("[PARAMETERS] - ACCELERATE_HASH =%s" %utils.ParametrosServer.AccelerateHash)
-
+# print(">[PARAMETERS] - TOTAL_STORAGE=%d" %utils.ParametrosServer.TotalStorage)
+# print("[PARAMETERS] - UPLOAD_FOLDER=%s" %utils.ParametrosServer.UploadFolder)
+# print("[PARAMETERS] - SIZE_1=%d" %utils.ParametrosServer.Size1)
+# print("[PARAMETERS] - SIZE_2=%d" %utils.ParametrosServer.Size2)
+# print("[PARAMETERS] - TIME_TO_DEL_0=%d" %utils.ParametrosServer.TimeToDel0)
+# print("[PARAMETERS] - TIME_TO_DEL_1=%d" %utils.ParametrosServer.TimeToDel1)
+# print("[PARAMETERS] - TIME_TO_DEL_2=%d" %utils.ParametrosServer.TimeToDel2)
+# print("[PARAMETERS] - SIZE_MAX_TO_UPLOAD=%d" %utils.ParametrosServer.SizeMaxToUpload)
+# print("[PARAMETERS] - Log File =%s" %utils.ParametrosServer.LogFileName)
+# print("[PARAMETERS] - Debug Level =%d" %utils.ParametrosServer.DebugLevel)
+# print("[PARAMETERS] - HASH_ALGORITHM =%s" %utils.ParametrosServer.HashAlgorithm)
+# print("[PARAMETERS] - ACCELERATE_HASH =%s" %utils.ParametrosServer.AccelerateHash)
 
 # blueprints
 from botadero.archivos.views import mod as modulo_archivos
 app.register_blueprint(modulo_archivos)
 
 # ############## principal ########################
-if __name__ == '__main__':
-    print "running from main"
-    print 
-    print "------"
+# if __name__ == '__main__':
+#     print "running from main"
+#     print 
+#     print "------"
 
-    app.run(host='0.0.0.0')
+#     # cargar configuraciones del servidor
+#     utils.Ea.Inicializar()
 
-    # cargar configuraciones del servidor
-    utils.EstadisticaArchivos.Inicializar()
-
-    print("[PARAMETERS] - TOTAL_STORAGE=%d" %utils.ParametrosServer.TotalStorage)
-    print("[PARAMETERS] - UPLOAD_FOLDER=%s" %utils.ParametrosServer.UploadFolder)
-    print("[PARAMETERS] - SIZE_1=%d" %utils.ParametrosServer.Size1)
-    print("[PARAMETERS] - SIZE_2=%d" %utils.ParametrosServer.Size2)
-    print("[PARAMETERS] - TIME_TO_DEL_0=%d" %utils.ParametrosServer.TimeToDel0)
-    print("[PARAMETERS] - TIME_TO_DEL_1=%d" %utils.ParametrosServer.TimeToDel1)
-    print("[PARAMETERS] - TIME_TO_DEL_2=%d" %utils.ParametrosServer.TimeToDel2)
-    print("[PARAMETERS] - SIZE_MAX_TO_UPLOAD=%d" %utils.ParametrosServer.SizeMaxToUpload)
-    print("[PARAMETERS] - Log File =%s" %utils.ParametrosServer.LogFileName)
-    print("[PARAMETERS] - Debug Level =%d" %utils.ParametrosServer.DebugLevel)
-    print("[PARAMETERS] - HASH_ALGORITHM =%s" %utils.ParametrosServer.HashAlgorithm)
-    print("[PARAMETERS] - ACCELERATE_HASH =%s" %utils.ParametrosServer.AccelerateHash)
+#     print("[PARAMETERS] - TOTAL_STORAGE=%d" %utils.ParametrosServer.TotalStorage)
+#     print("[PARAMETERS] - UPLOAD_FOLDER=%s" %utils.ParametrosServer.UploadFolder)
+#     print("[PARAMETERS] - SIZE_1=%d" %utils.ParametrosServer.Size1)
+#     print("[PARAMETERS] - SIZE_2=%d" %utils.ParametrosServer.Size2)
+#     print("[PARAMETERS] - TIME_TO_DEL_0=%d" %utils.ParametrosServer.TimeToDel0)
+#     print("[PARAMETERS] - TIME_TO_DEL_1=%d" %utils.ParametrosServer.TimeToDel1)
+#     print("[PARAMETERS] - TIME_TO_DEL_2=%d" %utils.ParametrosServer.TimeToDel2)
+#     print("[PARAMETERS] - SIZE_MAX_TO_UPLOAD=%d" %utils.ParametrosServer.SizeMaxToUpload)
+#     print("[PARAMETERS] - Log File =%s" %utils.ParametrosServer.LogFileName)
+#     print("[PARAMETERS] - Debug Level =%d" %utils.ParametrosServer.DebugLevel)
+#     print("[PARAMETERS] - HASH_ALGORITHM =%s" %utils.ParametrosServer.HashAlgorithm)
+#     print("[PARAMETERS] - ACCELERATE_HASH =%s" %utils.ParametrosServer.AccelerateHash)

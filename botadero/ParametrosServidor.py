@@ -19,9 +19,9 @@ from botadero.logs import initLogs
 import os
 
 class ParametrosServidor:
-    NombreArchivoConfig = ''
+    NombreArchivoConfig = 'parametros.txt'
     TotalStorage = 0
-    UploadFolder = ''
+    UploadFolder = 'almacen'
     Size1 = 0
     Size2 = 0
     TimeToDel0 = 0

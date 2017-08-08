@@ -15,12 +15,14 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
-from botadero.Estadisticas_Archivos import *
-from botadero.datos_archivo import *
 import random
+import os
 
-EstadisticaArchivos = EstadisticaArchivos('parametros.txt', False)
-ParametrosServer = EstadisticaArchivos.Parametros
+from botadero import EstadisticaArchivos
+from botadero import DatosDeArchivo
+
+Ea = EstadisticaArchivos.EstadisticaArchivos('parametros.txt', False)
+ParametrosServer = Ea.Parametros
 
 # Develve el nombre de un esquema de colores al azar
 def esquema_colores_random():
@@ -39,7 +41,7 @@ def ls_archivos(categoria=""):
     l_archivos = []
     
     upload_folder = ParametrosServer.UploadFolder
-    pila_archivos = EstadisticaArchivos.PilaArchivos
+    pila_archivos = Ea.PilaArchivos
 
     nombres = []
     for ra in pila_archivos:
@@ -49,7 +51,7 @@ def ls_archivos(categoria=""):
     # coloca cada archivo en la pantalla
     for arch in nombres:
         # TODO: controlar excepcion
-        size_long = EstadisticaArchivos.GetDatosArchivo(arch).Tam
+        size_long = Ea.GetDatosArchivo(arch).Tam
         unidades = "B"
         if size_long > 1000 and size_long < 1000000:
             tam = round(size_long/float(1000), 2)
@@ -64,7 +66,7 @@ def ls_archivos(categoria=""):
             tam = float(size_long)
         # lista a devolver
         l_archivos.append([upload_folder, arch, str(tam)+" "+unidades, \
-                           str(EstadisticaArchivos.GetDatosArchivo(arch).DiasRestantes)])
+                           str(Ea.GetDatosArchivo(arch).DiasRestantes)])
 
     return l_archivos
 
@@ -93,7 +95,7 @@ def num_archivos_por_categoria(categoria):
     '''Devuelve el numero de archivos segun la categoria
     dada'''
     num = 0
-    for da in EstadisticaArchivos.PilaArchivos:
+    for da in Ea.PilaArchivos:
         if da.categoria == categoria:
            num += 1
     return num
