@@ -31,6 +31,7 @@ def esquema_colores_random():
     '''
     esquemas = ('gris1', 'neutral','verde1','azul1','amarillo1', 'rojo1','cafe1')
 
+
     return esquemas[random.randint(0, len(esquemas)-1)]
 
 def ls_archivos(categoria=""):

@@ -1,2 +1,0 @@
-Aqui van los archivos alamacenados y que son manejados por la app. 
- Esta es la carpeta publica.

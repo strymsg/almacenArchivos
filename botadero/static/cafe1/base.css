@@ -1140,7 +1140,7 @@ a.label:hover {
 
 #dias_moderados{
 	color: #5C4C2B;
-	font-weight: bold;
+b	font-weight: bold;
 }
 
 #dias_pocos{
@@ -1157,3 +1157,27 @@ a.label:hover {
 	font-size: 22px;
 }
 
+
+#dropbox {
+    border: 2px dashed #000000;
+    font-family: monospace;
+    font-size: 10px;
+    padding: 20px;
+}
+
+#dropbox.active {
+    border: 4px dashed #FF0A0E;
+}
+
+.progress-trough {
+    border: 1px solid #000000;
+    height: 18px;
+    width: 100%;
+    position: relative;
+}
+
+.progress-bar {
+    width: 50%;
+    height: 100%;
+    background-color: #0099FF;
+}
