@@ -35,7 +35,7 @@ TODO: Averiguar como manejar un unico objeto en RAM comun a todos los hilos
 '''
 class EstadisticaArchivos:
     Parametros = ParametrosServidor.ParametrosServidor("parametros.txt", "")
-    almacenDisponible = 0
+    almacenisponible = 0
     numArchivos = 0
     porcentajeAlmacenDisponible = 0
     PilaArchivos = []
@@ -46,7 +46,7 @@ class EstadisticaArchivos:
                           ParametrosServidor(NombreArchivoConfig \
                                      , DebugLevel)
         self.almacenDisponible = 0
-        self.porcentajealmacenDisponible = 0
+        self.porcentajeAlmacenDisponible = 0
         self.numArchivos = 0
 
         self.PilaArchivos = []
@@ -316,8 +316,8 @@ class EstadisticaArchivos:
             tam_total = tam_total + da.Tam
             
         self.almacenDisponible = self.Parametros.TotalStorage - tam_total
-        self.porcentajealmacenDisponible = 100 - (tam_total * 100)\
-                                           / self.almacenDisponible
+        self.porcentajeAlmacenDisponible = 100 - ((tam_total * 100) / float(self.almacenDisponible))
+        print '{}', self.porcentajeAlmacenDisponible
         self.numArchivos = len(self.PilaArchivos)
         
         self.GuardarCambiosEnDisco()
@@ -415,7 +415,7 @@ class EstadisticaArchivos:
             # copia el objeto guardado
             self.PilaArchivos = Ea.PilaArchivos
             self.almacenDisponible = Ea.almacenDisponible
-            self.porcentajealmacenDisponible = Ea.porcentajealmacenDisponible
+            self.porcentajeAlmacenDisponible = Ea.porcentajeAlmacenDisponible
             self.numArchivos = self.numArchivos
             
             Eaf.close()

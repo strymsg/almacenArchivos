@@ -73,7 +73,7 @@
 	
 	<!-- Estadisticas generales -->
 	<p>
-	    {{ esp_disp }} MB disponibles (usado: <b>{{ p_disp }} %</b>) Total de <b>{{ num_arch }}</b> archivos
+	    {{ esp_disp }} MB disponibles (<b>{{'%0.1f'| format(p_disp|float)}}%</b>) Total de <b>{{ num_arch }}</b> archivos
 	</p>
 
 	<!-- Listado de Archivos -->	
