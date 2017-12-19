@@ -66,6 +66,8 @@ function doUpload() {
                     // Set the progress bar.
                     $progressBar.css({"width": percent + "%"});
                     $progressBar.text(percent + "% recibido");
+		    if (percent == 100)
+			$estadoRecepcion.text("Comprobando archivo(s)...");
                 }, false)
             }
             return xhrobj;
@@ -96,7 +98,6 @@ function doUpload() {
 		    // luego del reatardo se recarga la pagina
 		    location.reload(true);
 		}, delayInMilliseconds);
-		
 
 		// redirection
 		//window.location = NEXT_URL;

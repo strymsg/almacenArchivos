@@ -39,6 +39,7 @@ class EstadisticaArchivos:
     numArchivos = 0
     porcentajeAlmacenDisponible = 0
     PilaArchivos = []
+    recalcular = False # ver como aprovechar este flag
 
     def __init__(self, NombreArchivoConfig, DebugLevel):
         self.Parametros = ParametrosServidor.\
@@ -133,7 +134,7 @@ class EstadisticaArchivos:
     def ExisteArchivoConTamanyo(self, tam):
         print ("-- tamanyo: %s" % tam)
         for da in self.PilaArchivos:
-            print(da.Tam)
+            #print(da.Tam)
             if tam == da.Tam:
                 return True
         return False
@@ -179,7 +180,7 @@ class EstadisticaArchivos:
         file.seek(0)
         if (self.Parametros.TotalStorage - self.almacenDisponible) \
            + fsize > self.Parametros.TotalStorage:
-            print "[STORAGE] - Error non free space: filesize %d" \
+            print "[STORAGE] - Error no free space: filesize %d" \
                 % fsize, " only %d(ts) " % self.almacenDisponible, \
                 " of space available."
             file.close()
@@ -322,7 +323,7 @@ class EstadisticaArchivos:
         self.GuardarCambiosEnDisco()
 
         print '[REG] - Updated.' # log
-        #self.MostrarRegistros() # muy verboso
+        #self.MostrarRegistros() # muy verboson
 
     def ComprobarTiempoArchivo(self, Nombre):
         '''Comprueba si el registro del Nombre de archivo ha sobrepasado
