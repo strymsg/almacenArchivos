@@ -3,15 +3,15 @@
 
 <html>
 	<head>
-		 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		 <link rel="shortcut icon" href="../static/botadero_resources/favicon.png">
-		<title>Archivador temporal para compartir archivos</title>
-		<link rel="stylesheet" href="../static/{{ esquema_colores }}/base.css" type="text/css" />
+	  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+          <link rel="shortcut icon" href="{{ url_for('static', filename='botadero_resources/favicon.png') }}">
+          <title>Archivador temporal para compartir archivos</title>
+	  {% set archivo_esquema_colores = esquema_colores + "/base.css" %}
+          <link rel="stylesheet" href="{{ url_for('static', filename=archivo_esquema_colores) }}" type="text/css" />
 
 	</head>
 	
 	<body>
-
 	<h1>"El botadero"</h1>
 		<div class="qu">
 			Un sitio <b>público</b> para compartir archivos	

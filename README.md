@@ -16,7 +16,7 @@ El botadero soporta categorías (que son directorios dentro la carpeta almacen/)
 **Ejecucion de pruebas**
 
 * `mkdir botadero_pruebas; cd botadero_pruebas`
-* `git clone https://notabug.org/r00thouse/botadero` o descomprimir si se ha descargado en .zip 
+* `git clone https://notabug.org/strysg/botadero` o descomprimir si se ha descargado en .zip 
 * Instalar `virtualenv` , `python-pip` , crear un entorno virtual python2.7, luego:
 * Activar el entorno virtual de la carpeta actual: `. venv/bin/activate`
 * `pip install Flask`
@@ -47,6 +47,7 @@ Más urgentes primero.
 * [IMPROVE] Comprobar si el nombre del archivo que se quiere subir ya existe (antes de hacer el hash o siquiera empezar a recibir el archivo)
 * Arreglar soporte para descargar archivos mas grandes que 2GB en servidor web (parece una configuracion propia de cada servidor web como NGINX o Apache2).
 * [IMPROVE] Individualizar barra de progreso al subir archivos.
+* [IMPRIVE] Agregar posiblidad de borrar archivos haciendo que se puede especificar password al subir el archivo.
 * Implementar límites de subida por visitante, esto para prevenir que un@ visitante suba demasiados archivos.
 * Implementar sistema detector de robots (captcha?).
 * Revisar disclaimer en info/

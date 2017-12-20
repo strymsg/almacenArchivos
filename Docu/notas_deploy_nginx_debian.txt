@@ -66,6 +66,8 @@ Config de NGINX
 		 include uwsgi_params;
 		 uwsgi_pass unix:/srv/botadero/botadero.sock;
 	}
+
+	location /robots.txt {alias /srv/botadero/botadero/static/robots.txt; }
    }
 
   Luego de guardar el archivo enlazarlo:
