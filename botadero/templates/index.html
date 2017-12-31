@@ -54,7 +54,7 @@
 		<input type="submit" class="btn large" id="upload-button" value="Compartir archivo(s)"/>
 		
 		<div class="nota">	
-		    <p>Los archivos se eliminan después de {{ borrar_1 }} a {{ borrar_2 }} días, dependiendo su tamaño.
+		    <p>Los archivos se eliminan después de {{ borrar_1 }} a {{ borrar_2 }} días, dependiendo su tamaño (máximo <i>{{ ms//1000000 }}</i> MB). <span id="max_filesize" hidden>{{ ms }}</span>
 			<a href="/info" >ver información</a>
 		    </p>
 		</div>

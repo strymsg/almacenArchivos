@@ -33,7 +33,8 @@ def pag_inicio():
                            lista_archivos=utils.ls_archivos(),\
                            esquema_colores=utils.esquema_colores_random(),\
                            categoria_actual=categoria_actual,\
-                           categorias_con_nums=categorias_con_nums)
+                           categorias_con_nums=categorias_con_nums,\
+                           ms=utils.Ea.Parametros.SizeMaxToUpload)
 
 @app.route('/<cat>/')
 def pag_principal(cat):
@@ -56,7 +57,8 @@ def pag_principal(cat):
                            lista_archivos=utils.ls_archivos(categoria_actual),\
                            esquema_colores=utils.esquema_colores_random(),\
                            categoria_actual=categoria_actual,\
-                           categorias_con_nums=categorias_con_nums)
+                           categorias_con_nums=categorias_con_nums,\
+                           ms=utils.Ea.Parametros.SizeMaxToUpload)
 
 @app.route('/estadisticas')
 def mostrar_estadisticas():

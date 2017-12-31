@@ -8,6 +8,7 @@ var NEXT_URL = "/";
 // List of pending files to handle when the Upload button is finally clicked.
 var PENDING_FILES  = [];
 var STORED_FILENAMES = [];
+var MAX_FILESIZE = 0;
 
 $(document).ready(function() {
     // Set up the drag/drop zone.
@@ -138,10 +139,16 @@ function collectFormData() {
 
 
 function handleFiles(files) {
+    var fs = document.getElementById('max_filesize');
+    MAX_FILESIZE = parseInt(document.
+			    getElementById('max_filesize').
+			    innerText);
+    
     // Add them to the pending files list.
     for (var i = 0, ie = files.length; i < ie; i++) {
-	// checking for duplicated files
-	if (STORED_FILENAMES.indexOf(files[i].name) == -1){
+	// checking for duplicated files and max filesize
+	if (STORED_FILENAMES.indexOf(files[i].name) == -1 &&
+	    files[i].size <= MAX_FILESIZE){
             PENDING_FILES.push(files[i]);
 	}
     }
