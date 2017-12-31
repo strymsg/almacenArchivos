@@ -7,6 +7,7 @@ var NEXT_URL = "/";
 
 // List of pending files to handle when the Upload button is finally clicked.
 var PENDING_FILES  = [];
+var STORED_FILENAMES = [];
 
 $(document).ready(function() {
     // Set up the drag/drop zone.
@@ -33,6 +34,8 @@ function doUpload() {
     $("#progress").show();
     var $progressBar   = $("#progress-bar");
     var $estadoRecepcion = $("#estado-recepcion");
+
+    var $caja_archivos = $("#caja_archivos");
     
     // Gray out the form.
     $("#upload-file :input").attr("disabled", "disabled");
@@ -137,7 +140,10 @@ function collectFormData() {
 function handleFiles(files) {
     // Add them to the pending files list.
     for (var i = 0, ie = files.length; i < ie; i++) {
-        PENDING_FILES.push(files[i]);
+	// checking for duplicated files
+	if (STORED_FILENAMES.indexOf(files[i].name) == -1){
+            PENDING_FILES.push(files[i]);
+	}
     }
 }
 
@@ -186,4 +192,12 @@ function initDropbox() {
     $(document).on("dragenter", stopDefault);
     $(document).on("dragover", stopDefault);
     $(document).on("drop", stopDefault);
+
+    // getting STORED_FILENAMES
+    var storedFiles = document.getElementById('caja_archivos');
+    var filenames = storedFiles.getElementsByTagName('a');
+    
+    for (var i=0; i<filenames.length; i++){
+	STORED_FILENAMES.push(filenames[i].text);
+    }
 }

@@ -1,152 +1,147 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+	  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html>
-	<head>
-	  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-          <link rel="shortcut icon" href="{{ url_for('static', filename='botadero_resources/favicon.png') }}">
-          <title>Archivador temporal para compartir archivos</title>
-	  {% set archivo_esquema_colores = esquema_colores + "/base.css" %}
-          <link rel="stylesheet" href="{{ url_for('static', filename=archivo_esquema_colores) }}" type="text/css" />
+    <head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <link rel="shortcut icon" href="{{ url_for('static', filename='botadero_resources/favicon.png') }}">
+        <title>Archivador temporal para compartir archivos</title>
+	{% set archivo_esquema_colores = esquema_colores + "/base.css" %}
+        <link rel="stylesheet" href="{{ url_for('static', filename=archivo_esquema_colores) }}" type="text/css" />
 
-	</head>
-	
-	<body>
+    </head>
+    
+    <body>
 	<h1>"El botadero"</h1>
-		<div class="qu">
-			Un sitio <b>público</b> para compartir archivos	
-		</div>
+	<div class="qu">
+	    Un sitio <b>público</b> para compartir archivos	
+	</div>
 
 	<!-- Categorias -->	
 	<div id="categorias">
-	  {% for cat_na in categorias_con_nums %}
-		{% if cat_na[0] == categoria_actual %}
-		  {% if cat_na[0] == "" %} <!-- Dummy -->
-	            <span class="categoria"><a href="/" > #Misc.</a>({{ cat_na[1] }})</span>
-		  {% else %}
-  		    <span class="categoria"><a href="/{{ categoria_actual }}/" > #{{ categoria_actual }}</a>({{ cat_na[1] }})</span>
-		  {% endif %}			
-		{% else %}
-		    {% if cat_na[0] == "" %} <!-- Dummy -->
-	               <a href="/" > #Misc.</a>({{ cat_na[1] }})</span>
-		    {% else %}
-  		       <a href="/{{ cat_na[0] }}/" > #{{ cat_na[0] }}</a>({{ cat_na[1] }})</span>
-		    {% endif %}			
-		{% endif%}
-	  {% endfor %}
+	    {% for cat_na in categorias_con_nums %}
+	    {% if cat_na[0] == categoria_actual %}
+	    {% if cat_na[0] == "" %} <!-- Dummy -->
+	    <span class="categoria"><a href="/" > #Misc.</a>({{ cat_na[1] }})</span>
+	    {% else %}
+  	    <span class="categoria"><a href="/{{ categoria_actual }}/" > #{{ categoria_actual }}</a>({{ cat_na[1] }})</span>
+	    {% endif %}			
+	    {% else %}
+	    {% if cat_na[0] == "" %} <!-- Dummy -->
+	    <a href="/" > #Misc.</a>({{ cat_na[1] }})</span>
+	    {% else %}
+  	    <a href="/{{ cat_na[0] }}/" > #{{ cat_na[0] }}</a>({{ cat_na[1] }})</span>
+	    {% endif %}			
+	    {% endif%}
+	    {% endfor %}
 	</div>
 
 	<!-- Subida de archivos -->		
 	{% if categoria_actual == "" %}
 	<form method="post" id="upload_file" action="/almacen/upload_file" enctype="multipart/form-data">
-	{% else %}
-	<form method="post" id="upload_file" action="/almacen/{{ categoria_actual }}/upload_file" enctype="multipart/form-data">	
-	{% endif %}
+	    {% else %}
+	    <form method="post" id="upload_file" action="/almacen/{{ categoria_actual }}/upload_file" enctype="multipart/form-data">	
+		{% endif %}
 
-	<!-- caja drag and drop -->
-	<div id="dropbox">
-            Arrastra archivos aquí
-	</div>
-	
-	<input id="file-picker" type="file" name="file" multiple>
-	
-	<!-- <input type="file" name="file"/> -->
-	<input type="submit" class="btn large" id="upload-button" value="Compartir archivo(s)"/>
-	
-	<div class="nota">	
-	    <p>Los archivos se eliminan después de {{ borrar_1 }} a {{ borrar_2 }} días, dependiendo su tamaño.
-		<a href="/info" >ver información</a>
-	    </p>
-	</div>
-	
-	</form>	
-
-	<!-- Barra de progreso -->
-	<fieldset id="progress" style="display: none">
-	    <legend id="estado-recepcion">Recibiendo archivo(s):</legend>
-            <div class="progress-trough">
-		<div id="progress-bar" class="progress-bar">0%</div>
-            </div>
-	</fieldset>
-
-
-	
-	<!-- Estadisticas generales -->
-	<p>
-	    {{ esp_disp }} MB disponibles (<b>{{'%0.1f'| format(p_disp|float)}}%</b>) Total de <b>{{ num_arch }}</b> archivos
-	</p>
-
-	<!-- Listado de Archivos -->	
-	<div class="caja_lista_archivos">
-	    {% for reg_arch in lista_archivos|reverse %}
-		<p class="lista_archivos_elemento">
-		    {% if categoria_actual != "" %}
-			<a href="/{{ reg_arch[0] }}/{{ categoria_actual }}/{{ reg_arch[1] }}">
-			    {# Puede servir para partir archivos con nombre grande #}				
-			    {# {% for c in reg_arch[1] %}{% if loop.index % 37 == 0 %}<br>{% endif %}{{ c }}{% endfor %} #}
-		    {% else %}
-			    <a href="/{{ reg_arch[0] }}/{{ reg_arch[1] }}">
-				{# Puede servir para partir archivos con nombre grande #}				
-				{# {% for c in reg_arch[1] %}{% if loop.index % 37 == 0 %}<br>{% endif %}{{ c }}{% endfor %} #}
-		    {% endif %}
-		    {{ reg_arch[1] }}
-			    </a>
-			    <span class="label">{{ reg_arch[2] }}</span>
-			    
-
-			    {% if reg_arch[3]|int >= 10 %}
-				<span class="label success" > {{ reg_arch[3] }} días</span>
-			    {% elif reg_arch[3]|int < 10 and reg_arch[3]|int > 3 %}
-				<span class="label warning" > {{ reg_arch[3] }}  días</span>
-			    {% elif reg_arch[3]|int <= 3 %}
-				<span class="label important" > {{ reg_arch[3] }}  días</span>
-			    {% endif %}
-
-		</p>	
+		<!-- caja drag and drop -->
+		<div id="dropbox">
+		    Arrastra archivos aquí
+		</div>
 		
-	    {% endfor %}
-	</div>
-	<br>
-	<!-- Categorias -->	
-	<div id="categorias">
-	    {% for cat_na in categorias_con_nums %}
-		{% if cat_na[0] == categoria_actual %}
-		    {% if cat_na[0] == "" %} <!-- Dummy -->
-			<span class="categoria"><a href="/" > #Misc.</a>({{ cat_na[1] }})</span>
-		    {% else %}
-  			<span class="categoria"><a href="/{{ categoria_actual }}/" > #{{ categoria_actual }}</a>({{ cat_na[1] }})</span>
-		    {% endif %}			
-		{% else %}
-		    {% if cat_na[0] == "" %} <!-- Dummy -->
-			<a href="/" > #Misc.</a>({{ cat_na[1] }})</span>
-		    {% else %}
-  			<a href="/{{ cat_na[0] }}/" > #{{ cat_na[0] }}</a>({{ cat_na[1] }})</span>
-		    {% endif %}			
-		{% endif%}
-	    {% endfor %}
-	</div>
+		<input id="file-picker" type="file" name="file" multiple>
+		
+		<!-- <input type="file" name="file"/> -->
+		<input type="submit" class="btn large" id="upload-button" value="Compartir archivo(s)"/>
+		
+		<div class="nota">	
+		    <p>Los archivos se eliminan después de {{ borrar_1 }} a {{ borrar_2 }} días, dependiendo su tamaño.
+			<a href="/info" >ver información</a>
+		    </p>
+		</div>
+		
+	    </form>	
+
+	    <!-- Barra de progreso -->
+	    <fieldset id="progress" style="display: none">
+		<legend id="estado-recepcion">Recibiendo archivo(s):</legend>
+		<div class="progress-trough">
+		    <div id="progress-bar" class="progress-bar">0%</div>
+		</div>
+	    </fieldset>
 
 
-	<!-- Notas al pie -->
-	<div class="nota">
-	    <p>Revisa las <a href="/estadisticas" > estadísticas </a> de los archivos.
+	    
+	    <!-- Estadisticas generales -->
+	    <p>
+		{{ esp_disp }} MB disponibles (<b>{{'%0.1f'| format(p_disp|float)}}%</b>) Total de <b>{{ num_arch }}</b> archivos
 	    </p>
-	</div>
-	
-	<!-- Notas al pie -->
-	<div class="qu">
-	    " La sabiduría crece cuando se comparte los conocimientos "
-	    <p> <a href="https://notabug.org/strysg/botadero">Código fuente</a> de esta aplicación.</p>
-	</div>
+
+	    <!-- Listado de Archivos -->	
+	    <div id="caja_archivos" class="caja_lista_archivos">
+		{% for reg_arch in lista_archivos|reverse %}
+		    <p class="lista_archivos_elemento">
+			{% if categoria_actual != "" %}
+			    {# Puede servir para partir archivos con nombre grande #}
+			    {# {% for c in reg_arch[1] %}{% if loop.index % 37 == 0 %}<br>{% endif %}{{ c }}{% endfor %} #}
+			    <a href="/{{ reg_arch[0] }}/{{ categoria_actual }}/{{ reg_arch[1] }}">{{ reg_arch[1] }}</a>
+			{% else %}
+				{# Puede servir para partir archivos con nombre grande #}
+				{# {% for c in reg_arch[1] %}{% if loop.index % 37 == 0 %}<br>{% endif %}{{ c }}{% endfor %} #}
+			    <a href="/{{ reg_arch[0] }}/{{ reg_arch[1] }}">{{ reg_arch[1] }}</a>
+			{% endif %}
+			
+			<span class="label">{{ reg_arch[2] }}</span>
+			{% if reg_arch[3]|int >= 10 %}
+			    <span class="label success" > {{ reg_arch[3] }} días</span>
+			{% elif reg_arch[3]|int < 10 and reg_arch[3]|int > 3 %}
+			    <span class="label warning" > {{ reg_arch[3] }}  días</span>
+			{% elif reg_arch[3]|int <= 3 %}
+			    <span class="label important" > {{ reg_arch[3] }}  días</span>
+			{% endif %}
+		    </p>
+		{% endfor %}
+	    </div>
+	    <br>
+	    <!-- Categorias -->	
+	    <div id="categorias">
+		{% for cat_na in categorias_con_nums %}
+		{% if cat_na[0] == categoria_actual %}
+		{% if cat_na[0] == "" %} <!-- Dummy -->
+		<span class="categoria"><a href="/" > #Misc.</a>({{ cat_na[1] }})</span>
+		{% else %}
+  		<span class="categoria"><a href="/{{ categoria_actual }}/" > #{{ categoria_actual }}</a>({{ cat_na[1] }})</span>
+		{% endif %}			
+		{% else %}
+		{% if cat_na[0] == "" %} <!-- Dummy -->
+		<a href="/" > #Misc.</a>({{ cat_na[1] }})</span>
+	    {% else %}
+  	    <a href="/{{ cat_na[0] }}/" > #{{ cat_na[0] }}</a>({{ cat_na[1] }})</span>
+	    {% endif %}			
+	    {% endif%}
+	    {% endfor %}
+	    </div>
 
 
-	<!-- javascript -->
-	<script type="text/javascript" src="{{ url_for('static', filename='js/jquery-2.1.1.min.js') }}"></script>
-	<script type="text/javascript" src="{{ url_for('static', filename='js/upload.js') }}"></script>
-	
-	<!-- <script type=text/javascript>
-	     $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
-	</script> -->
-	</body>
+	    <!-- Notas al pie -->
+	    <div class="nota">
+		<p>Revisa las <a href="/estadisticas" > estadísticas </a> de los archivos.
+		</p>
+	    </div>
+	    
+	    <!-- Notas al pie -->
+	    <div class="qu">
+		" La sabiduría crece cuando se comparte los conocimientos "
+		<p> <a href="https://notabug.org/strysg/botadero">Código fuente</a> de esta aplicación.</p>
+	    </div>
+
+
+	    <!-- javascript -->
+	    <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-2.1.1.min.js') }}"></script>
+	    <script type="text/javascript" src="{{ url_for('static', filename='js/upload.js') }}"></script>
+	    
+	    <!-- <script type=text/javascript>
+		 $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+		 </script> -->
+    </body>
 
 </html>
