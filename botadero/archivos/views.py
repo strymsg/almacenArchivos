@@ -181,7 +181,61 @@ def upload_file_ajax():
                          'agregados': agregados}], \
                       separators=(',',':'), indent=4)
 
-def ajax_response(status, msg) :
+@mod.route("/<cat>/upload_file_a", methods=['POST'])
+def upload_file_ajax_cat(cat):
+    ''' Funcion para subir archivos mediante peticiones ajax
+    a una categoria especifica
+    '''
+    utils.Ea.Actualizar()
+    categorias = utils.categorias()
+    categoria_actual = ''
+    categorias = [""] + categorias # dummy
+    if cat in categorias:
+        categoria_actual = cat
+    else:
+        return "La categoria %s no se ha encontrado." %cat # TODO: redirigir a pagina error en categoria
+
+    form = request.form
+    print ("[UPLOAD-ajax]")
+    
+    # Is the upload using Ajax, or a direct POST by the form?
+    if form.get("__ajax", None) != "true":
+        return ajax_response("error", "Invlalid request")
+        
+    if request.method == 'POST':
+        for key, value in form.items():
+            print (key, "=>", value)
+
+    agregados = []
+    no_agregados = []
+            
+    # Procesando cada archivo enviado en la peticion.
+    for upload in request.files.getlist("file"):
+        filename = secure_filename(upload.filename)
+        print (" Incoming file:", filename)
+        
+        da = DatosDeArchivo.DatosDeArchivo()
+        hash_chk = da.arch_hash(upload, \
+                                hash_algorithm=HashAlgorithm,\
+                                accelerate=AccelerateHash)
+        print (" Applied ", HashAlgorithm, ":", hash_chk)
+
+        aux = os.path.join(UploadFolder, cat, filename)
+        if utils.Ea.AgregarArchivo(aux, hash_chk, upload) != 0:
+            no_agregados.append(filename)
+        else:
+            agregados.append(filename)
+
+    # retornando respuesta
+    if len(agregados) == 0:
+        return ajax_response("error", "No se han subido nuevos archivos")
+
+    return json.dumps([{ 'status':'ok',\
+                         'no_agregados': no_agregados,\
+                         'agregados': agregados}], \
+                      separators=(',',':'), indent=4)
+                      
+def ajax_response(status, msg):
     status_code = "ok" if status else "error"
     return json.dumps(dict(
         status=status_code,

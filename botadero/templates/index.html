@@ -17,7 +17,9 @@
 	    Un sitio <b>público</b> para compartir archivos	
 	</div>
 
-	<!-- Categorias -->	
+	<!-- Categorias -->
+	<span id="categoria_actual" value="{{ categoria_actual }}" hidden>{{ categoria_actual }}</span>
+
 	<div id="categorias">
 	    {% for cat_na in categorias_con_nums %}
 	    {% if cat_na[0] == categoria_actual %}
@@ -36,12 +38,12 @@
 	    {% endfor %}
 	</div>
 
-	<!-- Subida de archivos -->		
+	<!-- Subida de archivos -->
 	{% if categoria_actual == "" %}
-	<form method="post" id="upload_file" action="/almacen/upload_file" enctype="multipart/form-data">
-	    {% else %}
-	    <form method="post" id="upload_file" action="/almacen/{{ categoria_actual }}/upload_file" enctype="multipart/form-data">	
-		{% endif %}
+	    <form method="post" id="upload_file" action="/almacen/upload_file" enctype="multipart/form-data">
+	{% else %}
+		<form method="post" id="upload_file" action="/almacen/{{ categoria_actual }}/upload_file" enctype="multipart/form-data">	
+	{% endif %}
 
 		<!-- caja drag and drop -->
 		<div id="dropbox">

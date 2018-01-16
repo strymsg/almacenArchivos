@@ -9,11 +9,17 @@ var NEXT_URL = "/";
 var PENDING_FILES  = [];
 var STORED_FILENAMES = [];
 var MAX_FILESIZE = 0;
+var CATEGORIA_ACTUAL = "";
 
 $(document).ready(function() {
     // Set up the drag/drop zone.
     initDropbox();
-
+    
+    // current category
+    
+    CATEGORIA_ACTUAL = document.getElementById('categoria_actual').innerHTML;
+    if (CATEGORIA_ACTUAL != "")
+	UPLOAD_URL = "/almacen/"+CATEGORIA_ACTUAL+"/upload_file_a";
     // Set up the handler for the file input box.
     $("#file-picker").on("change", function() {
         handleFiles(this.files);
