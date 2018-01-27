@@ -45,10 +45,9 @@ Más urgentes primero.
 
 * [BUG] Arreglar el problema cuando se suben archivos estos se copian en al parecer un buffer, luego una vez se comprueba no duplicacion se copia el archivo nuevamente al directorio, analizar si es necesario moverlo o establecer el directorio destino como "buffer". (Para profundizar eso, se debe estudiar flask (metodo save() en flask_uploads.py) y werkzeug (datastructures.py) para dominar la forma en que se guardan los archivos subidos.
 * [BUG] Evitar que se suban directorios enteros.
-* [IMPROVE] Comprobar si el nombre del archivo que se quiere subir ya existe (antes de hacer el hash o siquiera empezar a recibir el archivo)
 * Arreglar soporte para descargar archivos mas grandes que 2GB en servidor web (parece una configuracion propia de cada servidor web como NGINX o Apache2).
 * [IMPROVE] Individualizar barra de progreso al subir archivos.
-* [IMPROVE] Agregar posiblidad de borrar archivos haciendo que se puede especificar password al subir el archivo.
+* [IMPROVE] Agregar posiblidad de borrar archivos haciendo que se pueda especificar password al subir el archivo.
 * Implementar límites de subida por visitante, esto para prevenir que un@ visitante suba demasiados archivos.
 * Implementar sistema detector de robots (captcha?).
 * Revisar disclaimer en info/

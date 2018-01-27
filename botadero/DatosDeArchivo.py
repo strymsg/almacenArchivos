@@ -121,6 +121,7 @@ class DatosDeArchivo:
                 h.update(cad)
                 t_ant = t_act
                 t_act = archivo.tell()
+        print (" --<>-- Archivo termino en "+str(archivo.tell()))
         return h.hexdigest()
 
     def edad(self):

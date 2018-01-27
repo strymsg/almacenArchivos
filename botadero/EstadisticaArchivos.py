@@ -97,9 +97,9 @@ class EstadisticaArchivos:
 
     def ExisteHash(self, Hash):
         ''' Comprueba si existe el hash en el registro de archivos'''
-        print ("hash.... %s" % Hash)
+        #print ("hash.... %s" % Hash)
         for da in self.PilaArchivos:
-            print("nombre: %s  hash: %s" % [da.Nombre, da.HashCheck])
+            #print("nombre: %s  hash: %s" % (da.Nombre, da.HashCheck))
             if Hash == da.HashCheck:
                 return True
         return False
@@ -127,14 +127,11 @@ class EstadisticaArchivos:
         if self.ExisteNombreEstricto(Nombre):
             return True
         else:
-            if self.ExisteHash(hash_check):
-                return True
-        return False
+            return self.ExisteHash(hash_check)
 
     def ExisteArchivoConTamanyo(self, tam):
-        print ("-- tamanyo: %s" % tam)
+        #print ("-- tamanyo: %s" % tam)
         for da in self.PilaArchivos:
-            #print(da.Tam)
             if tam == da.Tam:
                 return True
         return False
@@ -173,10 +170,14 @@ class EstadisticaArchivos:
         '''
         self.CargarDesdeDisco()
         # comprobacion de espacio disponible
-        #TODO: Al parecer file.tell() no esta devolviendo el tamanyo exacto
-        #      del archivo
+        #BUG:
+        #file.tell() no devulve el tamanyo del archivo solo donde esta
+        #            la pocision a la que apunta el lector actualmente
+        #    https://docs.python.org/2/library/stdtypes.html#file.tell
+        # Para obtener el tamanyo del archivo antes de usar .save()
+        # https://stackoverflow.com/questions/15772975/flask-get-the-size-of-request-files-object/23601025#23601025
+        file.seek(0, os.SEEK_END)
         fsize = file.tell()
-        
         file.seek(0)
         if (self.Parametros.TotalStorage - self.almacenDisponible) \
            + fsize > self.Parametros.TotalStorage:
@@ -193,12 +194,11 @@ class EstadisticaArchivos:
             file.close()
             return 2
         # comprobacion de tamanyo
-        #TODO: corregir esta comprobacion
         elif self.ExisteArchivoConTamanyo(fsize):
             # comprobacion de hash_check
             if self.ExisteArchivoEstricto(self.NombreSinRuta(Nombre_con_ruta), hash_check):
-                print "[STORAGE] - Warning: hash check %s exists," % hash_check, \
-                    "            not uploaded."
+                print "[STORAGE] - Warning: Hash check %s exists," % hash_check, \
+                    "              not uploaded."
                 file.close()
                 return 3
         else:
