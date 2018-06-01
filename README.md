@@ -47,7 +47,7 @@ Más urgentes primero.
 * [BUG] Evitar que se suban directorios enteros.
 * Arreglar soporte para descargar archivos mas grandes que 2GB en servidor web (parece una configuracion propia de cada servidor web como NGINX o Apache2).
 * [IMPROVE] Individualizar barra de progreso al subir archivos.
-* [IMPROVE] Agregar posiblidad de borrar archivos haciendo que se pueda especificar password al subir el archivo.
+* [IMPROVE] Agregar posibilidad de borrar archivos haciendo que se pueda especificar password al subir el archivo.
 * Implementar límites de subida por visitante, esto para prevenir que un@ visitante suba demasiados archivos.
 * Implementar sistema detector de robots (captcha?).
 * Revisar disclaimer en info/

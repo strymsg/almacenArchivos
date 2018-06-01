@@ -8,6 +8,7 @@ var NEXT_URL = "/";
 // List of pending files to handle when the Upload button is finally clicked.
 var PENDING_FILES  = [];
 var STORED_FILENAMES = [];
+var DUPLICATED_FILES = [];
 var MAX_FILESIZE = 0;
 var CATEGORIA_ACTUAL = "";
 
@@ -33,7 +34,7 @@ $(document).ready(function() {
         // the POST using ajax and then redirect them ourself when done.
         e.preventDefault();
         doUpload();
-    })
+    });
 });
 
 
@@ -75,10 +76,10 @@ function doUpload() {
                     }
                     // Set the progress bar.
                     $progressBar.css({"width": percent + "%"});
-                    $progressBar.text(percent + "% recibido");
+                    $progressBar.text(percent + "% enviado");
 		    if (percent == 100)
 			$estadoRecepcion.text("Comprobando archivo(s)...");
-                }, false)
+                }, false);
             }
             return xhrobj;
         },
@@ -154,8 +155,10 @@ function handleFiles(files) {
     for (var i = 0, ie = files.length; i < ie; i++) {
 	// checking for duplicated files and max filesize
 	if (STORED_FILENAMES.indexOf(files[i].name) == -1 &&
-	    files[i].size <= MAX_FILESIZE){
+	    files[i].size <= MAX_FILESIZE) {
             PENDING_FILES.push(files[i]);
+	} else {
+	  DUPLICATED_FILES.push(files[i]);
 	}
     }
 }
@@ -179,20 +182,23 @@ function initDropbox() {
 
     // On drop...
     $dropbox.on("drop", function(e) {
-        e.preventDefault();
-        $(this).removeClass("active");
+      e.preventDefault();
+      $(this).removeClass("active");
 
-        // Get the files.
-        var files = e.originalEvent.dataTransfer.files;
-        handleFiles(files);
+      // Get the files.
+      var files = e.originalEvent.dataTransfer.files;
+      handleFiles(files);
 
-        // Update the display to acknowledge the number of pending files.
-	var texto = "";
-	for (var i = 0; i < PENDING_FILES.length ; i++) {
-	    texto += "&check;" + PENDING_FILES[i].name + "<br>";
-	}
-	
-	$dropbox.html(texto + "<br/><big><b>"+PENDING_FILES.length+"</big></b> archivos.");
+      // Update the display to acknowledge the number of pending files.
+      var texto = "";
+      for (var i = 0; i < PENDING_FILES.length ; i++) {
+	texto += "&check;" + PENDING_FILES[i].name + "<br>";
+      }
+      for (let i = 0; i < DUPLICATED_FILES.length; i++) {
+	texto += "&#x2715;" + DUPLICATED_FILES[i].name + " (duplicado)<br>";
+      }
+      
+      $dropbox.html(texto + "<br/><big><b>"+PENDING_FILES.length+"</big></b> archivos.");
     });
 
     // If the files are dropped outside of the drop zone, the browser will

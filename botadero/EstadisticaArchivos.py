@@ -322,7 +322,7 @@ class EstadisticaArchivos:
         
         self.GuardarCambiosEnDisco()
 
-        print '[REG] - Updated.' # log
+        print ('[REG] - Updated.') # log
         #self.MostrarRegistros() # muy verboson
 
     def ComprobarTiempoArchivo(self, Nombre):
@@ -419,31 +419,31 @@ class EstadisticaArchivos:
             self.numArchivos = self.numArchivos
             
             Eaf.close()
-            print '[REG] - Loaded: Data from object file '\
-                , '        EstadisticaArchivos.pkl'
+            print ('[REG] - Loaded: Data from object file '\
+                , '        EstadisticaArchivos.pkl')
             #self.Parametros.Reload_configs()
             return True
         except:
-            print '[REG] - Warning: Not found object file '\
-                , '        EstadisticaArchivos.pkl. Restarting, creating registers.'
+            print ('[REG] - Warning: Not found object file '\
+                , '        EstadisticaArchivos.pkl. Restarting, creating registers.')
             return False
 
     def MostrarRegistros(self):
         '''
         Mostrar todos los registros, para propositos de debug
         '''
-        print '[REG] - ---------------------'
-        print '[REG] - Showing all registers'
-        print '[REG] - ---------------------'
-        print 'Available: %s ' %self.almacenDisponible
-        print 'Porcentaje Available: %s ' %self.porcentajeAlmacenDisponible
-        print 'Show: Number of files: %s ' %self.numArchivos
+        print ('[REG] - ---------------------')
+        print ('[REG] - Showing all registers')
+        print ('[REG] - ---------------------')
+        print ('Available: %s ' %self.almacenDisponible)
+        print ('Porcentaje Available: %s ' %self.porcentajeAlmacenDisponible)
+        print ('Show: Number of files: %s ' %self.numArchivos)
         for pa in self.PilaArchivos:
-            print 'File %(na)s size %(sz)d , hash_check %(hash)s'\
+            print ('File %(na)s size %(sz)d , hash_check %(hash)s'\
                 % {'na': '#'+pa.categoria+' '+pa.Nombre, \
                    'sz': pa.Tam, 'hash': pa.HashCheck},\
-                'created at', pa.FechaYHoraDeSubida
-            print '---'
+                'created at', pa.FechaYHoraDeSubida)
+            print ('---')
         
     def NombreSinRuta(self, Nombre_con_ruta):
         ''' Retorna el nombre del archivo sin la ruta
