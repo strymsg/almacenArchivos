@@ -185,6 +185,10 @@ function initDropbox() {
       e.preventDefault();
       $(this).removeClass("active");
 
+      // cleaning arrays
+      PENDING_FILES.splice(0);
+      DUPLICATED_FILES.splice(0);
+	
       // Get the files.
       var files = e.originalEvent.dataTransfer.files;
       handleFiles(files);
