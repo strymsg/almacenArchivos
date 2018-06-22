@@ -1,53 +1,62 @@
-## El Botadero ##
+* [Castellano](#es)
+* [English](#en)
+----
+<h3 id="es">El Botadero</h3>
 
-Una aplicación para compartir archivos públicamente. DEMO: https://botadero.rmgss.net
+Servidor web centralizado para compartir archivos en una red local o internert.
 
-La idea es compartir archivos, si alguien sube un archivo, este se lista en la página principal y cualquiera puede descargarlo. Para ahorrar espacio de almacenamiento los archivos subidos se borran automáticamente después de X días dependiendo su tamaño.
+Un directorio público donde cualquiera puede subir archivos y estos se pueden descargar libremente.
 
-Los parámetros como espacio de alamcenamiento reservado para la aplicación, tiempo para eliminación de archivos, máximo tamaño de archivos y otros, son configurables desde un archivo de configuracion [parametros.txt](parametros.txt).
+Para ahorrar espacio de almacenamiento, los archivos se borrar después de un número ajustable de días y también se evita la posiblidad de subir archivos duplicados usando algoritmos para obtener digestos sha1, md5, sha256, etc. 
 
-La app optimiza el almacenamiento evitando que se suban archivos con el mismo nombre o contenido.
-El botadero soporta categorías (que son directorios dentro la carpeta almacen/) ver [Docu/categorias.txt](Docu/categorias.txt)
+Entre las funcionalidades que se pueden ajustar están:
 
-*LICENCIA* **AGPL**
+* Intervalo de borrado.
+* Almacenamiento máximo para archivos.
+* Almacenamiento máximo por tamaño de archivo.
+* Intervalo de borrado por tamaño de archivos.
+* Nivel de verbosidad en archivos de reportes.
+* Selección de algoritmo para digestos.
+* Comprobación acelerada de digestos.
+* Borrado de archivos usando passwords.
+* Unidad de tiempo.
 
-*Requiere* [Python-flask](http://flask.pocoo.org/docs/0.10/installation/#installation)
+Esta aplicación no guarda datos sobre quién sube los archivos, licencia **AGPL**.
 
-**Ejecucion de pruebas**
+#### Instalación ####
 
-* `mkdir botadero_pruebas; cd botadero_pruebas`
-* `git clone https://notabug.org/strysg/botadero` o descomprimir si se ha descargado en .zip 
-* Instalar `virtualenv` , `python-pip` , crear un entorno virtual python2.7, luego:
-* Activar el entorno virtual de la carpeta actual: `. venv/bin/activate`
-* `pip install Flask`
-* `pip install uwsgi`
+Se utiliza python3 con el micro framework Flask, se puede instalar con los siguientes pasos:
 
-Ejecutar la app con:
+#### Despliegue ####
 
-`python2.7 runserver.py` y puede probarse en `localhost:5000`
+Revisar notas de despliegue; [Nginx](docs/deploy_nginx.md).
 
-*Revisar logs* `tail -f logs/botadero.log`
+<h3 id="en">El Botadero</h3>
 
-## Despliegue con NGINX ##
+Centralized web server to share files on a local network or over the internet. 
 
-* [debian](Docu/notas_deploy_nginx_debian.txt)
-* [ubuntu](Docu/notas_deploy_nginx_ubuntu.txt)
+A public directory where anyone can upload files and so they can be freely downlaoded.
 
-*NOTA:* ajustar `application.debug` del archivo [runserver.py](runserver.py) adecuadamente para desarrollo o produccion.
+To save storage, files are deleted after an adjustable number of days and file duplication is avoided by using sha1, md5, sha256, etc. digests.
 
-*Revisar logs* `tail -f logs/botadero.log`
+Some customizable features are:
 
-Esta aplicación no usa bases de datos.
+* File deletion interval.
+* Maximun file storage size.
+* Maximun file size for files.
+* Deletion interval per file size.
+* Verbosity level to log files.
+* Digest algorithm selection.
+* Accelerated digest.
+* File deletion using password.
+* Time unit.
 
-## Tareas por hacer ##
+This application does not store data about who upload files, **AGPL** License.
 
-Más urgentes primero.
+#### Install ####
 
-* [BUG] Arreglar el problema cuando se suben archivos estos se copian en al parecer un buffer, luego una vez se comprueba no duplicacion se copia el archivo nuevamente al directorio, analizar si es necesario moverlo o establecer el directorio destino como "buffer". (Para profundizar eso, se debe estudiar flask (metodo save() en flask_uploads.py) y werkzeug (datastructures.py) para dominar la forma en que se guardan los archivos subidos.
-* [BUG] Evitar que se suban directorios enteros.
-* Arreglar soporte para descargar archivos mas grandes que 2GB en servidor web (parece una configuracion propia de cada servidor web como NGINX o Apache2).
-* [IMPROVE] Individualizar barra de progreso al subir archivos.
-* [IMPROVE] Agregar posiblidad de borrar archivos haciendo que se pueda especificar password al subir el archivo.
-* Implementar límites de subida por visitante, esto para prevenir que un@ visitante suba demasiados archivos.
-* Implementar sistema detector de robots (captcha?).
-* Revisar disclaimer en info/
+It uses python3 and micro framework Flask, can be installed following:
+
+#### Deploy ####
+
+See deploy notes; [Nginx](docs/deploy_nginx.md).

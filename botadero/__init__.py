@@ -1,68 +1,63 @@
-'''
-Botadero, una aplicacion para compartir archivos libremente.
-Copyright (C) 2016 Rodrigo Garcia <strysg@riseup.net>
+# this file is part of "El Botadero"
+# copyright Rodrigo Garcia 2018 <strysg@riseup.net>
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-'''
-# cargar configuraciones del servidor
+import os
 from flask import Flask
 
-print ("Inicializando app")
-print (" registros en archivo: logs/botadero.log")
-app = Flask(__name__, static_url_path='/static')
+def create_app(config=None, instance_path=None):
+    """ Crear la app.
+    :param instance_path: An alternative instance path for the application.
+                          By default the folder ``'instance'`` next to the
+                          package or module is assumed to be the instance
+                          path.
+                          See :ref:`Instance Folders <flask:instance-folders>`.
+    :param config: The configuration file or object.
+                   The environment variable is weightet as the heaviest.
+                   For example, if the config is specified via an file
+                   and a ENVVAR, it will load the config via the file and
+                   later overwrite it from the ENVVAR.
+    """
+    app = Flask('botadero',
+                instance_path=instance_path,
+                instance_relative_config=True)
+    print ('INICIANDO')
+    print (app.instance_path)
 
-import botadero.views
-#import botadero.utils
+    # instance folders are not automatically created by flask
+    if not os.path.exists(app.instance_path):
+        os.makedirs(app.instance_path)
+    
+    # config file and parameters
+    if config is None:
+        app.config.from_pyfile('../botadero/configs/configsDevelopment.py')
+    else:
+        app.config.from_pyfile(config)
 
-app.config['UPLOAD_FOLDER'] = utils.ParametrosServer.UploadFolder
-app.config['MAX_CONTENT_LENGTH'] = utils.ParametrosServer.SizeMaxToUpload
+    # blueprints
+    configure_blueprints(app)
+    
+    print ('Creating app finished')
+    return app
+    
+def configure_app(app, config):
+    pass
 
-# print(">[PARAMETERS] - TOTAL_STORAGE=%d" %utils.ParametrosServer.TotalStorage)
-# print("[PARAMETERS] - UPLOAD_FOLDER=%s" %utils.ParametrosServer.UploadFolder)
-# print("[PARAMETERS] - SIZE_1=%d" %utils.ParametrosServer.Size1)
-# print("[PARAMETERS] - SIZE_2=%d" %utils.ParametrosServer.Size2)
-# print("[PARAMETERS] - TIME_TO_DEL_0=%d" %utils.ParametrosServer.TimeToDel0)
-# print("[PARAMETERS] - TIME_TO_DEL_1=%d" %utils.ParametrosServer.TimeToDel1)
-# print("[PARAMETERS] - TIME_TO_DEL_2=%d" %utils.ParametrosServer.TimeToDel2)
-# print("[PARAMETERS] - SIZE_MAX_TO_UPLOAD=%d" %utils.ParametrosServer.SizeMaxToUpload)
-# print("[PARAMETERS] - Log File =%s" %utils.ParametrosServer.LogFileName)
-# print("[PARAMETERS] - Debug Level =%d" %utils.ParametrosServer.DebugLevel)
-# print("[PARAMETERS] - HASH_ALGORITHM =%s" %utils.ParametrosServer.HashAlgorithm)
-# print("[PARAMETERS] - ACCELERATE_HASH =%s" %utils.ParametrosServer.AccelerateHash)
+def configure_blueprints(app):
+    from . import views
+    app.register_blueprint(views.botaderoBp)
 
-# blueprints
-from botadero.archivos.views import mod as modulo_archivos
-app.register_blueprint(modulo_archivos)
+    
 
-# ############## principal ########################
-# if __name__ == '__main__':
-#     print "running from main"
-#     print 
-#     print "------"
 
-#     # cargar configuraciones del servidor
-#     utils.Ea.Inicializar()
 
-#     print("[PARAMETERS] - TOTAL_STORAGE=%d" %utils.ParametrosServer.TotalStorage)
-#     print("[PARAMETERS] - UPLOAD_FOLDER=%s" %utils.ParametrosServer.UploadFolder)
-#     print("[PARAMETERS] - SIZE_1=%d" %utils.ParametrosServer.Size1)
-#     print("[PARAMETERS] - SIZE_2=%d" %utils.ParametrosServer.Size2)
-#     print("[PARAMETERS] - TIME_TO_DEL_0=%d" %utils.ParametrosServer.TimeToDel0)
-#     print("[PARAMETERS] - TIME_TO_DEL_1=%d" %utils.ParametrosServer.TimeToDel1)
-#     print("[PARAMETERS] - TIME_TO_DEL_2=%d" %utils.ParametrosServer.TimeToDel2)
-#     print("[PARAMETERS] - SIZE_MAX_TO_UPLOAD=%d" %utils.ParametrosServer.SizeMaxToUpload)
-#     print("[PARAMETERS] - Log File =%s" %utils.ParametrosServer.LogFileName)
-#     print("[PARAMETERS] - Debug Level =%d" %utils.ParametrosServer.DebugLevel)
-#     print("[PARAMETERS] - HASH_ALGORITHM =%s" %utils.ParametrosServer.HashAlgorithm)
-#     print("[PARAMETERS] - ACCELERATE_HASH =%s" %utils.ParametrosServer.AccelerateHash)
+
+
+
+
+
+
+
+
+
+
+
