@@ -27,9 +27,11 @@ Esta aplicación no guarda datos sobre quién sube los archivos, licencia **AGPL
 
 Se utiliza python3 con el micro framework Flask, se puede instalar con los siguientes pasos:
 
+pronto.
+
 #### Despliegue ####
 
-Revisar notas de despliegue; [Nginx](docs/deploy_nginx.md).
+pronto.
 
 <h3 id="en">El Botadero</h3>
 
@@ -57,6 +59,9 @@ This application does not store data about who upload files, **AGPL** License.
 
 It uses python3 and micro framework Flask, can be installed following:
 
+soon.
+
 #### Deploy ####
 
-See deploy notes; [Nginx](docs/deploy_nginx.md).
+soon.
+

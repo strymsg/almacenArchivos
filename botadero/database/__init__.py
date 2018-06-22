@@ -1,14 +1,23 @@
-from sqlalchemy import create_engine
-from sqlalchemy.orm import scoped_session, sessionmaker
-from sqlalchemy.ext.declarative import declarative_base
+''' 
+El Botadero, una aplicación web para compartir archivos libremente.
+Copyright (C) 2018 Rodrigo Garcia <strysg@riseup.net>
+'''
+from flask_sqlalchemy import SQLAlchemy
+from . import models
 
-engine = create_engine('sqlite:///db.sqlite3', convert_unicode=True)
-db_session = scoped_session(sessionmaker(autocommit=False,
-                                         autoflush=False,
-                                         bind=engine))
+from flask import current_app as app
 
-Base = declarative_base()
-Base.query = db_session.query_property()
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite3:///db.sqlite3'
+db = SQLAlchemy(app)
 
-def init_db():
-    import 
+def init_db(app=None):
+    ''' Re-Initializes database module.
+    :param app: Flask instance app.
+                If not providen flask.current_app is returned, if
+                providen configures database object for the given app'''
+
+    if app is not None:
+        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite3:///db.sqlite3'
+        db = SQLAlchemy(app)
+
+    return db

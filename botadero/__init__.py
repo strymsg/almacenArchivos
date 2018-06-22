@@ -35,7 +35,8 @@ def create_app(config=None, instance_path=None):
 
     # blueprints
     configure_blueprints(app)
-    
+
+    print ('app.config:', str(app.config), '\n')
     print ('Creating app finished')
     return app
     
