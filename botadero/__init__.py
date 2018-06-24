@@ -3,6 +3,7 @@
 
 import os
 from flask import Flask
+from . import database
 
 def create_app(config=None, instance_path=None):
     """ Crear la app.
@@ -17,7 +18,7 @@ def create_app(config=None, instance_path=None):
                    and a ENVVAR, it will load the config via the file and
                    later overwrite it from the ENVVAR.
     """
-    app = Flask('botadero',
+    app = Flask(__name__,
                 instance_path=instance_path,
                 instance_relative_config=True)
     print ('INICIANDO')
@@ -26,13 +27,18 @@ def create_app(config=None, instance_path=None):
     # instance folders are not automatically created by flask
     if not os.path.exists(app.instance_path):
         os.makedirs(app.instance_path)
-    
+
     # config file and parameters
     if config is None:
         app.config.from_pyfile('../botadero/configs/configsDevelopment.py')
     else:
         app.config.from_pyfile(config)
 
+    # base de datos
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite3:///db.sqlite3'
+    with app.app_context():
+        database.init_db(app)
+    
     # blueprints
     configure_blueprints(app)
 

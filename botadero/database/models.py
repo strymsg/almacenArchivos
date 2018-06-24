@@ -1,9 +1,7 @@
 from sqlalchemy import Column, Integer, String
-from .database import Base
 from datetime import datetime as dt
 
-from flask import current_app as app
-from . import db
+from .database import db
 
 class Archivo(db.Model):
     __tablename__ = 'archivos'

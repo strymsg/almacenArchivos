@@ -29,6 +29,23 @@ Se utiliza python3 con el micro framework Flask, se puede instalar con los sigui
 
 pronto.
 
+##### Pruebas de desarrollo #####
+
+    # descargar el repositorio
+    git clone https://notabug.org/strysg/botadero
+	cd <nombre del proyecto>
+	# crear entorno virtual python 3
+	virtualenv --python=python3 venv
+	# activar entrono virtual
+	. venv/bin/activate
+	# instalar dependencias
+	pip install -r rquirements.txt
+	# variables de entorno
+	export FLASK_APP=botadero
+	export FLASK_ENV=development
+	# ejecutar en modo desarrollo
+	flask run
+
 #### Despliegue ####
 
 pronto.
