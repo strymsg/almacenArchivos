@@ -1,8 +1,8 @@
-###### Archivo de configuración del Botadero ######
+###### Archivo de configuración (desarrollo) del Botadero ######
 
 # Tamaño máximo en bytes que se puede almacenar
-# (para este ejemplo se usa 10.5 GB)
-TOTAL_STORAGE = 10500000000
+# (para este ejemplo se usa 12.5 GB)
+TOTAL_STORAGE = 12500000000
 
 # Directorio se almacenan los archivos compartidos
 UPLOAD_DIRECTORY = "almacen"
@@ -16,11 +16,14 @@ SIZE_LIMITS_AND_TIME_TO_DELETE = [
     [{'220000000': 6}]
 ]
 
+# Unidad de tiempo para manejar los archivos
+TIME_UNIT = 'day'
+
 # Nivel de verbosidad para guardar registros de eventos
 # 0 = ERROR
 # 1 = INFO
 # 2 = DEBUG
-LOG_LEVEL = 1
+LOG_LEVEL = 0
 
 # True fuerza la comprobación, False cancela la comprobación al subir archivos
 DIGEST_CHECK = True
@@ -42,4 +45,4 @@ CAPTCHA_USE = False
 
 # cuando se pone la app en produccion Usar DEBUG = False
 DEBUG = False
-SECRET_KEY = 'Llave secreta tiene que ir aqui'
+SECRET_KEY = 'cambiar una buena llave para produccion'

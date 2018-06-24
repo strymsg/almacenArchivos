@@ -1,5 +1,4 @@
-###### Archivo de configuración del Botadero ######
-# --> Renombrar como configs.py 
+###### Archivo de configuración (desarrollo) del Botadero ######
 
 # Tamaño máximo en bytes que se puede almacenar
 # (para este ejemplo se usa 10.5 GB)
@@ -17,11 +16,14 @@ SIZE_LIMITS_AND_TIME_TO_DELETE = [
     [{'220000000': 6}]
 ]
 
+# Unidad de tiempo para manejar los archivos
+TIME_UNIT = 'day'
+
 # Nivel de verbosidad para guardar registros de eventos
 # 0 = ERROR
 # 1 = INFO
 # 2 = DEBUG
-LOG_LEVEL = 1
+LOG_LEVEL = 2
 
 # True fuerza la comprobación, False cancela la comprobación al subir archivos
 DIGEST_CHECK = True

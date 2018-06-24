@@ -29,19 +29,19 @@ Se utiliza python3 con el micro framework Flask, se puede instalar con los sigui
 
 pronto.
 
-##### Pruebas de desarrollo #####
+##### Para desarrollo #####
 
     # descargar el repositorio
     git clone https://notabug.org/strysg/botadero
-	cd <nombre del proyecto>
+	cd botadero
 	# crear entorno virtual python 3
 	virtualenv --python=python3 venv
-	# activar entrono virtual
+	# activar entorno virtual
 	. venv/bin/activate
 	# instalar dependencias
 	pip install -r rquirements.txt
 	# variables de entorno
-	export FLASK_APP=botadero
+	export FLASK_APP=botadero.py
 	export FLASK_ENV=development
 	# ejecutar en modo desarrollo
 	flask run
@@ -77,6 +77,23 @@ This application does not store data about who upload files, **AGPL** License.
 It uses python3 and micro framework Flask, can be installed following:
 
 soon.
+
+##### For development #####
+
+    # download project
+    git clone https://notabug.org/strysg/botadero
+	cd botadero
+	# create python 3 virtual environment
+	virtualenv --python=python3 venv
+	# activate it
+	. venv/bin/activate
+	# install dependencies
+	pip install -r rquirements.txt
+	# environment variables
+	export FLASK_APP=botadero.py
+	export FLASK_ENV=development
+	# run in development mode
+	flask run
 
 #### Deploy ####
 

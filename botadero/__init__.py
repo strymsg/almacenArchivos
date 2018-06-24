@@ -21,18 +21,21 @@ def create_app(config=None, instance_path=None):
     app = Flask(__name__,
                 instance_path=instance_path,
                 instance_relative_config=True)
-    print ('INICIANDO')
-    print (app.instance_path)
+    print ('\nINICIANDO\n')
+    print ('os.environ.FLASK_ENV:',str(os.environ['FLASK_ENV']))
+    print ('instance_path:',app.instance_path)
 
     # instance folders are not automatically created by flask
     if not os.path.exists(app.instance_path):
         os.makedirs(app.instance_path)
 
     # config file and parameters
-    if config is None:
+    # if config is None:
+        # nothing yet!
+    if os.environ['FLASK_ENV'] == 'development':
         app.config.from_pyfile('../botadero/configs/configsDevelopment.py')
-    else:
-        app.config.from_pyfile(config)
+    elif os.environ['FLASK_ENV'] == 'production':
+        app.config.from_pyfile('../botadero/configs/configs.py')
 
     # base de datos
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite3:///db.sqlite3'
