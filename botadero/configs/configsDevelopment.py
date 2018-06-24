@@ -13,7 +13,7 @@ SIZE_LIMITS_AND_TIME_TO_DELETE = [
     [{'9000000': 16}],
     [{'20000000': 11}],
     [{'40000000': 8}],
-    [{'220000000': 6}]
+    [{'120000000': 6}]
 ]
 
 # Unidad de tiempo para manejar los archivos

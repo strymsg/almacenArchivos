@@ -3,7 +3,12 @@
 
 import os
 from flask import Flask
+
 from . import database
+from .configs import Parameters
+
+# objetos globales y otros
+globalParams = Parameters()
 
 def create_app(config=None, instance_path=None):
     """ Crear la app.
@@ -36,20 +41,24 @@ def create_app(config=None, instance_path=None):
         app.config.from_pyfile('../botadero/configs/configsDevelopment.py')
     elif os.environ['FLASK_ENV'] == 'production':
         app.config.from_pyfile('../botadero/configs/configs.py')
+    print ('app.config:', str(app.config), '\n')
 
     # base de datos
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite3:///db.sqlite3'
     with app.app_context():
         database.init_db(app)
-    
+
     # blueprints
     configure_blueprints(app)
 
-    print ('app.config:', str(app.config), '\n')
-    print ('Creating app finished')
+    # configuraciones adicionales
+    globalParams = Parameters(app)
+    print ('Parameters:',str(globalParams))
+
+    print ('Creating app finished!')
     return app
     
-def configure_app(app, config):
+def configure_app(app):
     pass
 
 def configure_blueprints(app):
