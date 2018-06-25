@@ -43,11 +43,6 @@ form, label, legend, button, table, caption, tbody, tfoot, thead, tr, th, td {
 }
 
 abbr[title], acronym[title] {
-	border-bottom: 1px dotted;
-	cursor: help;
-}
-
-table {
 	border-collapse: collapse;
 	border-spacing: 1;
 	/* -C- */
@@ -60,15 +55,8 @@ ol, ul {
 	list-style: none;
 }
 
-q:before,
-q:after,
-blockquote:before,
-blockquote:after {
-	content: "";
-}
 
-html {
-	overflow-y: scroll;
+overflow-y: scroll;
 	font-size: 100%;
 	-webkit-text-size-adjust: 100%;
 	-ms-text-size-adjust: 100%;
@@ -422,25 +410,6 @@ fieldset legend {
 }
 
 form .clearfix,
-form .cbi-value {
-	margin-bottom: 18px;
-	zoom: 1;
-	overflow: hidden;
-}
-
-form .clearfix:before, form .clearfix:after,
-form .cbi-value:before, form .cbi-value:after  {
-	display: table;
-	content: "";
-	zoom: 1;
-}
-
-form .clearfix:after
-form .cbi-value:after {
-	clear: both;
-}
-
-label,
 input,
 select,
 textarea {
@@ -451,74 +420,10 @@ textarea {
 }
 
 form .input,
-form .cbi-value-field {
-	margin-left: 200px;
-}
-
-form .cbi-value label.cbi-value-title {
-	padding-top: 6px;
-	font-size: 13px;
-	line-height: 18px;
-	float: left;
-	width: 180px;
-	text-align: right;
-	color: #404040;
-}
-
-input[type=checkbox], input[type=radio] {
-	cursor: pointer;
-}
-
-input,
-textarea,
-select,
-.uneditable-input {
-	display: inline-block;
-	width: 210px;
-	height: 30px;
-	padding: 4px;
-	font-size: 13px;
-	line-height: 18px;
-	color: #808080;
-	border: 1px solid #ccc;
-	-webkit-border-radius: 3px;
-	-moz-border-radius: 3px;
-	border-radius: 3px;
-}
-
-select {
 	padding: initial;
 }
 
 input[type=checkbox], input[type=radio] {
-	width: auto;
-	height: auto;
-	padding: 0;
-	margin: 3px 0;
-	*margin-top: 0;
-	/* IE6-7 */
-
-	line-height: normal;
-	border: none;
-}
-
-input[type=file] {
-	/*background-color: #ffffff;*/
-	padding: initial;
-	border: initial;
-	line-height: initial;
-	-webkit-box-shadow: none;
-	-moz-box-shadow: none;
-	box-shadow: none;
-	width: auto !important;
-}
-
-input[type=button], input[type=reset], input[type=submit] {
-	width: auto;
-	height: auto;
-}
-
-select, input[type=file] {
 	*height: auto;
 	*margin-top: 4px;
 	/* For IE7, add top margin to align select with labels */

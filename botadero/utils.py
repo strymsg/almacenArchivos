@@ -98,5 +98,4 @@ def esquemaColoresRandom():
     devuelve un esquema de colores random de los definidos en static/
     '''
     esquemas = ('gris1', 'neutral','verde1','azul1','amarillo1', 'rojo1','cafe1')
-    return 'neutral'
     return esquemas[random.randint(0, len(esquemas) - 1)]

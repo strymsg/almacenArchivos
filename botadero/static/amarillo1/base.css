@@ -42,11 +42,6 @@ form, label, legend, button, table, caption, tbody, tfoot, thead, tr, th, td {
 	font-family: inherit;
 v}
 
-abbr[title], acronym[title] {
-	border-bottom: 1px dotted;
-	cursor: help;
-}
-
 table {
 	border-collapse: collapse;
 	border-spacing: 1;
@@ -58,13 +53,6 @@ table {
 
 ol, ul {
 	list-style: none;
-}
-
-q:before,
-q:after,
-blockquote:before,
-blockquote:after {
-	content: "";
 }
 
 html {
@@ -421,25 +409,6 @@ fieldset legend {
 
 }
 
-form .clearfix,
-form .cbi-value {
-	margin-bottom: 18px;
-	zoom: 1;
-	overflow: hidden;
-}
-
-form .clearfix:before, form .clearfix:after,
-form .cbi-value:before, form .cbi-value:after  {
-	display: table;
-	content: "";
-	zoom: 1;
-}
-
-form .clearfix:after
-form .cbi-value:after {
-	clear: both;
-}
-
 label,
 input,
 select,
@@ -450,72 +419,8 @@ textarea {
 	line-height: normal;
 }
 
-form .input,
-form .cbi-value-field {
-	margin-left: 200px;
-}
-
-form .cbi-value label.cbi-value-title {
-	padding-top: 6px;
-	font-size: 13px;
-	line-height: 18px;
-	float: left;
-	width: 180px;
-	text-align: right;
-	color: #404040;
-}
-
-input[type=checkbox], input[type=radio] {
-	cursor: pointer;
-}
-
-input,
-textarea,
-select,
-.uneditable-input {
-	display: inline-block;
-	width: 210px;
-	height: 30px;
-	padding: 4px;
-	font-size: 13px;
-	line-height: 18px;
-	color: #808080;
-	border: 1px solid #ccc;
-	-webkit-border-radius: 3px;
-	-moz-border-radius: 3px;
-	border-radius: 3px;
-}
-
 select {
 	padding: initial;
-}
-
-input[type=checkbox], input[type=radio] {
-	width: auto;
-	height: auto;
-	padding: 0;
-	margin: 3px 0;
-	*margin-top: 0;
-	/* IE6-7 */
-
-	line-height: normal;
-	border: none;
-}
-
-input[type=file] {
-	/*background-color: #ffffff;*/
-	padding: initial;
-	border: initial;
-	line-height: initial;
-	-webkit-box-shadow: none;
-	-moz-box-shadow: none;
-	box-shadow: none;
-	width: auto !important;
-}
-
-input[type=button], input[type=reset], input[type=submit] {
-	width: auto;
-	height: auto;
 }
 
 select, input[type=file] {
@@ -587,53 +492,6 @@ textarea[readonly] {
 	border-color: #ddd;
 }
 
-.actions,
-.cbi-page-actions {
-	background: #f5f5f5;
-	margin-bottom: 18px;
-	padding: 17px 20px 18px 150px;
-	border-top: 1px solid #ddd;
-	-webkit-border-radius: 0 0 3px 3px;
-	-moz-border-radius: 0 0 3px 3px;
-	border-radius: 0 0 3px 3px;
-	text-align: right;
-}
-
-.actions .secondary-action,
-.cbi-page-actions .secondary-action{
-	float: right;
-}
-
-.actions .secondary-action a,
-.cbi-page-actions .secondary-action a {
-	line-height: 30px;
-}
-
-.actions .secondary-action a:hover,
-.cbi-page-actions .secondary-action a:hover {
-	text-decoration: underline;
-}
-
-.help-inline, .help-block {
-	font-size: 13px;
-	line-height: 18px;
-	color: #bfbfbf;
-}
-
-.help-inline {
-	padding-left: 5px;
-	*position: relative;
-	/* IE6-7 */
-
-	*top: -5px;
-	/* IE6-7 */
-
-}
-
-.help-block {
-	display: block;
-	max-width: 600px;
-}
 
 /*
  * Tables.less
@@ -784,44 +642,6 @@ footer {
 	-webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
 	-moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
 	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
-}
-
-.btn:hover,
-.cbi-button:hover {
-	color: #333;
-	text-decoration: none;
-}
-
-.btn:focus,
-.cbi-button:focus {
-	outline: 1px dotted #666;
-}
-
-.btn.primary,
-.cbi-page-actions .cbi-button-apply,
-.cbi-page-actions .cbi-button-save,
-.cbi-page-actions .cbi-button-reset {
-	color: #ffffff;
-	padding: 5px 14px 6px;
-	background-color: #0064cd;
-	background-repeat: repeat-x;
-	background-image: -khtml-gradient(linear, left top, left bottom, from(#049cdb), to(#0064cd));
-	background-image: -moz-linear-gradient(top, #049cdb, #0064cd);
-	background-image: -ms-linear-gradient(top, #049cdb, #0064cd);
-	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #049cdb), color-stop(100%, #0064cd));
-	background-image: -webkit-linear-gradient(top, #049cdb, #0064cd);
-	background-image: -o-linear-gradient(top, #049cdb, #0064cd);
-	background-image: linear-gradient(top, #049cdb, #0064cd);
-	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#049cdb', endColorstr='#0064cd', GradientType=0);
-	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
-	border-color: #0064cd #003f81;
-	border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
-}
-
-.cbi-input-invalid,
-.cbi-value-error input {
-	color: #FF0000;
-	border-color: #FF0000;
 }
 
 .btn.active, .btn:active {
