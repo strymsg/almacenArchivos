@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+	<head>
+		 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		 <link rel="shortcut icon" href="../static/botadero_resources/favicon.png">
+		<title>Archivador temporal para compartir archivos</title>
+		<link rel="stylesheet" href="../static/{{ esquema_colores }}/base.css" type="text/css" />
+
+	</head>
+	<body>
+
+	  <h1><a href="/">"El botadero"</a></h1>
+		<div class="qu">
+			Un sitio <b>público</b> para compartir archivos	
+		</div>
+	
+	<p>
+	<a href="/" >Inicio </a>
+	</p>
+	<!-- Mostrar estadisticas -->		
+		
+	<!-- Estadisticas generales -->
+	<p>
+	Disponibles {{ esp_disp }} MB (<b>{{ p_disp }} %</b>) Total de <b>{{ num_arch }}</b> archivos
+	</p>
+	<!-- Listado de Archivos -->
+	<div class="caja_lista_archivos">
+		<ul>
+			{% for da in datos_archivos | reverse %}
+			<li>
+			{% if da.categoria != "" %}
+			{{ da.categoria }} /
+			{% endif %}
+			{{ da.Nombre }}
+			</li>
+			<dd><b>tam:</b> {{ da.Tam/1000 }} (KB) </dd>
+			<dd><b>descargas:</b> <code>{{ da.NumDescargas }}</code> </dd>
+			<dd><b>subida:</b> {{ da.FechaYHoraDeSubida|string|truncate(19, True, end='') }}</dd>
+			<dd><b>hash check:</b> {{ da.HashCheck }}  </dd>
+			{% endfor %}
+		</ul>
+	</div>
+	<p>
+	<a href="/" >Inicio </a>
+	</p>
+	<!-- Notas al pie -->
+
+	<div class="qu">
+		" Compartir es bueno "
+		<p> <a href="https://notabug.org/strysg/botadero">Código fuente</a> de esta aplicación.</p>
+	</div>
+	</body>
+
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+    <head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link rel="shortcut icon" href="../static/botadero_resources/favicon.png">
+	<title>Archivador temporal para compartir archivos</title>
+	<link rel="stylesheet" href="../static/{{ esquema_colores }}/base.css" type="text/css" />
+
+    </head>
+    <body>
+
+	<h1>"El botadero"</h1>
+	<div class="qu">
+	    Un sitio <b>público</b> para compartir archivos	
+	</div>
+	
+	<P>El archivo <b>{{ nombre }}</b> que tratas de subir ya existe. </p>
+	<p><b>comprobacion hash:</b> {{ hash_check }} </p>
+	<a href="/info#duplicados" >No se guardan archivos duplicados.</a>
+	<!-- Notas al pie -->
+	
+	<div class="nota">
+	    <p>Revisa las <a href="/estadisticas" > estadisticas </a> de los archivos. 
+		<a href="/" >Volver al inicio </a>
+	    </p>
+	</div>
+	
+	<!-- Notas al pie -->
+	<div class="qu">
+	    <p>Compartir es bueno</p>
+	    <p> <a href="https://notabug.org/r00thouse/botadero">Código fuente</a> de esta aplicación.  </p>
+	</div>
+    </body>
+
+</html>

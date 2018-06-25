@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="shortcut icon" href="../static/botadero_resources/favicon.png">
+      <title>Archivador temporal para compartir archivos</title>
+      <link rel="stylesheet" href="../static/{{ esquema_colores }}/base.css" type="text/css" />
+    </head>
+    <body>
+      <h1><a href="/">"El botadero"</a></h1>
+    	<div class="qu">
+    	  Un sitio <b>público</b> para compartir archivos	
+    	</div>
+    	
+    	<h2>El Botadero</h2>
+    	<p>"El Botadero" es una "carpeta" pública donde cualquier persona puede subir archivos y descargarlos. Los archivos
+    	  aquí tienen un límite de permanencia ({{ td0 }} a {{ td2 }} días) pero no límites de velocidad.
+    	</p>
+    	<h2>¿Por qué se borran los archivos?</h2>
+    	<p>La principal razón es para <b>ahorrar espacio de almacenamiento</b>: este servidor ha dispuesto {{ dm }} MB para
+    	  almacenar archivos (si los archivos no se borrarían automáticamente, el espacio se terminaría tarde o temprano)</p>
+    	
+    	<p>Mientras más espacio disponible haya más archivos se pueden compartir y más gente puede descargarlos.
+    	  Además, siendo este un espacio de almacenamiento temporal, forzando el borrado de contenido viejos 
+    	  estimulamos la renovación del contenido del Botadero</p>
+    	
+    	<h2>Criterios de borrado de archivos</h2>
+    	<p>Usualmente los archivos desaparecen por el límite de tiempo:</p>
+    	<ul>
+    	  <li>Archivos menores a {{ sz1 }} MB: {{ td0 }} días</li>
+    	  <li>Archivos entre {{ sz1 }} MB y {{ sz2 }} MB: {{ td1 }} días</li>
+    	  <li>Archivos entre {{ sz2 }} MB y {{ ms }} MB: {{ td2 }} días</li>
+    	</ul>
+    	<p>No se aceptan archivos mayores a {{ ms }} MB.</p>
+    	
+    	<p>Cuando un archivo se borra, sus registros en el servidor tambíen se eliminan.</p>
+    	
+    	<h2 id="duplicados">¿Qué pasa con los archivos duplicados?</h2>
+    	<p>El Botadero rechaza los archivos subidos que tengan un nombre igual a algún otro que ya exista.
+    	  También rechaza los archivos que se detecten sean iguales (en contenido) a otro que ya exista,
+    	  tengan el mismo nombre o no.</p>
+    	
+    	<h2>No se guardan registros de los usuarios</h2>
+    	<p>Cuando subes un archivo, la aplicación no guarda datos relacionados a tu dirección IP o computadora.</p>
+    	
+	<h2>Sube los archivos según su categoría</h2>
+    	<p>Existen categorías (#) de archivos para mantenerlos clasificados y así es más sencillo que alguien los ubique.
+    	Sube archivos en las categorías correspondientes, si no estás seguro súbelo en #Misc.</p>    	
+    	
+    	<h2>Ten respeto por los usuarios</h2>
+    	<p>Recuerda que este es un espacio público y <b>si subes algo todas y todos podrán verlo</b>.
+    	<p>El Botadero no filtra (aún) por sí solo el contenido: este es moderado continuamente por administradores
+    	  y estos eliminarán los archivos si estos incumplen alguna de estas reglas.</p>
+    	<h2>Contenido prohibido</h2>
+    	<p>Aunque el contenido del portal es "vale todo" (documentos, música, etc), existen algunos tipos no admitidos:</p>
+    	<ul>
+    	  <!-- <li>Contenido para adultos de todo tipo</li> -->
+    	  <li>Archivos que hagan referencia a delitos o actividad ilegal en Bolivia</li>
+    	  <li>Archivos con contraseña</li>
+    	</ul>
+    	
+    	<p>Cuida este espacio para que siga funcionando por que <b>compartir es bueno</b>.</p>
+    	<!-- Notas al pie -->
+    	
+    	<div class="nota">
+    	  <p>Revisa las <a href="estadisticas" > estadísticas </a> de los archivos. 
+    	    <a href="/" >Inicio </a>
+    	  </p>
+    	</div>
+
+	<!-- Notas al pie -->
+	<div class="qu">
+		" Compartir es bueno "
+		<p> <a href="https://notabug.org/strysg/botadero">Código fuente</a> de esta aplicación.</p>
+	</div>
+
+    	</body>
+</html>

@@ -1,14 +1,14 @@
-# this file is part of "El Botadero"
-# copyright Rodrigo Garcia 2018 <strysg@riseup.net>
-
+'''
+this file is part of "El Botadero"
+copyright 2018 Rodrigo Garcia <strysg@riseup.net>
+AGPL liberated.
+'''
 import os
 from flask import Flask
 
 from . import database
 from .configs import Parameters
-
-# objetos globales y otros
-globalParams = Parameters()
+from .shared import globalParams
 
 def create_app(config=None, instance_path=None):
     """ Crear la app.
@@ -64,19 +64,3 @@ def configure_app(app):
 def configure_blueprints(app):
     from . import views
     app.register_blueprint(views.botaderoBp)
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
