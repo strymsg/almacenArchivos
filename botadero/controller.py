@@ -8,3 +8,10 @@ from . import utils as u
 from .database.database import db
 from .database.models import Archivo
 
+def procesarListaArchivos(catgeoria=None):
+    ''' Verifica si es necesario generar una nueva cadena html para 
+    mostrar la lista de archivos actualizada.
+    '''
+    
+
+

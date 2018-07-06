@@ -13,3 +13,6 @@ globalParams = Parameters()
 gr = {
     'reload': True
 }
+htmls = {
+    'htmlLista': ''
+}

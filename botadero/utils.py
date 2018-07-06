@@ -31,7 +31,51 @@ def registrarArchivo(self, nombreYRuta, hashCheck=False, hashAlgorithm=None, acc
 def hashArchivo(nombreYRuta, hashAlgorithm=None, accelerateHash=False):
     ''' Retorna el hexdigest del archivo usando los parametros dados
     '''
-    return ''
+    if hashAlgorithm is None:
+        hashAlgo = globalParams.digestAlgorithm
+        if hashAlgo not in ('md5', 'sha1', 'sha224', 'sha256', 'sha384', 'sha512'):
+            hashAlgo = 'sha1'
+
+    h=None
+    if hashAlgo == 'md5':
+        h = hashlib.md5()
+    elif hashAlgo == 'sha1':
+        h = hashlib.sha1()
+    elif hashAlgo == 'sha224':
+        h = hashlib.sha224()
+    elif hashAlgo == 'sha256':
+        h = hashlib.sha256()
+    elif hashAlgo == 'sha384':
+        h = hashlib.sha384()
+    elif hashAlgo == 'sha512':
+        h = hashlib.sha512()
+
+    with open(nombreYRuta, 'rb') as fil:
+        if accelerateHash:
+            fsize = os.path.getsize(nombreYRuta)
+            # se divide el archivo en pedazos y se comprueba solo esos pedazos
+            i = 0
+            puntero = 0
+            while puntero < fsize:
+                # pedazos que crecen a razon de 1MiB
+                cad = fil.read(i*1024*1024)
+                h.update(cad)
+                fil.seek(i*10*1024*1024, os.SEEK_CUR)
+                puntero = fil.tell()
+                i += 1
+        else:
+            # comprobando en pedazos de hasta 125 MiB
+            pedazoTam = 125*1024*1024
+            cad = fil.read(pedazoTam)
+            h.update(cad)
+            tAnt = -1
+            tAct = fil.tell()
+            while tAnt != tAct:
+                cad = fil.read(pedazoTam)
+                h.update(cad)
+                tAnt = tAct
+                tAct = fil.tell()
+    return h.hexdigest()
 
 def edadArchivo(nombreYRuta):
     ''' Retorna la edad o tiempo (en la unidad de tiempo usada globalmente)
@@ -67,14 +111,30 @@ def listaDeArchivosEnBd(categoria=None):
     lista = []
     return lista
 
-def listaDeArchivos(categoria=None, ignorar=[]):
+def listaDeArchivos(categoria=None, ignorar=[], orden='fecha_asc'):
     ''' retorna la lista de nombres de archivos (en la carpeta donde se almacenan los archivos) esten o no en la BD.
 
     :param categoria: si se proporciona solo busca en la carpeta correspondiente a la categoria dada.
 
     :param ignorar: Una lista con expresiones regulares para omitir nombres de archivos que coincidan.
+
+    :param orden: de opciones multiples
+    - fecha_asc: ordena por fecha de modificacion acendentemente (mas reciente primero)
+    - fecha_des: ordena por fecha de modificacion decendentemetne.
     '''
     lista = []
+    ruta = globalParams.uploadDirectory
+    try:
+        ow = os.walk(ruta)
+        p,d,files = next(ow)
+    except OSError:
+        print ("[REG] - Error: Can't os.walk() on %s except OSError.")
+    else:
+        lista = [os.path.join(ruta, f) for f in files]
+        reverse = False
+        if orden == 'fecha_asc':
+            reverse = True
+        lista.sort(key=lambda x: os.path.getmtime(x), reverse=reverse)
     return lista
 
 def borrarArchivo(nombreYRuta):

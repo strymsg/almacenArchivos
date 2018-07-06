@@ -46,13 +46,3 @@ def indexView():
         'params': {}
     }
     return render_template("index.html", dv=dv)
-                           # borrar_1=utils.Ea.Parametros.TimeToDel0,\
-                           # borrar_2=utils.Ea.Parametros.TimeToDel2,\
-                           # esp_disp=utils.Ea.almacenDisponible/1000000,\
-                           # p_disp=utils.Ea.porcentajeAlmacenDisponible,\
-                           # num_arch=utils.Ea.numArchivos,\
-                           # lista_archivos=utils.ls_archivos(),\
-                           # esquema_colores=utils.esquema_colores_random(),\
-                           # categoria_actual=categoria_actual,\
-                           # categorias_con_nums=categorias_con_nums,\
-                           # ms=utils.Ea.Parametros.SizeMaxToUpload)

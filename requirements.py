@@ -1,7 +1,10 @@
+atomicwrites==1.1.5
+attrs==18.1.0
 blessings==1.7
 certifi==2018.4.16
 chardet==3.0.4
 click==6.7
+coverage==4.5.1
 curtsies==0.3.0
 Flask==1.0.2
 Flask-SQLAlchemy==2.3.2
@@ -10,8 +13,12 @@ idna==2.7
 itsdangerous==0.24
 Jinja2==2.10
 MarkupSafe==1.0
+more-itertools==4.2.0
 pkg-resources==0.0.0
+pluggy==0.6.0
+py==1.5.4
 Pygments==2.2.0
+pytest==3.6.2
 requests==2.19.1
 six==1.11.0
 SQLAlchemy==1.2.8
