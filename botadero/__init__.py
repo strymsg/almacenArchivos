@@ -46,7 +46,7 @@ def create_app(config=None, instance_path=None):
     # base de datos
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite3:///db.sqlite3'
     with app.app_context():
-        database.init_db(app)
+        database.setup_db(app)
 
     # blueprints
     configure_blueprints(app)

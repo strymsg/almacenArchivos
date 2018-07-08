@@ -3,6 +3,7 @@
 .*
 \#
 botadero/*~
+*sqlite3
 
 # python
 *.pyc
