@@ -7,12 +7,18 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, String
 from datetime import datetime as dt
 
+#from .database import CRUDMixin
 #from .database import db
-db = SQLAlchemy()
+#db = SQLAlchemy()
+from . import get_db
+from . import CRUDMixin
 from botadero.shared import globalParams
 
-class Archivo(db.Model):
-    print ('  objeto db (desde models.Archivo)', str(db))
+print ('modelos antes de get_db')
+db = get_db()
+print ('modelos (db)', str(db))
+
+class Archivo(db.Model, CRUDMixin):
     __tablename__ = 'archivos'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(1000), nullable=False)
@@ -52,5 +58,25 @@ class Archivo(db.Model):
         self.remainingTime = kwargs.get('ramainingTime', 1)
         self.hashedPassword = kwargs.get('hashedPassword', '')
 
-    def __repr__(self):
-        return 'File %r/%r: [%r] (%r B), downloads: %d - uploaded: %r remaining time: %d' % (self.path, self.name, self.digestCheck, self.size, self.downloads, self.uploadedAtTime, self.remainingTime)
+    def save(self, **kwargs):
+        self.name = kwargs.get('name',self.name)
+        self.path = kwargs.get('path', self.path)
+        self.size = kwargs.get('size', self.size)
+        self.extension = kwargs.get('extension', self.extension)
+        self.downloads = kwargs.get('downloads', self.downloads)
+        self.digestCheck = kwargs.get('digetsCheck', self.digestCheck)
+        self.digestAlgorithm = kwargs.get('digestAlgorithm',
+                                          self.digestAlgorithm)
+        self.uploadedAtTime = kwargs.get('uploadedAtTime',
+                                         self.uploadedAtTime)
+        self.remainingTime = kwargs.get('ramainingTime',
+                                        self.remainingTime)
+        self.hashedPassword = kwargs.get('hashedPassword',
+                                         self.hashedPassword)
+        
+        db.session.add(self)
+        db.session.commit()
+        return self
+        
+    # def __repr__(self):
+    #     return 'File %r/%r: [%r] (%r B), downloads: %d - uploaded: %r remaining time: %d' % (self.path, self.name, self.digestCheck, self.size, self.downloads, self.uploadedAtTime, self.remainingTime)

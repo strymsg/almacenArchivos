@@ -12,14 +12,19 @@ from botadero.shared import globalParams
 
 @pytest.fixture
 def app():
-    app = create_app({
-        'TESTING': true
-    })
-
-    # agregar aqui inicializadores de base de datos
-    # ...
-
+    db_fd, db_path = tempfile.mkstemp()
+    
+    # create_app() tambien contiene inicializadores para la base de datos
+    app = create_app(db_path=db_path)
+    # app = create_app({
+    #     'TESTING': true,
+    #     'DATABASE': db_path,
+    # })
+    
     yield app
+
+    os.close(db_fd)
+    os.unlink(db_path)
 
 @pytest.fixture
 def client(app):
@@ -29,5 +34,3 @@ def client(app):
 @pytest.fixture
 def runner(app):
     return app.test_cli_runner()
-
-

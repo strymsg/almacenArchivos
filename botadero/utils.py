@@ -7,6 +7,7 @@ import os, sys, hashlib, re, random
 from datetime import datetime as dt
 
 from .shared import globalParams
+from .database import get_db
 from .database.models import Archivo
 
 from flask import Flask
@@ -36,7 +37,7 @@ def hashArchivo(nombreYRuta, hashAlgorithm=None, accelerateHash=False):
         if hashAlgo not in ('md5', 'sha1', 'sha224', 'sha256', 'sha384', 'sha512'):
             hashAlgo = 'sha1'
 
-    h=None
+    h = None
     if hashAlgo == 'md5':
         h = hashlib.md5()
     elif hashAlgo == 'sha1':
@@ -109,6 +110,10 @@ def listaDeArchivosEnBd(categoria=None):
     lista completa de todos los archivos.
     '''
     lista = []
+    qLista = Archivo.query.all()
+    for archivo in qLista:
+        print (archivo)
+    lista = qLista
     return lista
 
 def listaDeArchivos(categoria=None, ignorar=[], orden='fecha_asc'):

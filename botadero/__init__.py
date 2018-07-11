@@ -6,11 +6,12 @@ AGPL liberated.
 import os
 from flask import Flask
 
-from . import database
 from .configs import Parameters
 from .shared import globalParams
 
-def create_app(config=None, instance_path=None):
+print ('__init.py<botadero>')
+
+def create_app(config=None, instance_path=None, db_path=None):
     """ Crear la app.
     :param instance_path: An alternative instance path for the application.
                           By default the folder ``'instance'`` next to the
@@ -22,13 +23,16 @@ def create_app(config=None, instance_path=None):
                    For example, if the config is specified via an file
                    and a ENVVAR, it will load the config via the file and
                    later overwrite it from the ENVVAR.
+
+    :param db_path: Database URI to be `SQLALCHEMY_DATABASE_URI', if not 
+    provided it uses 'sqlite:///db.sqlite3'
     """
     app = Flask(__name__,
                 instance_path=instance_path,
                 instance_relative_config=True)
     print ('\nINICIANDO\n')
-    print ('os.environ.FLASK_ENV:',str(os.environ['FLASK_ENV']))
-    print ('instance_path:',app.instance_path)
+    print ('os.environ.FLASK_ENV:', str(os.environ['FLASK_ENV']))
+    print ('instance_path:', app.instance_path)
 
     # instance folders are not automatically created by flask
     if not os.path.exists(app.instance_path):
@@ -43,24 +47,27 @@ def create_app(config=None, instance_path=None):
         app.config.from_pyfile('../botadero/configs/configs.py')
     print ('app.config:', str(app.config), '\n')
 
-    # base de datos
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite3:///db.sqlite3'
-    with app.app_context():
-        database.setup_db(app)
-
-    # blueprints
-    configure_blueprints(app)
-
     # configuraciones adicionales
     globalParams = Parameters(app)
     print ('Parameters:',str(globalParams))
 
-    print ('Creating app finished!')
+    # base de datos
+    print ('Base de datos setup---')
+    from . import database
+
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite3:///db.sqlite3'
+    with app.app_context():
+        if db_path is None:
+            database.setup_db(app)
+        else:
+            database.setup_db(app, db_path)
+
+    # blueprints
+    configure_blueprints(app)
+
+    print ('\nCreating app finished!')
     return app
     
-def configure_app(app):
-    pass
-
 def configure_blueprints(app):
     from . import views
     app.register_blueprint(views.botaderoBp)

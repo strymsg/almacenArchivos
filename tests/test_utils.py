@@ -13,10 +13,6 @@ from botadero import utils
 
 # NOTA: para ver los mensajes en print usar: pytest -s
 
-# def test_config():
-#     assert not create_app()
-#     assert create_app({'TESTING': true}).testing
-
 def test_listaDeArchivos():
     lista = utils.listaDeArchivos()
     print ('lista obtenida:')
@@ -35,3 +31,8 @@ def test_hashArchivo_conAceleracion():
     hexdigest = utils.hashArchivo(archivo, accelerateHash=True)
     print ('hash con aceleracion', hexdigest)
     assert hexdigest != 'da39a3ee5e6b4b0d3255bfef95601890afd80709'
+    
+# def test_listaDeArchivos(app):
+#     lista = utils.listaDeArchivosEnBd()
+#     assert len(lista) > 0
+    
