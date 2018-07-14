@@ -9,6 +9,7 @@ import tempfile
 import pytest
 from botadero import create_app
 from botadero.shared import globalParams
+from botadero.database import get_db
 
 @pytest.fixture
 def app():
@@ -20,7 +21,6 @@ def app():
     #     'TESTING': true,
     #     'DATABASE': db_path,
     # })
-    
     yield app
 
     os.close(db_fd)
@@ -30,7 +30,12 @@ def app():
 def client(app):
     return app.test_client()
 
-
 @pytest.fixture
 def runner(app):
     return app.test_cli_runner()
+
+@pytest.fixture
+def db(app):
+    with app.app_context():
+        from botadero.database.models import Archivo
+        #yield get_db()

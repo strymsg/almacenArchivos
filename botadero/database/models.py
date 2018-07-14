@@ -77,6 +77,10 @@ class Archivo(db.Model, CRUDMixin):
         db.session.add(self)
         db.session.commit()
         return self
+
+    def delete(self):
+        return db.session.delete(self)
+        #pass
         
     # def __repr__(self):
     #     return 'File %r/%r: [%r] (%r B), downloads: %d - uploaded: %r remaining time: %d' % (self.path, self.name, self.digestCheck, self.size, self.downloads, self.uploadedAtTime, self.remainingTime)

@@ -1,21 +1,13 @@
 '''
 This file is part of "El Botadero"
-copyright 2018 Rodrigo Garcia <strysg@riseup.net>
+copy
+right 2018 Rodrigo Garcia <strysg@riseup.net>
 AGPL liberated.
 '''
-print('__init.py<database>')
-
 from flask_sqlalchemy import SQLAlchemy
 from flask import g
 from flask import current_app
 from flask_sqlalchemy import BaseQuery
-
-#from .database import setup_db, db, get_db
-# from .models import Archivo
-# from .models import CRUDMixin
-
-#db = SQLAlchemy()
-#print('db(1):', str(db))
 
 def setup_db(app, db=None, destroy=True, db_path='sqlite:///db.sqlite3'):
     ''' Re-Initializes database module.
@@ -42,14 +34,10 @@ def setup_db(app, db=None, destroy=True, db_path='sqlite:///db.sqlite3'):
     db.create_all()
     db.session.commit()
         
-    #archivo = Archivo(name='prueba.py', extension='py')
-    Archivo.create(name='prueba1.py', extension='py')
-    Archivo.create(name='prueba2.py', extension='py')
-    #print (archivo)
-    #db.session.add(archivo)
-    #db.session.commit()
-    print('Archivo.query.all():', str(Archivo.query.all()))
-
+    # Archivo.create(name='prueba1.py', extension='py')
+    # Archivo.create(name='prueba2.py', extension='py')
+    # print('Archivo.query.all():', str(Archivo.query.all()))
+    print ('Base de datos creada!')
     return g.db
 
 def get_db():
@@ -80,7 +68,4 @@ class CRUDMixin(object):
     def delete(self):
         """Delete the object from the database."""
         db.session.delete(self)
-        db.session.commit()
-        return self
-
-
+        return db.session.commit()
