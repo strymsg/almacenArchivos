@@ -59,7 +59,6 @@ def create_app(config=None, instance_path=None, db_path='sqlite:///db.sqlite3', 
     ctx = app.app_context()
     ctx.push()
     database.setup_db(app, db_path=db_path, testing=testing)
-    #database.setup_db(app, db_path=db_path)
     
     # blueprints
     configure_blueprints(app)

@@ -5,8 +5,7 @@ right 2018 Rodrigo Garcia <strysg@riseup.net>
 AGPL liberated.
 '''
 from flask_sqlalchemy import SQLAlchemy
-from flask import g
-from flask import current_app
+from flask import g, current_app
 from flask_sqlalchemy import BaseQuery
 
 def setup_db(app, db=None, destroy=True, db_path='sqlite:///db.sqlite3', testing=False):
@@ -47,8 +46,6 @@ def get_db():
     again.
     """
     return g.db
-    # with current_app.app_context():
-    #     return g.db
 
 def close_db(e=None):
     """If this request connected to the database, close the
