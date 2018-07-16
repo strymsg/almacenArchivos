@@ -9,7 +9,7 @@ import tempfile
 import pytest
 from botadero import create_app
 from botadero.shared import globalParams
-
+from flask import current_app
 # NOTA: para ver los mensajes en print usar: pytest -s
 
 def test_listaDeArchivos():

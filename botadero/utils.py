@@ -21,11 +21,16 @@ def registrarArchivo(self, nombreYRuta, hashCheck=False, hashAlgorithm=None, acc
     archivo = Archivo()
 
     # obtener la ruta completa
+    rutaCompleta = os.path.realpath(nombreYRuta)
+    rutaRelativa = addRelativeFileName(nombreYRuta)
     
     # obtener informacion basica del archivo (del sistema de archivos)
-    
-    # comprobar si existe o no en la BD
+    size = os.stat(rutaRelativa)
+    extension = extensionArchivo(nombreYRuta)
 
+    # comprobar si existe o no en la BD
+    if (existeArchivo(nombreYRuta)):
+        return True
     # si no existe obtener estadisticas e introducir en la BD
     return archivo
 
@@ -101,7 +106,9 @@ def existeArchivo(nombreYRuta, comprobarCategoria=False, hashCheck=None):
     ''' Comprueba si el archivo dado esta registrado en la BD 
     usando los parametros dados.
     '''
-    return False
+    nombre = nombreArchivo(nombreYRuta)
+    path = categoriaArchivo(nombreYRuta)
+    return Archivo.query.filter_by(name=nombre, path=path).first() is not None
 
 def listaDeArchivosEnBd(categoria=None):
     ''' retorna la lista de archivos (registrados en la BD)
@@ -164,3 +171,8 @@ def esquemaColoresRandom():
     '''
     esquemas = ('gris1', 'neutral','verde1','azul1','amarillo1', 'rojo1','cafe1')
     return esquemas[random.randint(0, len(esquemas) - 1)]
+
+def addRelativeFileName(filename):
+    if not filename.startswith(os.path.curdir, os.path.sep):
+        return os.path.join((os.path.curdir + os.path.join), filename)
+    return filename

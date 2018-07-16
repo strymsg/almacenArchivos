@@ -11,7 +11,7 @@ from .shared import globalParams
 
 print ('__init.py<botadero>')
 
-def create_app(config=None, instance_path=None, db_path=None):
+def create_app(config=None, instance_path=None, db_path='sqlite:///db.sqlite3', testing=False):
     """ Crear la app.
     :param instance_path: An alternative instance path for the application.
                           By default the folder ``'instance'`` next to the
@@ -30,6 +30,7 @@ def create_app(config=None, instance_path=None, db_path=None):
     app = Flask(__name__,
                 instance_path=instance_path,
                 instance_relative_config=True)
+    
     print ('\nINICIANDO\n')
     print ('os.environ.FLASK_ENV:', str(os.environ['FLASK_ENV']))
     print ('instance_path:', app.instance_path)
@@ -55,13 +56,11 @@ def create_app(config=None, instance_path=None, db_path=None):
     print ('Base de datos setup---')
     from . import database
 
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite3:///db.sqlite3'
-    with app.app_context():
-        if db_path is None:
-            database.setup_db(app)
-        else:
-            database.setup_db(app, db_path)
-
+    ctx = app.app_context()
+    ctx.push()
+    database.setup_db(app, db_path=db_path, testing=testing)
+    #database.setup_db(app, db_path=db_path)
+    
     # blueprints
     configure_blueprints(app)
 

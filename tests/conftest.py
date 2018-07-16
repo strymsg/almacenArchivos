@@ -13,10 +13,12 @@ from botadero.database import get_db
 
 @pytest.fixture
 def app():
-    db_fd, db_path = tempfile.mkstemp()
+    db_fd, db_path = tempfile.mkstemp(suffix='.db')
+    print ('>>>>', db_path)
     
     # create_app() tambien contiene inicializadores para la base de datos
-    app = create_app(db_path=db_path)
+    
+    app = create_app(db_path=db_path, testing=True)
     # app = create_app({
     #     'TESTING': true,
     #     'DATABASE': db_path,
@@ -36,6 +38,9 @@ def runner(app):
 
 @pytest.fixture
 def db(app):
-    with app.app_context():
-        from botadero.database.models import Archivo
-        #yield get_db()
+    # ctx = app.app_context()
+    # ctx.push()
+    # yield get_db()
+    #from botadero.database.models import Archivo
+    yield get_db()
+    #yield get_db()
