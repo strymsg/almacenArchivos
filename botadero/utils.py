@@ -12,12 +12,19 @@ from .database.models import Archivo
 
 from flask import Flask
 
-def registrarArchivo(self, nombreYRuta, hashCheck=False, hashAlgorithm=None, accelerateHash=False):
+def registrarArchivo(self, nombreYRuta, hashCheck=False, hashAlgorithm=None, accelerateHash=False, hashedPassword=''):
     ''' Dado un archivo en el sistema de archivos hace una serie de comprobaciones 
     y lo registra en la base de datos como un nuevo archivo.
 
     retorna el objeto creado o si existe el que esta en la BD.
     '''
+    # comprobar si existe o no en la BD
+    archivo = existeArchivo(nombreYRuta)
+    if archivo is not None:
+        return archivo
+        
+    # si no existe obtener estadisticas e introducir en la BD
+
     archivo = Archivo()
 
     # obtener la ruta completa
@@ -28,10 +35,14 @@ def registrarArchivo(self, nombreYRuta, hashCheck=False, hashAlgorithm=None, acc
     size = os.stat(rutaRelativa)
     extension = extensionArchivo(nombreYRuta)
 
-    # comprobar si existe o no en la BD
-    if (existeArchivo(nombreYRuta)):
-        return True
-    # si no existe obtener estadisticas e introducir en la BD
+    # obtener hashcheck del archivo
+    hashcheck = ''
+    if hashCheck:
+        hashcheck = hashArchivo(rutaCompleta, hashAlgorithm=hashAlgorithm, accelerateHash=accelerateHash)
+
+    # determinar tiempo de eliminacion
+    # ...
+
     return archivo
 
 def hashArchivo(nombreYRuta, hashAlgorithm=None, accelerateHash=False):
@@ -96,7 +107,7 @@ def extensionArchivo(nombreYRuta):
     if len(nombreYRuta.split('.')) > 1:
         return nombreYRuta.split('.')[-1]
 
-def categoriaArchivo(self, nombreYRuta):
+def categoriaArchivo(nombreYRuta):
     tupla = nombreYRuta.split(os.sep)
     if len(tupla) > 2:
         return tupla[-2]
@@ -104,11 +115,11 @@ def categoriaArchivo(self, nombreYRuta):
 
 def existeArchivo(nombreYRuta, comprobarCategoria=False, hashCheck=None):
     ''' Comprueba si el archivo dado esta registrado en la BD 
-    usando los parametros dados.
+    usando los parametros dados. Retorna el Objeto Archivo o None
     '''
     nombre = nombreArchivo(nombreYRuta)
     path = categoriaArchivo(nombreYRuta)
-    return Archivo.query.filter_by(name=nombre, path=path).first() is not None
+    return Archivo.query.filter_by(name=nombre, path=path).first()
 
 def listaDeArchivosEnBd(categoria=None):
     ''' retorna la lista de archivos (registrados en la BD)
@@ -159,6 +170,18 @@ def comprobarTiempoArchivo(nombreYRuta):
     ''' comprueba si el archivo dado ha sobrepasado o no su tiempo permitido.
     '''
     return False
+
+def tiempoBorradoArchivo(size):
+    ''' retorna el tiempo en que el archivo debe ser borrado 
+    '''
+    timeToDel = 0
+    
+    for lim in globalParams['SIZE_LIMITS_AND_TIME_TO_DEL'].sort():
+        if size <= lim[0]:
+            return lim[1]
+        else:
+            timeToDel = lim[1]
+    return timeToDel
 
 def comprobarPassword(nombreYRuta, password):
     ''' Consulta en la BD y comprueba si el archivo ha sido guardado usando el password dado.

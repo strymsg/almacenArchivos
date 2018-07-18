@@ -11,7 +11,8 @@ from .configs import Parameters
 # objetos globales y otros
 globalParams = Parameters()
 gr = {
-    'reload': True
+    'reload': True,
+    'esapacioConsumido': 0,
 }
 htmls = {
     'htmlLista': ''

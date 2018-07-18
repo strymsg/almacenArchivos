@@ -8,12 +8,12 @@ TOTAL_STORAGE = 10500000000
 UPLOAD_DIRECTORY = "almacen"
 
 # Objeto que define Tamaño de archivos a considerar (en Bytes) y en cuantas unidades de tiempo borrarlos.
-# En este este ejemplo se definen cuatro tamaños a considerar (9MB, 20MB, 40MB y 220 MB
+# En este este ejemplo se definen cuatro tamaños a considerar (5MB, 20MB, 40MB y 110 MB
 SIZE_LIMITS_AND_TIME_TO_DELETE = [
-    [{'9000000': 16}],
-    [{'20000000': 11}],
-    [{'40000000': 8}],
-    [{'120000000': 6}]
+    ('5000000', 16),
+    ('20000000', 11),
+    ('40000000', 8),
+    ('110000000', 6)
 ]
 
 # Unidad de tiempo para manejar los archivos
