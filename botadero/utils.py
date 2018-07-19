@@ -12,7 +12,7 @@ from .database.models import Archivo
 
 from flask import Flask
 
-def registrarArchivo(self, nombreYRuta, hashCheck=False, hashAlgorithm=None, accelerateHash=False, hashedPassword=''):
+def registrarArchivo(nombreYRuta, digestCheck=None, digestAlgorithm=None, accelerateHash=False, hashedPassword=''):
     ''' Dado un archivo en el sistema de archivos hace una serie de comprobaciones 
     y lo registra en la base de datos como un nuevo archivo.
 
@@ -24,30 +24,41 @@ def registrarArchivo(self, nombreYRuta, hashCheck=False, hashAlgorithm=None, acc
         return archivo
         
     # si no existe obtener estadisticas e introducir en la BD
-
-    archivo = Archivo()
-
     # obtener la ruta completa
     rutaCompleta = os.path.realpath(nombreYRuta)
     rutaRelativa = addRelativeFileName(nombreYRuta)
-    
+    path = rutaRelativa
     # obtener informacion basica del archivo (del sistema de archivos)
-    size = os.stat(rutaRelativa)
+    size = os.path.getsize(nombreYRuta)
     extension = extensionArchivo(nombreYRuta)
-
     # obtener hashcheck del archivo
-    hashcheck = ''
-    if hashCheck:
-        hashcheck = hashArchivo(rutaCompleta, hashAlgorithm=hashAlgorithm, accelerateHash=accelerateHash)
-
+    _digestCheck = ''
+    _digestAlgorithm = ''
+    if digestAlgorithm is None:
+        _digestAlgorithm = globalParams.digestAlgorithm
+    if digestCheck is None:
+        if globalParams.digestCheck:
+            _digestCheck = hashArchivo(rutaCompleta, hashAlgorithm=_digestAlgorithm, accelerateHash=accelerateHash)
+    elif digestCheck == True:
+        _digestCheck = hashArchivo(rutaCompleta, hashAlgorithm=_digestAlgorithm, accelerateHash=accelerateHash)
     # determinar tiempo de eliminacion
-    # ...
-
-    return archivo
+    remainingTime = tiempoBorradoArchivo(nombreYRuta)
+    uploadedAtTime = dt.now()
+    # creando registro en la BD
+    arch = Archivo.create(name=nombreArchivo(nombreYRuta),
+                          path=path, size=size,
+                          extension=extensionArchivo(nombreYRuta),
+                          digestCheck=_digestCheck,
+                          digestAlgorithm=_digestAlgorithm,
+                          uploadedAtTime=uploadedAtTime,
+                          remainingTime=remainingTime,
+                          hashedPassword=hashedPassword)
+    return arch
 
 def hashArchivo(nombreYRuta, hashAlgorithm=None, accelerateHash=False):
     ''' Retorna el hexdigest del archivo usando los parametros dados
     '''
+    hashAlgo = 'sha1'
     if hashAlgorithm is None:
         hashAlgo = globalParams.digestAlgorithm
         if hashAlgo not in ('md5', 'sha1', 'sha224', 'sha256', 'sha384', 'sha512'):
@@ -176,7 +187,7 @@ def tiempoBorradoArchivo(size):
     '''
     timeToDel = 0
     
-    for lim in globalParams['SIZE_LIMITS_AND_TIME_TO_DEL'].sort():
+    for lim in globalParams.sizeLimitsAndTimeToDelete:
         if size <= lim[0]:
             return lim[1]
         else:
@@ -196,6 +207,6 @@ def esquemaColoresRandom():
     return esquemas[random.randint(0, len(esquemas) - 1)]
 
 def addRelativeFileName(filename):
-    if not filename.startswith(os.path.curdir, os.path.sep):
+    if not filename.startswith(os.path.sep):
         return os.path.join((os.path.curdir + os.path.join), filename)
     return filename

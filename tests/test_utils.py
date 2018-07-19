@@ -5,6 +5,7 @@ AGPL liberated.
 '''
 import os
 import tempfile
+import random
 
 import pytest
 from botadero import create_app
@@ -36,3 +37,38 @@ def test_hashArchivo_conAceleracion():
     hexdigest = hashArchivo(archivo, accelerateHash=True)
     print ('hash con aceleracion', hexdigest)
     assert hexdigest != 'da39a3ee5e6b4b0d3255bfef95601890afd80709'
+
+def test_registrarArchivo(db):
+    from botadero.utils import registrarArchivo
+    from botadero.database.models import Archivo
+    
+    nombreYRuta = crearArchivoPrueba()
+    registrado = registrarArchivo(nombreYRuta)
+    print ('ARchivo registrado:', str(registrado))
+    assert registrado is not None
+    assert Archivo.query.filter_by(name=registrado.name).first() is not None
+    
+# def test_existeArchivoEnBD(db):
+#     from botadero.utils import existeArchivo
+#     from botadero.database.models import Archivo
+
+#     name = 'tenton.txt'
+#     ruta = os.path.realpath(name)
+#     a = Archivo.create(name=name, extension='txt', path=ruta)
+#     print ('ruta:', ruta)
+#     print(existeArchivo(ruta))
+#     assert existeArchivo(ruta) is not None
+#     assert existeArchivo('uno') is None
+
+# utils para pruebas
+def crearArchivoPrueba():
+    db_fd, db_path = tempfile.mkstemp(suffix='.txt')
+    
+    with open(db_path, 'w') as file:
+        i = 5122
+        cont = ''
+        while i > 10:
+            cont += ',' + str(random.randint(1,i))
+            i -= 1
+        file.write(cont)
+    return db_path

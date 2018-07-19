@@ -6,9 +6,9 @@ class Parameters():
     totalStorage = 5000000000
     uploadDirectory = 'almacen'
     sizeLimitsAndTimeToDelete = [
-        [{'500000': 15}],
-        [{'1500000': 10}],
-        [{'5000000': 5}],
+        ('500000', 15),
+        ('1500000', 10),
+        ('5000000', 5),
     ]
     timeUnit = 'day'
     logLevel = 2
@@ -24,6 +24,7 @@ class Parameters():
         self.totalStorage = app.config['TOTAL_STORAGE']
         self.uploadDirectory = app.config['UPLOAD_DIRECTORY']
         self.sizeLimitsAndTimeToDelete = app.config['SIZE_LIMITS_AND_TIME_TO_DELETE']
+        self.sizeLimitsAndTimeToDelete.sort()
         #configFileName = ''
         self.timeUnit = app.config['TIME_UNIT']
         self.logLevel = app.config['LOG_LEVEL']

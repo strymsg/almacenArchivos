@@ -51,11 +51,11 @@ class Archivo(db.Model, CRUDMixin):
         self.size = kwargs.get('size',0)
         self.extension = kwargs.get('extension','')
         self.downloads = kwargs.get('downloads', 0)
-        self.digestCheck = kwargs.get('digetsCheck', '')
+        self.digestCheck = kwargs.get('digestCheck', '')
         self.digestAlgorithm = kwargs.get('digestAlgorithm',
                                           globalParams.digestAlgorithm)
         self.uploadedAtTime = kwargs.get('uploadedAtTime', str(dt.now()))
-        self.remainingTime = kwargs.get('ramainingTime', 1)
+        self.remainingTime = kwargs.get('remainingTime', 1)
         self.hashedPassword = kwargs.get('hashedPassword', '')
 
     def save(self, **kwargs):
@@ -82,5 +82,5 @@ class Archivo(db.Model, CRUDMixin):
         return db.session.delete(self)
         #pass
         
-    # def __repr__(self):
-    #     return 'File %r/%r: [%r] (%r B), downloads: %d - uploaded: %r remaining time: %d' % (self.path, self.name, self.digestCheck, self.size, self.downloads, self.uploadedAtTime, self.remainingTime)
+    def __repr__(self):
+        return 'File %r/%r: [%r] (%r B), downloads: %d - uploaded: %r remaining time: %d' % (self.path, self.name, self.digestCheck, self.size, self.downloads, self.uploadedAtTime, self.remainingTime)

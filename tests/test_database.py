@@ -40,4 +40,3 @@ def test_modificarArchivo(db):
     name = uuid.uuid4().hex
     b.save(name=name)
     assert Archivo.query.filter_by(name=name).first() is not None
-
