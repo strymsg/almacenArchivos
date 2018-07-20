@@ -83,4 +83,4 @@ class Archivo(db.Model, CRUDMixin):
         #pass
         
     def __repr__(self):
-        return 'File %r/%r: [%r] (%r B), downloads: %d - uploaded: %r remaining time: %d' % (self.path, self.name, self.digestCheck, self.size, self.downloads, self.uploadedAtTime, self.remainingTime)
+        return 'File %r: %r [%r] (%r B), downloads: %d - uploaded: %r remaining time: %d' % (self.name, self.path, self.digestCheck, self.size, self.downloads, self.uploadedAtTime, self.remainingTime)

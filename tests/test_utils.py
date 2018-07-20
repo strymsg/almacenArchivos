@@ -47,19 +47,28 @@ def test_registrarArchivo(db):
     print ('ARchivo registrado:', str(registrado))
     assert registrado is not None
     assert Archivo.query.filter_by(name=registrado.name).first() is not None
+
+
+def test_existeArchivoEnBD(db):
+    from botadero.utils import existeArchivo, registrarArchivo
+    from botadero.database.models import Archivo
+
+    nombreYRuta = crearArchivoPrueba()
+    registrado = registrarArchivo(nombreYRuta)
+    assert existeArchivo(nombreYRuta) is not None
+    nombreYRuta = crearArchivoPrueba()
+    assert existeArchivo(nombreYRuta) is None
+
+def test_borrarArchivo(db):
+    from botadero.utils import existeArchivo, registrarArchivo, borrarArchivo
+    from botadero.database.models import Archivo
+
+    nombreYRuta = crearArchivoPrueba()
+    registrado = registrarArchivo(nombreYRuta)
+    assert existeArchivo(nombreYRuta) is not None
+    assert borrarArchivo(nombreYRuta) is True
+    assert existeArchivo(nombreYRuta) is None
     
-# def test_existeArchivoEnBD(db):
-#     from botadero.utils import existeArchivo
-#     from botadero.database.models import Archivo
-
-#     name = 'tenton.txt'
-#     ruta = os.path.realpath(name)
-#     a = Archivo.create(name=name, extension='txt', path=ruta)
-#     print ('ruta:', ruta)
-#     print(existeArchivo(ruta))
-#     assert existeArchivo(ruta) is not None
-#     assert existeArchivo('uno') is None
-
 # utils para pruebas
 def crearArchivoPrueba():
     db_fd, db_path = tempfile.mkstemp(suffix='.txt')

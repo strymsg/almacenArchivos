@@ -25,7 +25,7 @@ def registrarArchivo(nombreYRuta, digestCheck=None, digestAlgorithm=None, accele
         
     # si no existe obtener estadisticas e introducir en la BD
     # obtener la ruta completa
-    rutaCompleta = os.path.realpath(nombreYRuta)
+    rutaCompleta = os.path.realpath(nombreYRuta) 
     rutaRelativa = addRelativeFileName(nombreYRuta)
     path = rutaRelativa
     # obtener informacion basica del archivo (del sistema de archivos)
@@ -129,7 +129,8 @@ def existeArchivo(nombreYRuta, comprobarCategoria=False, hashCheck=None):
     usando los parametros dados. Retorna el Objeto Archivo o None
     '''
     nombre = nombreArchivo(nombreYRuta)
-    path = categoriaArchivo(nombreYRuta)
+    #path = categoriaArchivo(nombreYRuta)
+    path = addRelativeFileName(nombreYRuta)
     return Archivo.query.filter_by(name=nombre, path=path).first()
 
 def listaDeArchivosEnBd(categoria=None):
@@ -175,7 +176,14 @@ def borrarArchivo(nombreYRuta):
     ''' Elimina del sistema de archivos y el registro en la BD el archivo dado
     :return boolean: True o False si se elimina correctamente.
     '''
-    return True
+    rutaCompleta = os.path.realpath(nombreYRuta) 
+    try:
+        os.remove(rutaCompleta)
+    except Exception as E:
+        print ('No se pudo borrar el archivo', rutaCompleta, 'E:', str(E))
+        return False
+    return Archivo.query.filter_by(path=nombreYRuta).first().delete() is None
+
 
 def comprobarTiempoArchivo(nombreYRuta):
     ''' comprueba si el archivo dado ha sobrepasado o no su tiempo permitido.

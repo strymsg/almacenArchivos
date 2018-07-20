@@ -5,6 +5,7 @@ AGPL liberated.
 '''
 import os
 import tempfile
+import random
 
 import pytest
 from botadero import create_app
@@ -35,3 +36,4 @@ def runner(app):
 def db(app):
     yield get_db()
 
+    
