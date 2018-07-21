@@ -38,9 +38,15 @@ def registrarArchivo(nombreYRuta, digestCheck=None, digestAlgorithm=None, accele
         _digestAlgorithm = globalParams.digestAlgorithm
     if digestCheck is None:
         if globalParams.digestCheck:
-            _digestCheck = hashArchivo(rutaCompleta, hashAlgorithm=_digestAlgorithm, accelerateHash=accelerateHash)
+            _accelerateHash = accelerateHash
+            if _accelerateHash is None:
+                _accelerateHash = globalParams.accelerateHash
+            _digestCheck = hashArchivo(rutaCompleta, hashAlgorithm=_digestAlgorithm, accelerateHash=_accelerateHash)
     elif digestCheck == True:
-        _digestCheck = hashArchivo(rutaCompleta, hashAlgorithm=_digestAlgorithm, accelerateHash=accelerateHash)
+        _accelerateHash = accelerateHash
+        if _accelerateHash is None:
+            _accelerateHash = globalParams.accelerateHash
+        _digestCheck = hashArchivo(rutaCompleta, hashAlgorithm=_digestAlgorithm, accelerateHash=_accelerateHash)
     # determinar tiempo de eliminacion
     remainingTime = tiempoBorradoArchivo(nombreYRuta)
     uploadedAtTime = dt.now()
@@ -105,9 +111,20 @@ def hashArchivo(nombreYRuta, hashAlgorithm=None, accelerateHash=False):
                 tAct = fil.tell()
     return h.hexdigest()
 
-def edadArchivo(nombreYRuta):
+def edadArchivo(nombreYRuta, archivo=None):
     ''' Retorna la edad o tiempo (en la unidad de tiempo usada globalmente)
     desde que el archivo ha sido creado '''
+    if archivo is None:
+        archivo = existeArchivo(nombreYRuta)
+    uploadedAtTime = dt.strptime(archivo.uploadedAtTime, '%Y-%m-%d %H:%M:%S.%f')
+    if archivo is None:
+        return -1
+    if globalParams.timeUnit == 'day':
+        return (dt.now() - uploadedAtTime).days
+    elif globalParams.timeUnit == 'minute':
+        return (dt.now() - uploadedAtTime).min
+    elif globalParams.timeUnit == 'second':
+        return (dt.now() - uploadedAtTime).seconds
     return 0
 
 def nombreArchivo(nombreYRuta):
@@ -172,7 +189,7 @@ def listaDeArchivos(categoria=None, ignorar=[], orden='fecha_asc'):
         lista.sort(key=lambda x: os.path.getmtime(x), reverse=reverse)
     return lista
 
-def borrarArchivo(nombreYRuta):
+def borrarArchivo(nombreYRuta, archivo=None):
     ''' Elimina del sistema de archivos y el registro en la BD el archivo dado
     :return boolean: True o False si se elimina correctamente.
     '''
@@ -185,11 +202,6 @@ def borrarArchivo(nombreYRuta):
     return Archivo.query.filter_by(path=nombreYRuta).first().delete() is None
 
 
-def comprobarTiempoArchivo(nombreYRuta):
-    ''' comprueba si el archivo dado ha sobrepasado o no su tiempo permitido.
-    '''
-    return False
-
 def tiempoBorradoArchivo(size):
     ''' retorna el tiempo en que el archivo debe ser borrado 
     '''
@@ -201,6 +213,14 @@ def tiempoBorradoArchivo(size):
         else:
             timeToDel = lim[1]
     return timeToDel
+
+def comprobarTiempoArchivo(nombreYRuta, archivo=None):
+    ''' comprueba si el archivo dado ha sobrepasado o no su tiempo permitido.
+    '''
+    if archivo is None:
+        archivo = Archivo.query.filter_by(path=nombreYRuta).first()
+    
+    return False
 
 def comprobarPassword(nombreYRuta, password):
     ''' Consulta en la BD y comprueba si el archivo ha sido guardado usando el password dado.
@@ -216,5 +236,26 @@ def esquemaColoresRandom():
 
 def addRelativeFileName(filename):
     if not filename.startswith(os.path.sep):
-        return os.path.join((os.path.curdir + os.path.join), filename)
+        return os.path.join((os.path.curdir + os.path.sep), filename)
     return filename
+
+def categorias():
+    ''' Devuelve la lista de categorias (carpetas) dentro el directorio
+    de subidas
+    '''
+    categorias = []
+    ow = os.walk(globalParams.uploadDirectory)
+    return ow.next()[1] # directorios en el primer nivel
+
+def sincronizarArchivos():
+    ''' Lista los archivos en el directorio de subidas y los introduce en
+    la base de datos si estos no estan registrados.
+
+    Retorna dos listas, una los archivos en el sistema de archivos y otra los registrados en BD
+    '''
+    lista = listaDeArchivos()
+    archivosEnBD = []
+    for archivo in lista:
+        arch = registrarArchivo(archivo)
+        archivosEnBD.append(arch.path)
+    return lista, archivosEnBD

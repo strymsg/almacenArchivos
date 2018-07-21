@@ -33,6 +33,7 @@ def test_hashArchivo_sinAceleracion():
 def test_hashArchivo_conAceleracion():
     from botadero.utils import hashArchivo
 
+    #nombreYRuta = crearArchivoPrueba(4918800)
     archivo = os.path.join(globalParams.uploadDirectory, '.gitkeep')
     hexdigest = hashArchivo(archivo, accelerateHash=True)
     print ('hash con aceleracion', hexdigest)
@@ -68,13 +69,22 @@ def test_borrarArchivo(db):
     assert existeArchivo(nombreYRuta) is not None
     assert borrarArchivo(nombreYRuta) is True
     assert existeArchivo(nombreYRuta) is None
-    
+
+def test_sincronizarArchivos(db):
+    from botadero.utils import sincronizarArchivos, addRelativeFileName
+    from botadero.database.models import Archivo
+
+    l1, l2 = sincronizarArchivos()
+    for filename in l1:
+        assert addRelativeFileName(filename) in l2
+    assert len(l1) == len(l2)
+            
 # utils para pruebas
-def crearArchivoPrueba():
+def crearArchivoPrueba(numCadenas=5000):
     db_fd, db_path = tempfile.mkstemp(suffix='.txt')
     
     with open(db_path, 'w') as file:
-        i = 5122
+        i = int(numCadenas)
         cont = ''
         while i > 10:
             cont += ',' + str(random.randint(1,i))

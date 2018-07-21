@@ -46,6 +46,9 @@ pronto.
 	# ejecutar en modo desarrollo
 	flask run
 
+    # ejecutar pruebas
+	pytest
+
 #### Despliegue ####
 
 pronto.
@@ -77,7 +80,7 @@ This application does not store data about who upload files, **AGPL** License.
 It uses python3 and micro framework Flask, can be installed following:
 
 soon.
-
+	
 ##### For development #####
 
     # download project
@@ -92,8 +95,11 @@ soon.
 	# environment variables
 	export FLASK_APP=botadero.py
 	export FLASK_ENV=development
-	# run in development mode
+	# run development mode
 	flask run
+
+    # testing
+    pytest
 
 #### Deploy ####
 
