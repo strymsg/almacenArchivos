@@ -24,7 +24,7 @@ class Parameters():
         self.totalStorage = app.config['TOTAL_STORAGE']
         self.uploadDirectory = app.config['UPLOAD_DIRECTORY']
         self.sizeLimitsAndTimeToDelete = app.config['SIZE_LIMITS_AND_TIME_TO_DELETE']
-        self.sizeLimitsAndTimeToDelete.sort()
+        #self.sizeLimitsAndTimeToDelete.sort(reverse=True)
         #configFileName = ''
         self.timeUnit = app.config['TIME_UNIT']
         self.logLevel = app.config['LOG_LEVEL']

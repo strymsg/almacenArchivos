@@ -26,9 +26,9 @@
     <div id="categorias">
       {% for catName in dv['categorias'] %}
 	{% if catName == 'Misc.' %}
-	  <span {% if catName == dv['categoriaActual'] %}class="categoria"{% endif %}><a href="/">#{{ catName }}</a></span>
+	  <span {% if catName == dv['categoriaActual'] %}class="categoria"{% endif %}><a href="/">#{{ catName }}/</a></span>
 	{% else %}
-	  <span {% if catName == dv['categoriaActual'] %}class="categoria"{% endif %}><a href="/{{ catName }}">#{{ catName }}</a> </span>
+	  <span {% if catName == dv['categoriaActual'] %}class="categoria"{% endif %}><a href="/{{ catName }}/">#{{ catName }}</a> </span>
 	{% endif %}
       {% endfor %}
     </div>
@@ -76,11 +76,7 @@
 
 	  {% for archivoObj in dv['archivos'] %}
 	    <p class="lista_archivos_elemento">
-	      {% if categoriaActual == 'Misc' %}
-		<a href="/{{ archivoObj['name'] }}">{{ archivoObj['name'] }}</a>
-	      {% else %}
-		<a href="/{{ categoriaActual }}/{{ archivoObj['name'] }}">{{ archivoObj['name'] }}</a>
-	      {% endif %}
+		<a href="/almacen/{{ dv['categoriaActual'] }}/{{ archivoObj['name'] }}">{{ archivoObj['name'] }}</a>
 
 	      {% if archivoObj['size'] < 1000 %}
 		<span class="label">{{ archivoObj['size'] }} B</span>
@@ -107,9 +103,9 @@
 	<div id="categorias">
 	  {% for catName in dv['categorias'] %}
 	    {% if catName == 'Misc.' %}
-	      <span {% if catName == dv['categoriaActual'] %}class="categoria"{% endif %}><a href="/">#{{ catName }}</a></span>
+	      <span {% if catName == dv['categoriaActual'] %}class="categoria"{% endif %}><a href="/">#{{ catName }}/</a></span>
 	    {% else %}
-	      <span {% if catName == dv['categoriaActual'] %}class="categoria"{% endif %}><a href="/{{ catName }}">#{{ catName }}</a> </span>
+	      <span {% if catName == dv['categoriaActual'] %}class="categoria"{% endif %}><a href="/{{ catName }}/">#{{ catName }}</a> </span>
 	    {% endif %}
 	  {% endfor %}
 	</div>
