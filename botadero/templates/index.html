@@ -24,7 +24,7 @@
     <span id="categoria_actual" value="{{ dv['categoriaActual'] }}" hidden>{{ dv['categoriaActual'] }}</span>
 
     <div id="categorias">
-      {% for catName in dv['categorias'].keys() %}
+      {% for catName in dv['categorias'] %}
 	{% if catName == 'Misc.' %}
 	  <span {% if catName == dv['categoriaActual'] %}class="categoria"{% endif %}><a href="/">#{{ catName }}</a></span>
 	{% else %}
@@ -74,9 +74,7 @@
 	<!-- Listado de Archivos -->	
 	<div id="caja_archivos" class="caja_lista_archivos">
 
-	  {{ dv['categorias']['{{ categoriaActual }}'] }}
-	  {% set listaArchivos = dv['categorias'].get(dv['categoriaActual']) %}
-	  {% for archivoObj in listaArchivos %}
+	  {% for archivoObj in dv['archivos'] %}
 	    <p class="lista_archivos_elemento">
 	      {% if categoriaActual == 'Misc' %}
 		<a href="/{{ archivoObj['name'] }}">{{ archivoObj['name'] }}</a>
@@ -107,7 +105,7 @@
 	<br>
 	<!-- Categorias -->
 	<div id="categorias">
-	  {% for catName in dv['categorias'].keys() %}
+	  {% for catName in dv['categorias'] %}
 	    {% if catName == 'Misc.' %}
 	      <span {% if catName == dv['categoriaActual'] %}class="categoria"{% endif %}><a href="/">#{{ catName }}</a></span>
 	    {% else %}

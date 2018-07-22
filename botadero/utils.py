@@ -5,6 +5,7 @@ AGPL liberated.
 '''
 import os, sys, hashlib, re, random
 from datetime import datetime as dt
+from sqlalchemy import desc
 
 from .shared import globalParams
 from .database import get_db
@@ -150,25 +151,27 @@ def existeArchivo(nombreYRuta, comprobarCategoria=False, hashCheck=None):
     path = addRelativeFileName(nombreYRuta)
     return Archivo.query.filter_by(name=nombre, path=path).first()
 
-def listaDeArchivosEnBd(categoria=None):
+def listaDeArchivosEnBd(categoria=None, ignorar=[]):
     ''' retorna la lista de archivos (registrados en la BD)
     :param categoria: si se proporciona, solo reotrna la lista de archivos
     que corresponde a esa categoria, si no se proporciona devuelve la 
     lista completa de todos los archivos.
     '''
     lista = []
-    qLista = Archivo.query.all()
+    qLista = Archivo.query.order_by(desc(Archivo.uploadedAtTime)).all()
     for archivo in qLista:
-        print (archivo)
-    lista = qLista
+        if archivo.name not in ignorar:
+            if categoria is not None:
+                if  categoriaArchivo(archivo.path) == categoria:
+                    lista.append(archivo)
+            else:
+                lista.append(archivo)
     return lista
 
-def listaDeArchivos(categoria=None, ignorar=[], orden='fecha_asc'):
+def listaDeArchivos(categoria=None, orden='fecha_asc'):
     ''' retorna la lista de nombres de archivos (en la carpeta donde se almacenan los archivos) esten o no en la BD.
 
     :param categoria: si se proporciona solo busca en la carpeta correspondiente a la categoria dada.
-
-    :param ignorar: Una lista con expresiones regulares para omitir nombres de archivos que coincidan.
 
     :param orden: de opciones multiples
     - fecha_asc: ordena por fecha de modificacion acendentemente (mas reciente primero)
@@ -176,6 +179,8 @@ def listaDeArchivos(categoria=None, ignorar=[], orden='fecha_asc'):
     '''
     lista = []
     ruta = globalParams.uploadDirectory
+    if categoria is not None:
+        ruta = os.path.join(globalParams.uploadDirectory, categoria)
     try:
         ow = os.walk(ruta)
         p,d,files = next(ow)
@@ -243,19 +248,69 @@ def categorias():
     ''' Devuelve la lista de categorias (carpetas) dentro el directorio
     de subidas
     '''
-    categorias = []
-    ow = os.walk(globalParams.uploadDirectory)
-    return ow.next()[1] # directorios en el primer nivel
+    ow = os.walk(os.path.realpath(globalParams.uploadDirectory))
+    return next(ow)[1] # directorios en el primer nivel
 
-def sincronizarArchivos():
+def sincronizarArchivos(ignorar=[]):
     ''' Lista los archivos en el directorio de subidas y los introduce en
     la base de datos si estos no estan registrados.
 
     Retorna dos listas, una los archivos en el sistema de archivos y otra los registrados en BD
+
+    :param ignorar: Una lista con nombres de archivos a ignorar
     '''
-    lista = listaDeArchivos()
+    print ('** Sincronizando archivos **')
     archivosEnBD = []
+    listaLsArchivos = []
+    for cat in categorias():
+        print ('#' + cat)
+        lista = listaDeArchivos(categoria=cat)
+        for archivo in lista:
+            print ('  ', archivo)
+            if nombreArchivo(archivo) not in ignorar:
+                arch = registrarArchivo(archivo)
+                archivosEnBD.append(arch.path)
+                listaLsArchivos.append(archivo)
+    lista = listaDeArchivos()
     for archivo in lista:
-        arch = registrarArchivo(archivo)
-        archivosEnBD.append(arch.path)
-    return lista, archivosEnBD
+        print (' ', archivo)
+        if nombreArchivo(archivo) not in ignorar:
+            arch = registrarArchivo(archivo)
+            archivosEnBD.append(arch.path)
+            listaLsArchivos.append(archivo)
+    print ('\nsincronizacion completa')
+    return listaLsArchivos, archivosEnBD
+
+def listaArchivosParaRenderizar(categoria=None, ignorar=[]):
+    ''' Devuelve un diccionario con la lista de archivos registrados 
+    en la base de datos en un formato conveniete para ser mostrado en
+    el sitio frontal web.
+
+    :param categoria: Si se proporciona solo retorna la lista de
+    archivos de esa categoria.
+
+    Ej:
+    [ {'name': 'archi1.jpeg', 'size': 4991, date: '2018-06-14 19:49:17.427922', 'restante': 2},
+      {'name': 'arc.jpeg', 'size': 199, date: '2018-08-14 19:49:17.427922', 'restante': 2},
+      {'name': '9g.mp3', 'size': 83981, date: '2018-08-14 19:49:19.427922', 'restante': 9}
+    ]
+    '''
+    lista = []
+    if categoria is not None:
+        if categoria == 'Misc':
+            # caso especial
+            lista = listaDeArchivosEnBd(categoria='almacen', ignorar=ignorar)
+        else:
+            lista = listaDeArchivosEnBd(categoria=categoria, ignorar=ignorar)
+    else:
+        lista = listaDeArchivosEnBd(ignorar=ignorar)
+    archivos = []
+    for archivo in lista:
+        obj = {
+            'name':archivo.name,
+            'size':archivo.size,
+            'date':archivo.uploadedAtTime,
+            'restante':archivo.remainingTime
+        }
+        archivos.append(obj)
+    return archivos

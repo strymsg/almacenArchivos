@@ -49,7 +49,6 @@ def test_registrarArchivo(db):
     assert registrado is not None
     assert Archivo.query.filter_by(name=registrado.name).first() is not None
 
-
 def test_existeArchivoEnBD(db):
     from botadero.utils import existeArchivo, registrarArchivo
     from botadero.database.models import Archivo
@@ -78,7 +77,16 @@ def test_sincronizarArchivos(db):
     for filename in l1:
         assert addRelativeFileName(filename) in l2
     assert len(l1) == len(l2)
-            
+
+def test_sincronizarArchivosConFiltro(db):
+    from botadero.utils import sincronizarArchivos, addRelativeFileName
+    from botadero.database.models import Archivo
+    
+    l1, l2 = sincronizarArchivos(['.gitignore'])
+    for filename in l1:
+        assert addRelativeFileName(filename) in l2
+    assert len(l1) == len(l2)
+    
 # utils para pruebas
 def crearArchivoPrueba(numCadenas=5000):
     db_fd, db_path = tempfile.mkstemp(suffix='.txt')
