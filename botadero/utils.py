@@ -7,7 +7,8 @@ import os, sys, hashlib, re, random
 from datetime import datetime as dt
 from sqlalchemy import desc
 
-from .shared import globalParams
+from . import shared
+#from .shared import globalParams
 from .database import get_db
 from .database.models import Archivo
 
@@ -26,7 +27,7 @@ def registrarArchivo(nombreYRuta, digestCheck=None, digestAlgorithm=None, accele
         
     # si no existe obtener estadisticas e introducir en la BD
     # obtener la ruta completa
-    rutaCompleta = os.path.realpath(nombreYRuta) 
+    rutaCompleta = os.path.realpath(nombreYRuta)
     rutaRelativa = addRelativeFileName(nombreYRuta)
     path = rutaRelativa
     # obtener informacion basica del archivo (del sistema de archivos)
@@ -36,20 +37,20 @@ def registrarArchivo(nombreYRuta, digestCheck=None, digestAlgorithm=None, accele
     _digestCheck = ''
     _digestAlgorithm = ''
     if digestAlgorithm is None:
-        _digestAlgorithm = globalParams.digestAlgorithm
+        _digestAlgorithm = shared.globalParams.digestAlgorithm
     if digestCheck is None:
-        if globalParams.digestCheck:
+        if shared.globalParams.digestCheck:
             _accelerateHash = accelerateHash
             if _accelerateHash is None:
-                _accelerateHash = globalParams.accelerateHash
+                _accelerateHash = shared.globalParams.accelerateHash
             _digestCheck = hashArchivo(rutaCompleta, hashAlgorithm=_digestAlgorithm, accelerateHash=_accelerateHash)
     elif digestCheck == True:
         _accelerateHash = accelerateHash
         if _accelerateHash is None:
-            _accelerateHash = globalParams.accelerateHash
+            _accelerateHash = shared.globalParams.accelerateHash
         _digestCheck = hashArchivo(rutaCompleta, hashAlgorithm=_digestAlgorithm, accelerateHash=_accelerateHash)
     # determinar tiempo de eliminacion
-    remainingTime = tiempoBorradoArchivo(nombreYRuta)
+    remainingTime = tiempoBorradoArchivo(size)
     uploadedAtTime = dt.now()
     # creando registro en la BD
     arch = Archivo.create(name=nombreArchivo(nombreYRuta),
@@ -67,7 +68,7 @@ def hashArchivo(nombreYRuta, hashAlgorithm=None, accelerateHash=False):
     '''
     hashAlgo = 'sha1'
     if hashAlgorithm is None:
-        hashAlgo = globalParams.digestAlgorithm
+        hashAlgo = shared.globalParams.digestAlgorithm
         if hashAlgo not in ('md5', 'sha1', 'sha224', 'sha256', 'sha384', 'sha512'):
             hashAlgo = 'sha1'
 
@@ -120,11 +121,11 @@ def edadArchivo(nombreYRuta, archivo=None):
     uploadedAtTime = dt.strptime(archivo.uploadedAtTime, '%Y-%m-%d %H:%M:%S.%f')
     if archivo is None:
         return -1
-    if globalParams.timeUnit == 'day':
+    if shared.globalParams.timeUnit == 'day':
         return (dt.now() - uploadedAtTime).days
-    elif globalParams.timeUnit == 'minute':
+    elif shared.globalParams.timeUnit == 'minute':
         return (dt.now() - uploadedAtTime).min
-    elif globalParams.timeUnit == 'second':
+    elif shared.globalParams.timeUnit == 'second':
         return (dt.now() - uploadedAtTime).seconds
     return 0
 
@@ -178,9 +179,9 @@ def listaDeArchivos(categoria=None, orden='fecha_asc'):
     - fecha_des: ordena por fecha de modificacion decendentemetne.
     '''
     lista = []
-    ruta = globalParams.uploadDirectory
+    ruta = shared.globalParams.uploadDirectory
     if categoria is not None:
-        ruta = os.path.join(globalParams.uploadDirectory, categoria)
+        ruta = os.path.join(shared.globalParams.uploadDirectory, categoria)
     try:
         ow = os.walk(ruta)
         p,d,files = next(ow)
@@ -211,12 +212,11 @@ def tiempoBorradoArchivo(size):
     ''' retorna el tiempo en que el archivo debe ser borrado 
     '''
     timeToDel = 0
-    
-    for lim in globalParams.sizeLimitsAndTimeToDelete:
-        if size <= lim[0]:
-            return lim[1]
+    for lim in shared.globalParams.sizeLimitsAndTimeToDelete:
+        if int(size) <= int(lim[0]):
+            return int(lim[1])
         else:
-            timeToDel = lim[1]
+            timeToDel = int(lim[1])
     return timeToDel
 
 def comprobarTiempoArchivo(nombreYRuta, archivo=None):
@@ -248,7 +248,7 @@ def categorias():
     ''' Devuelve la lista de categorias (carpetas) dentro el directorio
     de subidas
     '''
-    ow = os.walk(os.path.realpath(globalParams.uploadDirectory))
+    ow = os.walk(os.path.realpath(shared.globalParams.uploadDirectory))
     return next(ow)[1] # directorios en el primer nivel
 
 def sincronizarArchivos(ignorar=[]):
@@ -260,6 +260,7 @@ def sincronizarArchivos(ignorar=[]):
     :param ignorar: Una lista con nombres de archivos a ignorar
     '''
     print ('** Sincronizando archivos **')
+    print ('\nParametros', str(shared.globalParams));
     archivosEnBD = []
     listaLsArchivos = []
     for cat in categorias():

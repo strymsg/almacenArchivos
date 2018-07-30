@@ -7,7 +7,7 @@ import os
 from flask import Flask
 
 from .configs import Parameters
-from .shared import globalParams
+from . import shared
 
 print ('__init.py<botadero>')
 
@@ -49,8 +49,7 @@ def create_app(config=None, instance_path=None, db_path='sqlite:///db.sqlite3', 
     print ('app.config:', str(app.config), '\n')
 
     # configuraciones adicionales
-    globalParams = Parameters(app)
-    print ('Parameters:',str(globalParams))
+    shared.globalParams = Parameters(app)
 
     # base de datos
     print ('Base de datos setup---')

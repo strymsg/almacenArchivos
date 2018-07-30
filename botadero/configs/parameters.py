@@ -24,7 +24,7 @@ class Parameters():
         self.totalStorage = app.config['TOTAL_STORAGE']
         self.uploadDirectory = app.config['UPLOAD_DIRECTORY']
         self.sizeLimitsAndTimeToDelete = app.config['SIZE_LIMITS_AND_TIME_TO_DELETE']
-        #self.sizeLimitsAndTimeToDelete.sort(reverse=True)
+        self.sizeLimitsAndTimeToDelete.sort(reverse=True)
         #configFileName = ''
         self.timeUnit = app.config['TIME_UNIT']
         self.logLevel = app.config['LOG_LEVEL']
@@ -34,8 +34,8 @@ class Parameters():
         self.passwordUse = app.config['PASSWORD_USE']
         self.captchaUse = app.config['CAPTCHA_USE']
     
-    def __init__(self,app=None):
-        self.create(app)
+    def __init__(self, app=None):
+        self.create(app=app)
         
     def __str__(self):
         return '** Parameters **'+ \

@@ -9,7 +9,7 @@ AGPL liberated.
 from .configs import Parameters
 
 # objetos globales y otros
-globalParams = Parameters()
+globalParams = None
 gr = {
     'reload': True,
     'esapacioConsumido': 0,

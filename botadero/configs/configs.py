@@ -11,8 +11,8 @@ UPLOAD_DIRECTORY = "almacen"
 # En este este ejemplo se definen cuatro tamaños a considerar (9MB, 20MB, 40MB y 220 MB
 SIZE_LIMITS_AND_TIME_TO_DELETE = [
     ('9000000': 16),
-    ('20000000': 11),
-    ('35000000': 8),
+    ('200000000': 11),
+    ('350000000': 8),
     ('200000000': 5)
 ]
 
