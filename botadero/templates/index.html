@@ -76,24 +76,24 @@
 
 	  {% for archivoObj in dv['archivos'] %}
 	    <p class="lista_archivos_elemento">
-		<a href="/almacen/{{ dv['categoriaActual'] }}/{{ archivoObj['name'] }}">{{ archivoObj['name'] }}</a>
+		<a href="/almacen/{{ dv['categoriaActual'] }}/{{ archivoObj['name'] }}" title="descargar">{{ archivoObj['name'] }}</a>
 
 	      {% if archivoObj['size'] < 1000 %}
-		<span class="label">{{ archivoObj['size'] }} B</span>
+		<span class="label" title="tamaño">{{ archivoObj['size'] }} B</span>
 	      {% elif archivoObj['size'] >= 1000 and archivoObj['size'] < 1000000 %}
-		<span class="label">{{ '%0.2f'|format(archivoObj['size']/1000) }} KB</span>
+		<span class="label" title="tamaño">{{ '%0.2f'|format(archivoObj['size']/1000) }} KB</span>
 	      {% elif archivoObj['size'] >= 1000000 and archivoObj['size'] < 1000000000 %}
-		<span class="label">{{ '%0.2f'|format(archivoObj['size']/1000000) }} MB</span>
+		<span class="label" title="tamaño">{{ '%0.2f'|format(archivoObj['size']/1000000) }} MB</span>
 	      {% elif archivoObj['size'] >= 1000000000 %}
-		<span class="label">{{ '%0.2f'|format(archivoObj['size']/1000000000) }} GB</span>
+		<span class="label" title="tamaño">{{ '%0.2f'|format(archivoObj['size']/1000000000) }} GB</span>
 	      {% endif %}
 
 	      {% if archivoObj['restante'] >= 10 %}
-		<span class="label success">{{ archivoObj['restante'] }} días</span>
+		<span class="label success" title="restantes">{{ archivoObj['restante'] }} días</span>
 	      {% elif archivoObj['restante'] < 10 and  archivoObj['restante'] > 3 %}
-		<span class="label warning">{{ archivoObj['restante'] }} días</span>
+		<span class="label warning" title="restantes">{{ archivoObj['restante'] }} días</span>
 	      {% elif archivoObj['restante'] <= 3 %}
-		<span class="label important">{{ archivoObj['restante'] }} días</span>
+		<span class="label important" title="restantes">{{ archivoObj['restante'] }} días</span>
 	      {% endif %}
 	    </p>
 	  {% endfor %}
