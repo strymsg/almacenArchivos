@@ -8,7 +8,6 @@ from datetime import datetime as dt
 from sqlalchemy import desc
 
 from . import shared
-#from .shared import globalParams
 from .database import get_db
 from .database.models import Archivo
 
@@ -251,6 +250,36 @@ def categorias():
     ow = os.walk(os.path.realpath(shared.globalParams.uploadDirectory))
     return next(ow)[1] # directorios en el primer nivel
 
+def descargarArchivo(cat, nombreArchivo):
+    ''' Devuelve la ruta para descargar (enviar el archivo al cliente) e
+    incrementa su contador de descargas'''
+    # print(cat, '"',nombreArchivo,'"')
+    pathf = '' # para ruta absoluta
+    pathr = '' # para ruta relativa
+    # rutas
+    if cat != 'Misc':
+        pathr = addRelativeFileName(
+            os.path.join(shared.globalParams.uploadDirectory, cat,
+                         nombreArchivo))
+        pathf = os.path.join(
+            os.path.abspath(shared.globalParams.uploadDirectory), cat,
+            nombreArchivo)
+    else:
+        pathr = addRelativeFileName(
+            os.path.join(shared.globalParams.uploadDirectory, nombreArchivo))
+        pathf = os.path.join(
+            os.path.abspath(shared.globalParams.uploadDirectory),
+            nombreArchivo)
+
+    # consultando en BD
+    archivo = Archivo.query.filter_by(path=pathr).first()
+    # print ('archivo::::', archivo)
+    if archivo is None:
+        return None
+    archivo.save(downloads=archivo.downloads + 1)
+    print ('archivo::::', archivo)
+    return pathf
+    
 def sincronizarArchivos(ignorar=[]):
     ''' Lista los archivos en el directorio de subidas y los introduce en
     la base de datos si estos no estan registrados.

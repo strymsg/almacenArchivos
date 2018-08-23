@@ -24,7 +24,7 @@ def test_listaDeArchivos():
 
 def test_hashArchivo_sinAceleracion():
     from botadero.utils import hashArchivo
-
+    
     archivo = os.path.join(globalParams.uploadDirectory, '.gitkeep')
     hexdigest = hashArchivo(archivo)
     print ('hash sin aceleracion', hexdigest)
@@ -86,6 +86,16 @@ def test_sincronizarArchivosConFiltro(db):
     for filename in l1:
         assert addRelativeFileName(filename) in l2
     assert len(l1) == len(l2)
+
+def test_descargarAchivo(db):
+    from botadero.utils import descargarArchivo, registrarArchivo
+    from botadero.database.models import Archivo
+
+    nombreYRuta = crearArchivoPrueba()
+    registrado = registrarArchivo(nombreYRuta)
+    assert descargarArchivo(cat='', nombreArchivo=nombreYRuta) is not None
+    a = Archivo.query.filter_by(path=nombreYRuta).first()
+    assert a.downloads == 1
     
 # utils para pruebas
 def crearArchivoPrueba(numCadenas=5000):

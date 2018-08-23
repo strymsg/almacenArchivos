@@ -7,9 +7,13 @@ import os
 from flask import Flask
 
 from .configs import Parameters
+######
+# Nota importante si solo se usa 'from .shared import globalParams' dentro
+# de este modulo *se crea una copia* local de `globalParams' de shared
+# y las modificaciones aqui no suponen un cambio global
+# por eso se utiliza from . import shared
+######
 from . import shared
-
-print ('__init.py<botadero>')
 
 def create_app(config=None, instance_path=None, db_path='sqlite:///db.sqlite3', testing=False):
     """ Crear la app.

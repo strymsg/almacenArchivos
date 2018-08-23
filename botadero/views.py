@@ -4,11 +4,12 @@
 
 import functools
 
-from . import controller
+from . import controller as co
 from . import utils as u
 
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, url_for
+    Blueprint, flash, g, redirect, render_template, request, url_for,
+    send_file
 )
 
 botaderoBp = Blueprint('botadero', __name__, url_prefix='')
@@ -35,5 +36,12 @@ def categoriaView(cat):
 @botaderoBp.route('/almacen/<string:nombreArchivo>', defaults={ 'cat': 'Misc'})
 @botaderoBp.route('/almacen/<string:cat>/<string:nombreArchivo>')
 def descargaDesdeIndexView(cat, nombreArchivo):
-    return (str(cat+'/'+nombreArchivo))
+
+    if not co.descargaPermitida(cat, nombreArchivo):
+        return ('No permitido: '+cat+'/'+nombreArchivo)
+
+    pathf = u.descargarArchivo(cat, nombreArchivo)
+    print('Descargando:::', pathf)
+    return send_file(pathf, as_attachment=True)
+    #return (str(cat+'/'+nombreArchivo))
 
