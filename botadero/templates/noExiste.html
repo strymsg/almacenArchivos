@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="shortcut icon" href="../static/botadero_resources/favicon.png">
+    <title>Archivador temporal para compartir archivos</title>
+    <link rel="stylesheet" href="/static/{{ esquemaColores }}/base.css" type="text/css" />
+
+  </head>
+  <body>
+
+    <h1>"El botadero"</h1>
+    <div class="qu">
+      Un sitio <b>público</b> para compartir archivos	
+    </div>
+    
+    <p>
+      El archivo <b>{{ nombre }}</b> no existe, se volverá a la página princial en <span id="segs">4</span> segundos, si no funciona haz click <a href="/">aquí</a>.
+    </p>
+    <!-- Notas al pie -->
+    
+    <div class="nota">
+      <p>Revisa las <a href="/estadisticas" > estadisticas </a> de los archivos. 
+	<a href="/" >Volver al inicio </a>
+      </p>
+    </div>
+    
+    <!-- Notas al pie -->
+    <div class="qu">
+      <p>Compartir es bueno</p>
+      <p> <a href="https://notabug.org/strysg/botadero">Código fuente</a> de esta aplicación.  </p>
+    </div>
+
+    <script>
+     window.onload = function() {
+       // redirect to /
+       let segsLabel = document.getElementById('segs');
+       var i = 4;
+       setInterval(function() {
+	 if (i <= 0) {
+	   window.location.href = '/';
+	 }
+	 segsLabel.innerHTML = i;
+	 i--;
+       }, 1000);
+     };
+    </script>
+    
+  </body>
+
+</html>

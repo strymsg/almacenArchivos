@@ -40,8 +40,17 @@ def descargaDesdeIndexView(cat, nombreArchivo):
     if not co.descargaPermitida(cat, nombreArchivo):
         return ('No permitido: '+cat+'/'+nombreArchivo)
 
-    pathf = u.descargarArchivo(cat, nombreArchivo)
+    pathf = co.descargarArchivo(cat, nombreArchivo)
     print('Descargando:::', pathf)
+    if pathf is None:
+        return render_template("noExiste.html",
+                               nombre=nombreArchivo,
+                               esquemaColores=u.esquemaColoresRandom())
     return send_file(pathf, as_attachment=True)
     #return (str(cat+'/'+nombreArchivo))
 
+# vista de subida de archivos
+# @botaderoBp.route('/almacen/<string:cat>/upload', defaults={ 'cat': 'Misc' })
+# @botaderoBp.route('/almacen/upload')
+# def subidaArchivos(cat, nombreArchivo):
+    

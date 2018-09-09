@@ -149,6 +149,7 @@ def existeArchivo(nombreYRuta, comprobarCategoria=False, hashCheck=None):
     nombre = nombreArchivo(nombreYRuta)
     #path = categoriaArchivo(nombreYRuta)
     path = addRelativeFileName(nombreYRuta)
+    print('>>>>>>>>>>', path)
     return Archivo.query.filter_by(name=nombre, path=path).first()
 
 def listaDeArchivosEnBd(categoria=None, ignorar=[]):
@@ -239,8 +240,11 @@ def esquemaColoresRandom():
     return esquemas[random.randint(0, len(esquemas) - 1)]
 
 def addRelativeFileName(filename):
-    if not filename.startswith(os.path.sep):
+    print ('filename', filename)
+    if not filename.startswith(os.path.sep) or not filename.startswith('.'):
+        print ('ret:::', os.path.join((os.path.curdir + os.path.sep), filename))
         return os.path.join((os.path.curdir + os.path.sep), filename)
+    print ('ret:', filename)
     return filename
 
 def categorias():
@@ -273,11 +277,9 @@ def descargarArchivo(cat, nombreArchivo):
 
     # consultando en BD
     archivo = Archivo.query.filter_by(path=pathr).first()
-    # print ('archivo::::', archivo)
     if archivo is None:
         return None
     archivo.save(downloads=archivo.downloads + 1)
-    print ('archivo::::', archivo)
     return pathf
     
 def sincronizarArchivos(ignorar=[]):
