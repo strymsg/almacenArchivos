@@ -149,7 +149,7 @@ def existeArchivo(nombreYRuta, comprobarCategoria=False, hashCheck=None):
     nombre = nombreArchivo(nombreYRuta)
     #path = categoriaArchivo(nombreYRuta)
     path = addRelativeFileName(nombreYRuta)
-    print('>>>>>>>>>>', path)
+    #print('>>>>>>>>>>', path)
     return Archivo.query.filter_by(name=nombre, path=path).first()
 
 def listaDeArchivosEnBd(categoria=None, ignorar=[]):
@@ -167,6 +167,7 @@ def listaDeArchivosEnBd(categoria=None, ignorar=[]):
                     lista.append(archivo)
             else:
                 lista.append(archivo)
+    #print ('  retornando lista>>>>', lista)
     return lista
 
 def listaDeArchivos(categoria=None, orden='fecha_asc'):
@@ -199,7 +200,7 @@ def borrarArchivo(nombreYRuta, archivo=None):
     ''' Elimina del sistema de archivos y el registro en la BD el archivo dado
     :return boolean: True o False si se elimina correctamente.
     '''
-    rutaCompleta = os.path.realpath(nombreYRuta) 
+    rutaCompleta = os.path.realpath(nombreYRuta)
     try:
         os.remove(rutaCompleta)
     except Exception as E:
@@ -214,8 +215,10 @@ def tiempoBorradoArchivo(size):
     timeToDel = 0
     for lim in shared.globalParams.sizeLimitsAndTimeToDelete:
         if int(size) <= int(lim[0]):
+            print (' (*) tamanyo para', str(size), '>', str(int(lim[1])))
             return int(lim[1])
         else:
+            print (' (*) tamanyo para', str(size), '>', str(int(lim[1])))
             timeToDel = int(lim[1])
     return timeToDel
 
@@ -240,11 +243,11 @@ def esquemaColoresRandom():
     return esquemas[random.randint(0, len(esquemas) - 1)]
 
 def addRelativeFileName(filename):
-    print ('filename', filename)
+    # print ('filename', filename)
     if not filename.startswith(os.path.sep) or not filename.startswith('.'):
-        print ('ret:::', os.path.join((os.path.curdir + os.path.sep), filename))
+        # print ('ret:::', os.path.join((os.path.curdir + os.path.sep), filename))
         return os.path.join((os.path.curdir + os.path.sep), filename)
-    print ('ret:', filename)
+    # print ('ret:', filename)
     return filename
 
 def categorias():
@@ -291,9 +294,10 @@ def sincronizarArchivos(ignorar=[]):
     :param ignorar: Una lista con nombres de archivos a ignorar
     '''
     print ('** Sincronizando archivos **')
-    print ('\nParametros', str(shared.globalParams));
+    print ('\nParametros', str(shared.globalParams))
     archivosEnBD = []
     listaLsArchivos = []
+    # para archivos en categorias
     for cat in categorias():
         print ('#' + cat)
         lista = listaDeArchivos(categoria=cat)
@@ -303,6 +307,7 @@ def sincronizarArchivos(ignorar=[]):
                 arch = registrarArchivo(archivo)
                 archivosEnBD.append(arch.path)
                 listaLsArchivos.append(archivo)
+    # para archivos sin categoria (en la carpeta alamcen raiz)
     lista = listaDeArchivos()
     for archivo in lista:
         print (' ', archivo)

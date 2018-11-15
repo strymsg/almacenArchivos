@@ -20,6 +20,8 @@ u.sincronizarArchivos(ignorar=['gitkeep'])
 @botaderoBp.route('/', defaults={ 'cat':'Misc' })
 @botaderoBp.route('/<string:cat>/')
 def categoriaView(cat):
+    co.comprobarTiempoBorradoListaArchivos(cat)
+    
     lista = u.listaArchivosParaRenderizar(categoria=cat,
                                           ignorar=['.gitkeep', '.gitkeep~'])
     categorias = u.categorias()
