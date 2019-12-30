@@ -44,14 +44,38 @@ def test_hashArchivo_sinAceleracion():
     print ('hash sin aceleracion pingüino.jpg', hexdigest)
     assert hexdigest == 'dce3c92b190dfd3a4a3d82b31f360ded041dcdfa'
 
+    # archivo grande
+    archivo = os.path.join(os.path.abspath(os.curdir),
+                           'tests', 'fixtures', 'archivos',
+                           'pasto1.jpg')
+    hexdigest = hashArchivo(archivo)
+    print ('hash sin aceleracion pasto1.jpg', hexdigest)
+    assert hexdigest == '1da479d184c1cf9a7d8df498c842ab258912a482'
+
 def test_hashArchivo_conAceleracion():
     from botadero.utils import hashArchivo
 
-    #nombreYRuta = crearArchivoPrueba(4918800)
-    archivo = os.path.join(globalParams.uploadDirectory, '.gitkeep')
+    # archivo chico
+    archivo = os.path.join(os.path.abspath(os.curdir),
+                           'tests', 'fixtures', 'archivos', '1.txt')
     hexdigest = hashArchivo(archivo, accelerateHash=True)
-    print ('hash con aceleracion', hexdigest)
-    assert hexdigest != 'da39a3ee5e6b4b0d3255bfef95601890afd80709'
+    print ('hash con aceleracion 1.txt', hexdigest)
+    assert hexdigest == '6e07f20f10664b06c50faa52dd5fad44d0e4461d'
+    # archivo mediano
+    archivo = os.path.join(os.path.abspath(os.curdir),
+                           'tests', 'fixtures', 'archivos', 'pingüino.jpg')
+    hexdigest = hashArchivo(archivo, accelerateHash=True)
+    print ('hash con aceleracion pingüino.jpg', hexdigest)
+    assert hexdigest == 'dce3c92b190dfd3a4a3d82b31f360ded041dcdfa'
+
+    # archivo grande
+    archivo = os.path.join(os.path.abspath(os.curdir),
+                           'tests', 'fixtures', 'archivos',
+                           'pasto1.jpg')
+    hexdigest = hashArchivo(archivo, accelerateHash=True)
+    print ('hash con aceleracion pasto.jpg', hexdigest)
+    assert hexdigest == '04433af3f8541ea34903e6e3cbda075a953cd6f2'
+    
 
 def test_registrarArchivo(db):
     from botadero.utils import registrarArchivo
