@@ -3,6 +3,9 @@
 ----
 <h3 id="es">Almacén de archivos</h3>
 
+- Repositorio Original: https://notabug.org/strysg/botadero
+- Mirror github: https://github.com/strymsg/almacenArchivos
+
 Servicio web centralizado para compartir archivos en una red local o internet.
 
 Un directorio público donde cualquiera puede subir archivos y estos se pueden descargar libremente.
@@ -46,7 +49,7 @@ pronto.
 	# ejecutar en modo desarrollo
 	flask run
 
-    # ejecutar pruebas
+    # ejecutar pruebas (desarrollo)
 	pytest
 
 #### Despliegue ####
@@ -54,6 +57,9 @@ pronto.
 pronto.
 
 <h3 id="en">El Botadero</h3>
+
+- Repositorio Original: https://notabug.org/strysg/botadero
+- Mirror github: https://github.com/strymsg/almacenArchivos
 
 Centralized web server to share files on a local network or over the internet. 
 
