@@ -204,8 +204,12 @@ def borrarArchivo(nombreYRuta, archivo=None):
     rutaCompleta = os.path.realpath(nombreYRuta)
     try:
         os.remove(rutaCompleta)
+    except OSError as E:
+        print ('Error no se pudo borrar el archivo', rutaCompleta, '\nError:', str(E))
+        # borrando de la BD
+        return Archivo.query.filter_by(path=nombreYRuta).first().delete() is None
     except Exception as E:
-        print ('No se pudo borrar el archivo', rutaCompleta, 'E:', str(E))
+        print ('Error general al borrar el archivo', rutaCompleta, 'E:', str(E))
         return False
     return Archivo.query.filter_by(path=nombreYRuta).first().delete() is None
 
