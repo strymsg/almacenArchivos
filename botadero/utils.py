@@ -177,10 +177,11 @@ def listaDeArchivos(categoria=None, orden='fecha_asc'):
 
     :param orden: de opciones multiples
     - fecha_asc: ordena por fecha de modificacion acendentemente (mas reciente primero)
-    - fecha_des: ordena por fecha de modificacion decendentemetne.
+    - fecha_des: ordena por fecha de modificacion descendentemente.
     '''
     lista = []
     ruta = shared.globalParams.uploadDirectory
+    print('>>', ruta)
     if categoria is not None:
         ruta = os.path.join(shared.globalParams.uploadDirectory, categoria)
     try:

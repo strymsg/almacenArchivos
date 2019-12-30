@@ -14,21 +14,35 @@ from flask import current_app
 # NOTA: para ver los mensajes en print usar: pytest -s
 
 def test_listaDeArchivos():
-    from botadero.utils import listaDeArchivos
+    from botadero.utils import listaDeArchivos, categorias
 
-    lista = listaDeArchivos()
-    print ('lista obtenida:')
-    for l in lista:
-        print (l)
-    assert len(lista) > 0
+    # categorias
+    try:
+        listaCategorias = categorias()
+        for categoria in listaCategorias:
+            lista = listaDeArchivos(categoria)
+            print ('lista obtenida:', str(lista))
+            for l in lista:
+                print (l)
+            #assert len(lista) > 0
+    except:
+        print ('Error listando archivos')
+        assert 1 == 0
 
 def test_hashArchivo_sinAceleracion():
     from botadero.utils import hashArchivo
-    
-    archivo = os.path.join(globalParams.uploadDirectory, '.gitkeep')
+
+    archivo = os.path.join(os.path.abspath(os.curdir),
+                           'tests', 'fixtures', 'archivos', '1.txt')
     hexdigest = hashArchivo(archivo)
-    print ('hash sin aceleracion', hexdigest)
-    assert hexdigest == 'd901cf70a95e546dbfedb749c40b6932f03a8e6f'
+    print ('hash sin aceleracion 1.txt', hexdigest)
+    assert hexdigest == '6e07f20f10664b06c50faa52dd5fad44d0e4461d'
+    
+    archivo = os.path.join(os.path.abspath(os.curdir),
+                           'tests', 'fixtures', 'archivos', 'pingüino.jpg')
+    hexdigest = hashArchivo(archivo) 
+    print ('hash sin aceleracion pingüino.jpg', hexdigest)
+    assert hexdigest == 'dce3c92b190dfd3a4a3d82b31f360ded041dcdfa'
 
 def test_hashArchivo_conAceleracion():
     from botadero.utils import hashArchivo

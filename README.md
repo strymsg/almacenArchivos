@@ -1,9 +1,9 @@
 * [Castellano](#es)
 * [English](#en)
 ----
-<h3 id="es">El Botadero</h3>
+<h3 id="es">Almacén de archivos</h3>
 
-Servidor web centralizado para compartir archivos en una red local o internet.
+Servicio web centralizado para compartir archivos en una red local o internet.
 
 Un directorio público donde cualquiera puede subir archivos y estos se pueden descargar libremente.
 
