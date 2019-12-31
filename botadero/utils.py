@@ -320,7 +320,7 @@ def sincronizarArchivos(ignorar=[]):
             arch = registrarArchivo(archivo)
             archivosEnBD.append(arch.path)
             listaLsArchivos.append(archivo)
-    print ('\nsincronizacion completa')
+    print ('\nsincronización completa')
     return listaLsArchivos, archivosEnBD
 
 def listaArchivosParaRenderizar(categoria=None, ignorar=[]):

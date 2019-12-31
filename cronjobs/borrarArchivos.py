@@ -9,7 +9,18 @@ import os
 
 from botadero.shared import globalParams, gr
 from botadero import utils as u
+from botadero import controller as co
 
-#print (u.categorias())
+# comprobando tiempo borrado
+categorias = u.categorias()
+categorias.append('Misc')
+print ('Comprobando tiempo de borrado de archivos...')
+for categoria in categorias:
+    co.comprobarTiempoBorradoListaArchivos(categoria)
 
+print ('Sincronizando archivos...')
+# sincronizando archivos y BD
+u.sincronizarArchivos(ignorar=['gitkeep'])
+
+print ('proceso borrado terminado')
 

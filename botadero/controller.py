@@ -32,7 +32,8 @@ def comprobarTiempoBorradoListaArchivos(categoria, hdd=False):
     la carpeta (categoria) guradada en el almacen
     :param categoria: La carpeta (categoria) dentro el almacen donde se hace
     la busqueda.
-    :param hdd: Hace que la busqueda se haga tambien en el almacenamiento fisico (HDD tipicamente).
+    :param hdd: Hace que la busqueda se haga en el almacenamiento fisico (HDD tipicamente).
+    :return borrados: Lista de archivos que se han borrado (directorios)
     '''
     # ajuste
     if categoria == 'Misc':
@@ -53,8 +54,8 @@ def comprobarTiempoBorradoListaArchivos(categoria, hdd=False):
             print (' xx Borrando archivo', archivo.name, ' = ', r)
 
             borrados.append(archivo.path)
-    
-
+    return borrados
+            
 def procesarListaArchivos(catgeoria=None):
     ''' Verifica si es necesario generar una nueva cadena html para 
     mostrar la lista de archivos actualizada.
