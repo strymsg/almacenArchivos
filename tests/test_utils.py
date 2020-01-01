@@ -11,6 +11,7 @@ import pytest
 from botadero import create_app
 from botadero.shared import globalParams
 from flask import current_app
+
 # NOTA: para ver los mensajes en print usar: pytest -s
 
 def test_listaDeArchivos():
@@ -134,7 +135,22 @@ def test_descargarAchivo(db):
     assert descargarArchivo(cat='', nombreArchivo=nombreYRuta) is not None
     a = Archivo.query.filter_by(path=nombreYRuta).first()
     assert a.downloads == 1
-    
+
+# @pytest.fixture
+# def test_crearHtmlListado_forzado(db):
+#     #flaskr.app.config['TESTING'] = True
+#     print ('listadoooooooooooooooo')
+#     from botadero.database.models import HtmlPage
+#     from botadero.utils import crearHtmlListado, sincronizarArchivos
+#     l1, l2 = sincronizarArchivos()
+#     html_page = crearHtmlListado(categoria='Misc', force=True)
+#     assert flask.request.path == '/'
+#     assert flask.request.args['name'] == 'Peter'
+#     #flaskr_app.config['SERVER_NAME'] = 'local'
+#     print('------------------------html---------')
+#     print ('test_crearHtmlListado_forzado:', str(html_page))
+#     assert html_page is not None
+
 # utils para pruebas
 def crearArchivoPrueba(numCadenas=5000):
     db_fd, db_path = tempfile.mkstemp(suffix='.txt')

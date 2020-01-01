@@ -358,14 +358,14 @@ def listaArchivosParaRenderizar(categoria=None, ignorar=[]):
         archivos.append(obj)
     return archivos
 
-def crearHtmlListado(categoria='Misc', force=False):
+def obtenerHtmlListado(categoria='Misc', force=False):
     ''' Verifica y usa `render_template' de jinja 2 para crear la pagina html de listado de archivos para la categoria dada. Crea/modifica el registro html_pages en la BD. 
     NOTA: No se ejecuta `sincronizarArchivos()'
 
     :param categoria: La pagina categoria 
     :force: Si es True ignora el campo `renderHtml' de la tabla en la BD
 
-    :return: Registro en la BD modificado.
+    :return: Registro en la BD encontrado o modificado.
     '''
     # comprobando en BD
     name = 'lista_archivos_' + categoria
@@ -375,6 +375,7 @@ def crearHtmlListado(categoria='Misc', force=False):
         # creando registro en BD
         html = renderizarHtmlListado(category=categoria)
         try:
+            print('Creando nuevo registro en BD pagina: %r', (name))
             html_page = HtmlPage.create(name=name, category=categoria, html=html)
             return html_page
         except Exception as E:
@@ -384,6 +385,7 @@ def crearHtmlListado(categoria='Misc', force=False):
     if force:
         html = renderizarHtmlListado(category=categoria)
         try:
+            print('Forzando modificacion registro en BD pagina: %r', (name))
             html_page.save(name=name, category=categoria, html=html)
             return html_page
         except Exception as E:
@@ -392,14 +394,15 @@ def crearHtmlListado(categoria='Misc', force=False):
     if html_page.renderHtml:
         html = renderizarHtmlListado(category=categoria)
         try:
+            print('Renderizando pagina por flag en BD pagina: %r', (name))
             html_page.save(name=name, category=categoria, html=html)
             return html_page
         except Exception as E:
             print ('Excepcion modificando htmlListado en BD:', str(E))
             raise E
     else:
-        print('No se necesita renderizar html desde template jinja2')
-        return None
+        print('No se necesita renderizar html desde template jinja2 pagina: %r', (name))
+        return html_page
     
 def renderizarHtmlListado(category='Misc'):
     l = listaArchivosParaRenderizar(categoria=category,

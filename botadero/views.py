@@ -22,8 +22,8 @@ u.sincronizarArchivos(ignorar=['gitkeep'])
 def categoriaView(cat):
     co.comprobarTiempoBorradoListaArchivos(cat)
     
-    html_page = u.crearHtmlListado(categoria=cat, force=True)
-    print('html_page:::::::::::::', str(html_page))
+    html_page = u.obtenerHtmlListado(categoria=cat)
+
     return html_page.html
 
 # vistas de descargas
