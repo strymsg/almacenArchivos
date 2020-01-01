@@ -40,3 +40,11 @@ def test_modificarArchivo(db):
     name = uuid.uuid4().hex
     b.save(name=name)
     assert Archivo.query.filter_by(name=name).first() is not None
+
+# tabla html_pages
+def test_crearHtmlPage(db):
+    from botadero.database.models import HtmlPage
+    name = uuid.uuid4().hex
+    b = HtmlPage.create(name=name, category='Misc')
+    assert HtmlPage.query.filter_by(name=name).first() is not None
+

@@ -29,7 +29,7 @@ def setup_db(app, db=None, destroy=True, db_path='sqlite:///db.sqlite3', testing
     g.db = db
     # importando modelos definidos en modulos externos
     print ('Importando modelos ... ')
-    from .models import Archivo
+    from .models import Archivo, HtmlPage
     
     db.create_all()
     db.session.commit()

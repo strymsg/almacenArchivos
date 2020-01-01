@@ -34,7 +34,7 @@ class Archivo(db.Model, CRUDMixin):
 
     def __init__(self, **kwargs):
         super(Archivo, self).__init__(**kwargs)
-        ''' Inicializador de columna Parametros, puede recibir los argumentos:
+        ''' Inicializador de la tabla archivos, puede recibir los argumentos:
         - name: string
         - path: string
         - size: int
@@ -85,3 +85,43 @@ class Archivo(db.Model, CRUDMixin):
         
     def __repr__(self):
         return 'File %r: %r [%r] (%r B), downloads: %d - uploaded: %r remaining time: %d' % (self.name, self.path, self.digestCheck, self.size, self.downloads, self.uploadedAtTime, self.remainingTime)
+
+class HtmlPage(db.Model, CRUDMixin):
+    __tablename__ = 'html_pages'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(1000), nullable=False)
+    html = db.Column(db.String(100000), nullable=False)
+    category = db.Column(db.String(1000), nullable=False, default='')
+    renderHtml = db.Column(db.Boolean, default=False, nullable=False)
+
+    def __init__(self, **kwargs):
+        super(HtmlPage, self).__init__(**kwargs)
+        ''' Inicializador de la tabla html_pages, puede recibir argumentos:
+        - name: string
+        - html: string
+        - category: string
+        - renderHtml: boolean
+        '''
+        self.name = kwargs.get('name','undefined')
+        self.html = kwargs.get('html', '<html>No content yet</html>')
+        self.category = kwargs.get('category', 'Misc')
+
+    def save(self, **kwargs):
+        self.name = kwargs.get('name', self.name)
+        self.html = kwargs.get('html', self.html)
+        self.category = kwargs.get('category', self.category)
+        self.renderHtml = kwargs.get('renderHtml', self.renderHtml)
+
+        db.session.add(self)
+        db.session.commit()
+        return self
+
+    def delete(self):
+        db.session.delete(self)
+        return db.session.commit()
+
+    def __repr__(self):
+        return 'html_page %r: \ncategory:\nhtml:\n%r\nrenderHtml:%r' % (self.name, self.category, self.html, self.renderHtml)
+
+    
+        
