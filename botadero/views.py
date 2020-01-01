@@ -22,17 +22,9 @@ u.sincronizarArchivos(ignorar=['gitkeep'])
 def categoriaView(cat):
     co.comprobarTiempoBorradoListaArchivos(cat)
     
-    lista = u.listaArchivosParaRenderizar(categoria=cat,
-                                          ignorar=['.gitkeep', '.gitkeep~'])
-    categorias = u.categorias()
-    categorias.insert(0, 'Misc') # categoria por defecto
-    dv = {
-        'esquemaColores':u.esquemaColoresRandom(),
-        'categoriaActual': cat,
-        'categorias': categorias,
-        'archivos': lista
-    }
-    return render_template("index.html", dv=dv)
+    html_page = u.crearHtmlListado(categoria=cat, force=True)
+    print('html_page:::::::::::::', str(html_page))
+    return html_page.html
 
 # vistas de descargas
 @botaderoBp.route('/almacen/<string:nombreArchivo>', defaults={ 'cat': 'Misc'})

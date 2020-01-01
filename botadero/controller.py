@@ -27,7 +27,7 @@ def descargarArchivo(cat, nombreArchivo):
 
 # definir una funcion para comprobar la lista de archivos y su tiempo de 
 # borrado
-def comprobarTiempoBorradoListaArchivos(categoria, hdxd=False):
+def comprobarTiempoBorradoListaArchivos(categoria, hdd=False):
     ''' Verifica si es necesario borrar archivos en los archivos dados en
     la carpeta (categoria) guradada en el almacen
     :param categoria: La carpeta (categoria) dentro el almacen donde se hace

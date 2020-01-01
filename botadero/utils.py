@@ -9,9 +9,10 @@ from sqlalchemy import desc
 
 from . import shared
 from .database import get_db
-from .database.models import Archivo
+from .database.models import Archivo, HtmlPage
 
 from flask import Flask
+from flask import render_template
 
 def registrarArchivo(nombreYRuta, digestCheck=None, digestAlgorithm=None, accelerateHash=False, hashedPassword=''):
     ''' Dado un archivo en el sistema de archivos hace una serie de comprobaciones 
@@ -356,3 +357,60 @@ def listaArchivosParaRenderizar(categoria=None, ignorar=[]):
         }
         archivos.append(obj)
     return archivos
+
+def crearHtmlListado(categoria='Misc', force=False):
+    ''' Verifica y usa `render_template' de jinja 2 para crear la pagina html de listado de archivos para la categoria dada. Crea/modifica el registro html_pages en la BD. 
+    NOTA: No se ejecuta `sincronizarArchivos()'
+
+    :param categoria: La pagina categoria 
+    :force: Si es True ignora el campo `renderHtml' de la tabla en la BD
+
+    :return: Registro en la BD modificado.
+    '''
+    # comprobando en BD
+    name = 'lista_archivos_' + categoria
+    html_page = HtmlPage.query.filter_by(name=name).first()
+    html = ''
+    if html_page is None:
+        # creando registro en BD
+        html = renderizarHtmlListado(category=categoria)
+        try:
+            html_page = HtmlPage.create(name=name, category=categoria, html=html)
+            return html_page
+        except Exception as E:
+            print ('Excepcion creando htmlListado en BD:', str(E))
+            raise E
+    # existe registro en BD
+    if force:
+        html = renderizarHtmlListado(category=categoria)
+        try:
+            html_page.save(name=name, category=categoria, html=html)
+            return html_page
+        except Exception as E:
+            print ('Excepcion modificando htmlListado en BD:', str(E))
+            raise E
+    if html_page.renderHtml:
+        html = renderizarHtmlListado(category=categoria)
+        try:
+            html_page.save(name=name, category=categoria, html=html)
+            return html_page
+        except Exception as E:
+            print ('Excepcion modificando htmlListado en BD:', str(E))
+            raise E
+    else:
+        print('No se necesita renderizar html desde template jinja2')
+        return None
+    
+def renderizarHtmlListado(category='Misc'):
+    l = listaArchivosParaRenderizar(categoria=category,
+                                    ignorar=['.gitkeep', '.gitkeep~'])
+    cats = categorias()
+    cats.insert(0, 'Misc')
+    dv = {
+        'esquemaColores': esquemaColoresRandom(),
+        'categoriaActual': category,
+        'categorias': cats,
+        'archivos': l
+    }
+    return render_template("index.html", dv=dv)
+    
