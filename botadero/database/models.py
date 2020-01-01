@@ -121,7 +121,7 @@ class HtmlPage(db.Model, CRUDMixin):
         return db.session.commit()
 
     def __repr__(self):
-        return 'html_page %r: \ncategory:\nhtml:\n%r\nrenderHtml:%r' % (self.name, self.category, self.html, self.renderHtml)
+        return 'html_page %r: \ncategory:%r\nhtml:\n%r\nrenderHtml:%r' % (self.name, self.category, self.html, self.renderHtml)
 
     
         
