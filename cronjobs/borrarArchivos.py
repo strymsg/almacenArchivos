@@ -6,6 +6,7 @@ AGPL liberated.
 # Este script se encarga de comprobar el tiempo de los archivos y si es necesario borrarlos del sistema de archivos y de la base de datos
 
 import os
+import sys
 
 from botadero.shared import globalParams, gr
 from botadero import utils as u
@@ -23,4 +24,4 @@ print ('Sincronizando archivos...')
 u.sincronizarArchivos(ignorar=['gitkeep'])
 
 print ('proceso borrado terminado')
-
+sys.exit()
