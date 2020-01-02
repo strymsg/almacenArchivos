@@ -15,7 +15,7 @@ from flask import (
 botaderoBp = Blueprint('botadero', __name__, url_prefix='')
 
 # TODO: mover la sincronizacion a un lugar mas convencional
-u.sincronizarArchivos(ignorar=['gitkeep'])
+# u.sincronizarArchivos(ignorar=['gitkeep'])
 
 @botaderoBp.route('/', defaults={ 'cat':'Misc' })
 @botaderoBp.route('/<string:cat>/')

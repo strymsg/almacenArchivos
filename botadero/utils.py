@@ -63,6 +63,14 @@ def registrarArchivo(nombreYRuta, digestCheck=None, digestAlgorithm=None, accele
                           hashedPassword=hashedPassword)
     return arch
 
+def borrarRegistroArchivoEnBd(name):
+    a = Archivo.query.filter_by(name=name).first()
+    if a is not None:
+        print('Eliminando registro de archivo en BD:', name)
+        return a.delete()
+    else:
+        return None
+
 def hashArchivo(nombreYRuta, hashAlgorithm=None, accelerateHash=False):
     ''' Retorna el hexdigest del archivo usando los parametros dados
     '''
@@ -214,6 +222,26 @@ def borrarArchivo(nombreYRuta, archivo=None):
         return False
     return Archivo.query.filter_by(path=nombreYRuta).first().delete() is None
 
+def actualizarTiempoRestanteArchivo(nombreYRuta, archivo=None):
+    ''' Actualiza el tiempo de restante de un registro de archivo en la BD
+    :param nombreYRuta: nombre y ruta del archivo
+    :param archivo: registro del archivo en la BD
+
+    :return: True si se ha modificado el registro, False en otro caso
+    '''
+    if archivo is None:
+        archivo = Archivo.query.filter_by(path=nombreYRuta).first()
+    tiempoBorrado = tiempoBorradoArchivo(archivo.size)
+    edad = edadArchivo(archivo.path, archivo)
+    restante = tiempoBorradoArchivo - edad
+    if restante == archivo.remainingTime:
+        return False
+    try:
+        archivo.save(remainingTime=restante)
+        return True
+    except Exception as E:
+        print('Excepcion actualizando tiempo restante de archivo en BD:', str(E))
+        return False
 
 def tiempoBorradoArchivo(size):
     ''' retorna el tiempo en que el archivo debe ser borrado 
@@ -228,13 +256,19 @@ def tiempoBorradoArchivo(size):
             timeToDel = int(lim[1])
     return timeToDel
 
-def comprobarTiempoArchivo(nombreYRuta, archivo=None):
+def archivoDebeBorrarsePorTiempo(nombreYRuta='', archivo=None):
     ''' comprueba si el archivo dado ha sobrepasado o no su tiempo permitido.
+    :param nombreYRuta: nombre y ruta del archivo
+    :param archivo (optional): registro del archivo en la BD
+
+    :return: True si el archivo ha soprepasado el tiempo, False si no.
     '''
     if archivo is None:
         archivo = Archivo.query.filter_by(path=nombreYRuta).first()
-    
-    return False
+    tiempoBorrado = tiempoBorradoArchivo(archivo.size)
+    edad = edadArchivo(archivo.path, archivo)
+    print ('verificando edad archivo:', archivo.name, '  edad:', str(edad),  'borrado max', str(tiempoBorrado))
+    return tiempoBorrado < edad
 
 def comprobarPassword(nombreYRuta, password):
     ''' Consulta en la BD y comprueba si el archivo ha sido guardado usando el password dado.
@@ -290,40 +324,6 @@ def descargarArchivo(cat, nombreArchivo):
         return None
     archivo.save(downloads=archivo.downloads + 1)
     return pathf
-    
-def sincronizarArchivos(ignorar=[]):
-    ''' Lista los archivos en el directorio de subidas y los introduce en
-    la base de datos si estos no estan registrados.
-
-    Retorna dos listas, una los archivos en el sistema de archivos. otra los registrados en BD.
-
-    :param ignorar: Una lista con nombres de archivos a ignorar
-    '''
-    print ('** Sincronizando archivos **')
-    print ('\nParametros', str(shared.globalParams))
-    archivosEnBD = listaDeArchivosEnBd()
-    listaLsArchivos = []
-    # para archivos en categorias
-    for cat in categorias():
-        print ('#' + cat)
-        lista = listaDeArchivos(categoria=cat)
-        for archivo in lista:
-            print ('  ', archivo)
-            if nombreArchivo(archivo) not in ignorar:
-                arch = registrarArchivo(archivo)
-                # archivosEnBD.append(arch.path)
-                listaLsArchivos.append(archivo)
-    # para archivos sin categoria (en la carpeta alamcen raiz)
-    lista = listaDeArchivos()
-    for archivo in lista:
-        print (' ', archivo)
-        if nombreArchivo(archivo) not in ignorar:
-            arch = registrarArchivo(archivo)
-            # archivosEnBD.append(arch.path)
-            listaLsArchivos.append(archivo)
-    
-    print ('\nsincronización completa')
-    return listaLsArchivos, archivosEnBD
 
 def listaArchivosParaRenderizar(categoria=None, ignorar=[]):
     ''' Devuelve un diccionario con la lista de archivos registrados 

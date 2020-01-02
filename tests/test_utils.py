@@ -108,24 +108,6 @@ def test_borrarArchivo(db):
     assert borrarArchivo(nombreYRuta) is True
     assert existeArchivo(nombreYRuta) is None
 
-def test_sincronizarArchivos(db):
-    from botadero.utils import sincronizarArchivos, addRelativeFileName
-    from botadero.database.models import Archivo
-
-    l1, l2 = sincronizarArchivos()
-    for filename in l1:
-        assert addRelativeFileName(filename) in l2
-    assert len(l1) == len(l2)
-
-def test_sincronizarArchivosConFiltro(db):
-    from botadero.utils import sincronizarArchivos, addRelativeFileName
-    from botadero.database.models import Archivo
-    
-    l1, l2 = sincronizarArchivos(['.gitignore'])
-    for filename in l1:
-        assert addRelativeFileName(filename) in l2
-    assert len(l1) == len(l2)
-
 def test_descargarAchivo(db):
     from botadero.utils import descargarArchivo, registrarArchivo
     from botadero.database.models import Archivo
