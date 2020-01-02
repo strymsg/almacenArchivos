@@ -233,7 +233,7 @@ def actualizarTiempoRestanteArchivo(nombreYRuta, archivo=None):
         archivo = Archivo.query.filter_by(path=nombreYRuta).first()
     tiempoBorrado = tiempoBorradoArchivo(archivo.size)
     edad = edadArchivo(archivo.path, archivo)
-    restante = tiempoBorradoArchivo - edad
+    restante = tiempoBorrado - edad
     if restante == archivo.remainingTime:
         return False
     try:
@@ -283,12 +283,16 @@ def esquemaColoresRandom():
     return esquemas[random.randint(0, len(esquemas) - 1)]
 
 def addRelativeFileName(filename):
-    # print ('filename', filename)
-    if not filename.startswith(os.path.sep) or not filename.startswith('.'):
+    if filename.startswith(os.path.sep):
+        # no deberia permitirse archivos con rutas absolutas
+        print(filename, 'ruta absoluta detectada')
+        return filename
+    if not filename.startswith(os.path.curdir):
         # print ('ret:::', os.path.join((os.path.curdir + os.path.sep), filename))
         return os.path.join((os.path.curdir + os.path.sep), filename)
-    # print ('ret:', filename)
-    return filename
+    else:
+        # print ('ret:', filename)
+        return filename
 
 def categorias():
     ''' Devuelve la lista de categorias (carpetas) dentro el directorio

@@ -93,7 +93,11 @@ def sincronizarArchivos(ignorar=[]):
     '''
     print ('** Sincronizando archivos **')
     print ('\nParametros', str(globalParams))
-    archivosEnBd = u.listaDeArchivosEnBd()
+    listaEnBd = u.listaDeArchivosEnBd()
+    archivosEnBd = []
+    for reg in listaEnBd:
+        archivosEnBd.append(reg.path)
+    
     archivos = []
 
     listaLsArchivos = []
@@ -107,6 +111,7 @@ def sincronizarArchivos(ignorar=[]):
     for archivo in lista:
         if u.nombreArchivo(archivo) not in ignorar:
             # estandarizando nombre
+            print(os.path.join(os.path.curdir + os.path.sep, archivo))
             archivos.append(os.path.join(os.path.curdir + os.path.sep, archivo))
     
     for cat in u.categorias():
@@ -115,6 +120,7 @@ def sincronizarArchivos(ignorar=[]):
         for archivo in lista:
             if u.nombreArchivo(archivo) not in ignorar:
                 # estandarizando nombre
+                print(os.path.join(os.path.curdir + os.path.sep, archivo))
                 archivos.append(os.path.join(os.path.curdir + os.path.sep, archivo))
 
     # actualizando BD
@@ -138,6 +144,12 @@ def sincronizarArchivos(ignorar=[]):
                     print ('(+-)', str(archivo))
                     actualizados.append(archivo)
                     marcarPaginaListaParaRenderizar(categoria=u.categoriaArchivo(archivo))
+    for reg in archivosEnBd:
+            # caso de que un archivo se borro del sistema de archivos
+            if reg not in archivos:
+                print('(bd -)', str(reg))
+                r = u.borrarRegistroArchivoEnBd(u.nombreArchivo(reg))
+                borrados.append(reg)
     print ('\nsincronización completa')
     return registrados, borrados, actualizados
 

@@ -27,13 +27,12 @@ def test_sincronizarArchivos(db):
     print(f1)
     print(f2)
     nuevos1, borrados1, actualizados1 = sincronizarArchivos()
-    assert len(nuevos1) > len(nuevos)
+    assert len(nuevos1) > 0
     os.remove(f1)
 
     nuevos2, borrados2, actualizados2 = sincronizarArchivos()
-    assert len(nuevos2) < len(nuevos1)
+    assert len(borrados2) > 0
     os.remove(f2)
-    
 
 # def test_sincronizarArchivosConFiltro(db):
 #     from botadero.utils import addRelativeFileName

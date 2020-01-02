@@ -17,10 +17,10 @@ botaderoBp = Blueprint('botadero', __name__, url_prefix='')
 # TODO: mover la sincronizacion a un lugar mas convencional
 # u.sincronizarArchivos(ignorar=['gitkeep'])
 
-@botaderoBp.route('/', defaults={ 'cat':'Misc' })
+@botaderoBp.route('/', defaults={ 'cat':'Misc'})
 @botaderoBp.route('/<string:cat>/')
 def categoriaView(cat):
-    co.comprobarTiempoBorradoListaArchivos(cat)
+    # co.comprobarTiempoBorradoListaArchivos(cat)
     
     html_page = u.obtenerHtmlListado(categoria=cat)
 
