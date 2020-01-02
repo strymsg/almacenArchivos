@@ -12,16 +12,27 @@ from botadero.shared import globalParams, gr
 from botadero import utils as u
 from botadero import controller as co
 
+
 # comprobando tiempo borrado
 categorias = u.categorias()
 categorias.append('Misc')
 print ('Comprobando tiempo de borrado de archivos...')
+borrados = []
 for categoria in categorias:
-    co.comprobarTiempoBorradoListaArchivos(categoria)
-
+    borrados = co.comprobarTiempoBorradoListaArchivos(categoria)
+    # se marca los templates para actualizarlos
+    if len(borrados) > 0:
+        co.marcarPaginaListaParaRenderizar(categoria=categoria)
+    
 print ('Sincronizando archivos...')
 # sincronizando archivos y BD
-u.sincronizarArchivos(ignorar=['gitkeep'])
+archivos, archivosEnBd = u.sincronizarArchivos(ignorar=['gitkeep'])
+print('archivos:\n', str(archivos), '\n', str(len(archivos)))
+print('archivosEnBd:\n', str(archivosEnBd), '\n', str(len(archivosEnBd)))
+
+# if len(archivos) != len(archivosEnBd):
+    # aqui se debe reprocesar
+    
 
 print ('proceso borrado terminado')
 sys.exit()

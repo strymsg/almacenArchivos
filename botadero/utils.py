@@ -295,13 +295,13 @@ def sincronizarArchivos(ignorar=[]):
     ''' Lista los archivos en el directorio de subidas y los introduce en
     la base de datos si estos no estan registrados.
 
-    Retorna dos listas, una los archivos en el sistema de archivos y otra los registrados en BD
+    Retorna dos listas, una los archivos en el sistema de archivos. otra los registrados en BD.
 
     :param ignorar: Una lista con nombres de archivos a ignorar
     '''
     print ('** Sincronizando archivos **')
     print ('\nParametros', str(shared.globalParams))
-    archivosEnBD = []
+    archivosEnBD = listaDeArchivosEnBd()
     listaLsArchivos = []
     # para archivos en categorias
     for cat in categorias():
@@ -311,7 +311,7 @@ def sincronizarArchivos(ignorar=[]):
             print ('  ', archivo)
             if nombreArchivo(archivo) not in ignorar:
                 arch = registrarArchivo(archivo)
-                archivosEnBD.append(arch.path)
+                # archivosEnBD.append(arch.path)
                 listaLsArchivos.append(archivo)
     # para archivos sin categoria (en la carpeta alamcen raiz)
     lista = listaDeArchivos()
@@ -319,8 +319,9 @@ def sincronizarArchivos(ignorar=[]):
         print (' ', archivo)
         if nombreArchivo(archivo) not in ignorar:
             arch = registrarArchivo(archivo)
-            archivosEnBD.append(arch.path)
+            # archivosEnBD.append(arch.path)
             listaLsArchivos.append(archivo)
+    
     print ('\nsincronización completa')
     return listaLsArchivos, archivosEnBD
 
@@ -375,7 +376,7 @@ def obtenerHtmlListado(categoria='Misc', force=False):
         # creando registro en BD
         html = renderizarHtmlListado(category=categoria)
         try:
-            print('Creando nuevo registro en BD pagina: %r', (name))
+            print('Creando nuevo registro en BD pagina: %r' % (name))
             html_page = HtmlPage.create(name=name, category=categoria, html=html)
             return html_page
         except Exception as E:
@@ -385,7 +386,7 @@ def obtenerHtmlListado(categoria='Misc', force=False):
     if force:
         html = renderizarHtmlListado(category=categoria)
         try:
-            print('Forzando modificacion registro en BD pagina: %r', (name))
+            print('Forzando modificacion registro en BD pagina: %r' % (name))
             html_page.save(name=name, category=categoria, html=html)
             return html_page
         except Exception as E:
@@ -394,14 +395,15 @@ def obtenerHtmlListado(categoria='Misc', force=False):
     if html_page.renderHtml:
         html = renderizarHtmlListado(category=categoria)
         try:
-            print('Renderizando pagina por flag en BD pagina: %r', (name))
-            html_page.save(name=name, category=categoria, html=html)
+            print('Renderizando pagina por flag en BD pagina: %r' % (name))
+            html_page.save(name=name, category=categoria, html=html,
+                           renderHtml=False)
             return html_page
         except Exception as E:
             print ('Excepcion modificando htmlListado en BD:', str(E))
             raise E
     else:
-        print('No se necesita renderizar html desde template jinja2 pagina: %r', (name))
+        print('No se necesita renderizar html desde template jinja2 pagina: %r' % (name))
         return html_page
     
 def renderizarHtmlListado(category='Misc'):

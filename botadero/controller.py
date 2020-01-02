@@ -55,7 +55,29 @@ def comprobarTiempoBorradoListaArchivos(categoria, hdd=False):
 
             borrados.append(archivo.path)
     return borrados
-            
+
+def marcarPaginaListaParaRenderizar(categoria):
+    ''' Marca la pagina de la lista para renderizar de la categoria dada
+    para que se vuelva a renderizar el template usando jinja2
+    
+    :param: True si se ha marcado correctamente, False en otro caso
+    '''
+    if categoria == 'Misc':
+        categoria = globalParams.uploadDirectory
+    # buscando el registro
+    name = 'lista_archivos_' + categoria
+    html_page = HtmlPage.query.filter_by(name=name).first()
+    if htlm_page is not None:
+        # modificando
+        try:
+            html_page.save(renderHtml=True)
+            return True
+        except Exception as E:
+            print ('Excepcion modificando html_page %r', (name))
+            return False
+    return False
+        
+        
 def procesarListaArchivos(catgeoria=None):
     ''' Verifica si es necesario generar una nueva cadena html para 
     mostrar la lista de archivos actualizada.
