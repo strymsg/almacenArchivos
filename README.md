@@ -10,7 +10,7 @@ Servicio web centralizado para compartir archivos en una red local o internet.
 
 Un directorio público donde cualquiera puede subir archivos y estos se pueden descargar libremente.
 
-Para ahorrar espacio de almacenamiento, los archivos se borrar después de un número ajustable de días y también se evita la posiblidad de subir archivos duplicados usando algoritmos para obtener digestos sha1, md5, sha256, etc. 
+Para ahorrar espacio de almacenamiento, los archivos se borran después de un número ajustable de tiempo (días, minutos o segundos) y también se evita la posiblidad de subir archivos duplicados usando algoritmos para obtener digestos sha1, md5, sha256, etc. 
 
 Entre las funcionalidades que se pueden ajustar están:
 
@@ -52,6 +52,11 @@ pronto.
     # ejecutar pruebas (desarrollo)
 	pytest
 
+La aplicación necesita que se ejecute el script `cronjobs.py` que se encarga de **actualizar** el tiempo restante de los archivos y eliminarlos. Es recomendable agregar la ejecución de este script como tarea programada, en sistemas UNIX por ejemplo agregando una entrada en /etc/crontab.
+
+```
+5/* *    * * *   user    cd /home/user/almacenArchivos/venv/bin/python3 cronjobs.py
+```
 #### Despliegue ####
 
 pronto.
@@ -106,6 +111,12 @@ soon.
 
     # testing
     pytest
+
+The aplication requires the script `cronjob.py` to be executed, this *updates* the files ramaining time and also removes them if necesary. It is recomended to make the execution of this script a cronjob, on UNIX system for instance adding to /etc/crontab.
+
+```
+5/* *    * * *   user    cd /home/user/almacenArchivos/venv/bin/python3 cronjobs.py
+```
 
 #### Deploy ####
 
