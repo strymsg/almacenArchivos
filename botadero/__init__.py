@@ -54,9 +54,11 @@ def create_app(config=None, instance_path=None, db_path='sqlite:///db.sqlite3', 
 
     # configuraciones adicionales
     shared.globalParams = Parameters(app)
+    print ('Configs cargadas--')
+    print (shared.globalParams)
 
     # base de datos
-    print ('Base de datos setup---')
+    print ('\nBase de datos setup---')
     from . import database
 
     ctx = app.app_context()

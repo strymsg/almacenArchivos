@@ -17,7 +17,7 @@ SIZE_LIMITS_AND_TIME_TO_DELETE = [
 ]
 
 # Unidad de tiempo para manejar los archivos posibles: day, minute, second
-TIME_UNIT = 'minute'
+TIME_UNIT = 'day'
 
 # Nivel de verbosidad para guardar registros de eventos
 # 0 = ERROR

@@ -127,14 +127,16 @@ def edadArchivo(nombreYRuta, archivo=None):
     if archivo is None:
         archivo = existeArchivo(nombreYRuta)
     uploadedAtTime = dt.strptime(archivo.uploadedAtTime, '%Y-%m-%d %H:%M:%S.%f')
+    edadSegundos = (dt.now() - uploadedAtTime).total_seconds()
+
     if archivo is None:
         return -1
     if shared.globalParams.timeUnit == 'day':
-        return (dt.now() - uploadedAtTime).days
+        return edadSegundos//(24*3600)
     elif shared.globalParams.timeUnit == 'minute':
-        return (dt.now() - uploadedAtTime).min
+        return edadSegundos//60
     elif shared.globalParams.timeUnit == 'second':
-        return (dt.now() - uploadedAtTime).seconds
+        return edadSegundos
     return 0
 
 def nombreArchivo(nombreYRuta):
@@ -249,10 +251,10 @@ def tiempoBorradoArchivo(size):
     timeToDel = 0
     for lim in shared.globalParams.sizeLimitsAndTimeToDelete:
         if int(size) <= int(lim[0]):
-            print (' (*) tamanyo para', str(size), '>', str(int(lim[1])))
+            # print (' (*) tamanyo para', str(size), '>', str(int(lim[1])))
             return int(lim[1])
         else:
-            print (' (*) tamanyo para', str(size), '>', str(int(lim[1])))
+            # print (' (*) tamanyo para', str(size), '>', str(int(lim[1])))
             timeToDel = int(lim[1])
     return timeToDel
 
