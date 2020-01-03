@@ -26,4 +26,9 @@ logs/
 # autosaves dia
 *.autosave
 
+# configs prod
+botadero/configs/configs.py
+# configs dev
+botadero/configs/configsDevelopment.py
+
 .gitignore
