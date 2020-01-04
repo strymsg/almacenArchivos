@@ -39,6 +39,7 @@ def subirArchivo(cat, file, hashedPassword=''):
       redirect: 'link redireccion en caso de ya existir un archivo'
     }
     '''
+    print('subirArchivo(cat="%r", file="%r", hashedPassword="%r"' % (cat, file, hashedPassword))
     filename = secure_filename(file.filename)
     categoria = ''
     if cat != 'Misc':
@@ -111,10 +112,7 @@ def subirArchivo(cat, file, hashedPassword=''):
                           hashedPassword=hashedPassword)
     print('✓ Archivo registrado en BD', arch)
     # marcando la pagina HTML para ser renderizada nuevamente
-    if categoria == 'Misc':
-        marcarPaginaListaParaRenderizar(categoria='Misc')
-    else:
-        marcarPaginaListaParaRenderizar(categoria=categoria)
+    marcarPaginaListaParaRenderizar(categoria=categoria)
     
     return arch
     
@@ -156,11 +154,10 @@ def marcarPaginaListaParaRenderizar(categoria='Misc'):
     
     :param: True si se ha marcado correctamente, False en otro caso
     '''
-    if categoria == globalParams.uploadDirectory:
+    if categoria == globalParams.uploadDirectory or categoria == '':
         categoria = 'Misc' # ajuste por conveniencia
     # buscando el registro
     name = 'lista_archivos_' + categoria
-
     html_page = HtmlPage.query.filter_by(name=name).first()
     if html_page is not None:
         # modificando

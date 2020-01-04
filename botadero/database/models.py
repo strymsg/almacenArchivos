@@ -69,7 +69,7 @@ class Archivo(db.Model, CRUDMixin):
                                           self.digestAlgorithm)
         self.uploadedAtTime = kwargs.get('uploadedAtTime',
                                          self.uploadedAtTime)
-        self.remainingTime = kwargs.get('ramainingTime',
+        self.remainingTime = kwargs.get('remainingTime',
                                         self.remainingTime)
         self.hashedPassword = kwargs.get('hashedPassword',
                                          self.hashedPassword)

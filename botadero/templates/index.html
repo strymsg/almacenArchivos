@@ -33,12 +33,16 @@
       {% endfor %}
     </div>
 
+    <p>{{ dv['categoriaActual'] }}</p>
     <!-- Subida de archivos -->
-    {% if dv['categoriaActual'] == "" %}
-      <form method="post" id="upload_file" action="/almacen/upload_file" enctype="multipart/form-data">
-    {% else %}
-	<form method="post" id="upload_file" action="/almacen/{{ categoriaActual }}/upload_file" enctype="multipart/form-data">	
-    {% endif %}
+
+    <form method="POST" id="upload_file" action="/{{ dv['categoriaActual'] }}/upload_file" enctype="multipart/form-data">
+
+    {# {% if dv['categoriaActual'] == "" %} #}
+    {#   <form method="post" id="upload_file" action="/almacen/upload_file" enctype="multipart/form-data"> #}
+    {# {% else %} #}
+    {# 	<form method="post" id="upload_file" action="/almacen/{{ categoriaActual }}/upload_file" enctype="multipart/form-data">	 #}
+    {# {% endif %} #}
 
     <!-- caja drag and drop -->
     <div id="dropbox">
@@ -51,7 +55,10 @@
     <input type="submit" class="btn large" id="upload-button" value="Compartir archivo(s)"/>
     
     <div class="nota">
-      <p> Los archivos se eliminan después de {pendiente} a {pendeinte} días, dependiendo de su tamaño (máximo <i>{ ms//1000000 }</i> MB). <span id="max_filesize" hidden>{ ms }</span>
+      <p> Los archivos se eliminan después de {pendiente} a {pendeinte} días, dependiendo de su tamaño 5 MB.
+	{# (máximo <i>{ ms//1000000 }</i> MB). #}
+	{# <span id="max_filesize" hidden>{ ms }</span> #}
+	<span id="max_filesize" hidden>500000</span>
 	<a href="/info" >ver información</a>
       </p>
     </div>
