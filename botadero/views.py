@@ -42,18 +42,30 @@ def descargaDesdeIndexView(cat, nombreArchivo):
     return send_file(pathf, as_attachment=True)
     #return (str(cat+'/'+nombreArchivo))
 
-# vista de subida de archivos
-@botaderoBp.route('/<string:cat>//upload_file', defaults={ 'cat': 'Misc' }, methods=['GET', 'POST'])
+# vista de subida de archivo (individual)
+@botaderoBp.route('/<string:cat>/upload_file', methods=['GET', 'POST'])
+def subidaArchivo(cat):
+    print('⮉ request (individual)', request.files.get('file', 'No se ha proporcionado archivo'), ', method=', request.method, 'categoria=', cat)
+    if cat == '':
+        cat = 'Misc'
+    if 'file' not in request.files:
+        return 'Debe subir un archivo'
+    file = request.files['file']
+    if file.filename == '':
+        return 'Invalido'
+
+    hashedPassword = ''
+    return co.subirArchivo(cat, file, hashedPassword)
+
+# vista de subida de varios archivos
+@botaderoBp.route('/<string:cat>/upload_file_a', methods=['GET', 'POST'])
 def subidaArchivos(cat):
-    print('.........<<<<<<>Z>>>')
+    print('⮉ request (multiple):', request.files.getlist("file"))
+    if cat == '':
+        cat = 'Misc'
     for upload in request.files.getlist("file"):
         print('filename', upload.filename)
-    print('>>>>>>')
-    for f in request.files:
-        print(f)
-        print('..........')
-    
-    print ("[upload file request]: %r" % str(request.files['file']))
+
     if 'file' not in request.files:
         return 'Debe subir un archivo'
     file = request.files['file']
