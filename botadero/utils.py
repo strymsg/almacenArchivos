@@ -410,6 +410,7 @@ def listaArchivosParaRenderizar(categoria=None, ignorar=[]):
     '''
     lista = []
     if categoria is not None:
+        # TODO: revisar si se debe realmente tratar como caso especial
         if categoria == 'Misc':
             # caso especial
             lista = listaDeArchivosEnBd(categoria='almacen', ignorar=ignorar)

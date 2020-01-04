@@ -44,7 +44,6 @@ def subirArchivo(cat, file, hashedPassword=''):
     categoria = ''
     if cat != 'Misc':
         categoria = cat
-
     # comprobando existencia
     filepath = os.path.join(globalParams.uploadDirectory, categoria, filename)
     try:
@@ -111,8 +110,14 @@ def subirArchivo(cat, file, hashedPassword=''):
                           remainingTime=remainingTime,
                           hashedPassword=hashedPassword)
     print('✓ Archivo registrado en BD', arch)
+
+    # actualizando
+    sincronizarArchivos()
     # marcando la pagina HTML para ser renderizada nuevamente
-    marcarPaginaListaParaRenderizar(categoria=categoria)
+    # if categoria == 'Misc':
+    #     marcarPaginaListaParaRenderizar(categoria='')
+    # else:
+    #     marcarPaginaListaParaRenderizar(categoria=categoria)
     
     return arch
     
@@ -159,6 +164,7 @@ def marcarPaginaListaParaRenderizar(categoria='Misc'):
     # buscando el registro
     name = 'lista_archivos_' + categoria
     html_page = HtmlPage.query.filter_by(name=name).first()
+
     if html_page is not None:
         # modificando
         try:
@@ -230,7 +236,7 @@ def sincronizarArchivos(ignorar=[]):
                 print ('(-)', str(archivo), u.categoriaArchivo(archivo))
                 r = u.borrarArchivo(archivo) # del sistema de archivos y BD
                 borrados.append(archivo)
-                print (' xx Registro de archivo borrado', archivo, ' = ', r)
+                print (' ✗ Registro de archivo borrado', archivo, ' = ', r)
                 marcarPaginaListaParaRenderizar(categoria=u.categoriaArchivo(archivo))
             else:
                 if u.actualizarTiempoRestanteArchivo(archivo):

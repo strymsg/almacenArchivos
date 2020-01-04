@@ -17,10 +17,10 @@ botaderoBp = Blueprint('botadero', __name__, url_prefix='')
 # TODO: mover la sincronizacion a un lugar mas convencional
 # u.sincronizarArchivos(ignorar=['gitkeep'])
 
-@botaderoBp.route('/', defaults={ 'cat':'Misc'})
+@botaderoBp.route('/')
 @botaderoBp.route('/<string:cat>/')
-def categoriaView(cat):
-    
+def categoriaView(cat='Misc'):
+    print('categoria::::', cat)
     html_page = u.obtenerHtmlListado(categoria=cat)
 
     return html_page.html
@@ -40,7 +40,6 @@ def descargaDesdeIndexView(cat, nombreArchivo):
                                nombre=nombreArchivo,
                                esquemaColores=u.esquemaColoresRandom())
     return send_file(pathf, as_attachment=True)
-    #return (str(cat+'/'+nombreArchivo))
 
 # vista de subida de archivo (individual)
 @botaderoBp.route('/<string:cat>/upload_file', methods=['GET', 'POST'])
@@ -55,7 +54,10 @@ def subidaArchivo(cat):
         return 'Invalido'
 
     hashedPassword = ''
-    return co.subirArchivo(cat, file, hashedPassword)
+    resultado = co.subirArchivo(cat, file, hashedPassword)
+    print('resultado:', resultado)
+    # retornando a pagina
+    return 'Done'
 
 # vista de subida de varios archivos
 @botaderoBp.route('/<string:cat>/upload_file_a', methods=['GET', 'POST'])
