@@ -35,30 +35,22 @@
 
     <p>{{ dv['categoriaActual'] }}</p>
     <!-- Subida de archivos -->
-
     <form method="POST" id="upload_file" action="/{{ dv['categoriaActual'] }}/upload_file" enctype="multipart/form-data">
-
-    {# {% if dv['categoriaActual'] == "" %} #}
-    {#   <form method="post" id="upload_file" action="/almacen/upload_file" enctype="multipart/form-data"> #}
-    {# {% else %} #}
-    {# 	<form method="post" id="upload_file" action="/almacen/{{ categoriaActual }}/upload_file" enctype="multipart/form-data">	 #}
-    {# {% endif %} #}
 
     <!-- caja drag and drop -->
     <div id="dropbox">
       Arrastra archivos aquí
     </div>
-    
+
+    <!-- input multiple files -->
     <input id="file-picker" type="file" name="file" multiple>
     
     <!-- <input type="file" name="file"/> -->
     <input type="submit" class="btn large" id="upload-button" value="Compartir archivo(s)"/>
     
     <div class="nota">
-      <p> Los archivos se eliminan después de {pendiente} a {pendeinte} días, dependiendo de su tamaño 5 MB.
-	{# (máximo <i>{ ms//1000000 }</i> MB). #}
-	{# <span id="max_filesize" hidden>{ ms }</span> #}
-	<span id="max_filesize" hidden>500000</span>
+      <p> Los archivos se eliminan después de {{ dv['timeLapseMax'] }} a {{ dv['timeLapseMin'] }} días, dependiendo de su tamaño (máximo <i>{{ dv['maxFilesize']//1000000 }}</i> MB).
+	<span id="max_filesize" hidden>{{ dv['maxFilesize'] }}</span> 
 	<a href="/info" >ver información</a>
       </p>
     </div>

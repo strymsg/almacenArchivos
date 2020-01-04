@@ -483,6 +483,9 @@ def renderizarHtmlListado(category='Misc'):
     cats.insert(0, 'Misc')
     dv = {
         'esquemaColores': esquemaColoresRandom(),
+        'maxFilesize': int(shared.globalParams.sizeLimitsAndTimeToDelete[-1][0]),
+        'timeLapseMax': shared.globalParams.sizeLimitsAndTimeToDelete[-1][1],
+        'timeLapseMin': shared.globalParams.sizeLimitsAndTimeToDelete[0][1],
         'categoriaActual': category,
         'categorias': cats,
         'archivos': l
