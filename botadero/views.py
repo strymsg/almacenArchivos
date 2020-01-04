@@ -65,14 +65,14 @@ def subidaArchivos(cat):
     print('⮉ request (multiple):', request.files.getlist("file"))
     if cat == '':
         cat = 'Misc'
-    for upload in request.files.getlist("file"):
-        print('filename', upload.filename)
-
-    if 'file' not in request.files:
-        return 'Debe subir un archivo'
-    file = request.files['file']
-    if file.filename == '':
-        return 'Invalido'
 
     hashedPassword = ''
-    return co.subirArchivo(cat, file, hashedPassword)
+    subidos = []
+    for upload in request.files.getlist("file"):
+        print('* filename', upload.filename)
+        subidos.append(co.subirArchivo(cat, upload, hashedPassword))
+
+    for subido in subidos:
+        print('subir archivo resultado:', str(subido))
+    hashedPassword = ''
+    return 'Hechos ' + str(len(subidos))
