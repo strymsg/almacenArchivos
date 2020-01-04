@@ -121,6 +121,60 @@ def hashArchivo(nombreYRuta, hashAlgorithm=None, accelerateHash=False):
                 tAct = fil.tell()
     return h.hexdigest()
 
+def hashFileStorage(file_storage, hashAlgorithm=None, accelerateHash=None):
+    ''' Obtiene el hexdigest de un objeto del tipo FileStorage '''
+    hashAlgo = 'sha1'
+    if hashAlgorithm is None:
+        hashAlgo = shared.globalParams.digestAlgorithm
+        if hashAlgo not in ('md5', 'sha1', 'sha224', 'sha256', 'sha384', 'sha512'):
+            hashAlgo = 'sha1'
+
+    h = None
+    if hashAlgo == 'md5':
+        h = hashlib.md5()
+    elif hashAlgo == 'sha1':
+        h = hashlib.sha1()
+    elif hashAlgo == 'sha224':
+        h = hashlib.sha224()
+    elif hashAlgo == 'sha256':
+        h = hashlib.sha256()
+    elif hashAlgo == 'sha384':
+        h = hashlib.sha384()
+    elif hashAlgo == 'sha512':
+        h = hashlib.sha512()
+
+    # tamaño del archivo
+    file_storage.seek(0, os.SEEK_END)
+    fsize = file_storage.tell()
+
+    # puntero en 0
+    file_storage.seek(0)
+
+    if accelerateHash:
+        i = 0
+        puntero = 0
+        while puntero < fsize:
+            # se salta algunos "pedazos"
+            cad = file_storage.read(i*1024*1024)
+            h.update(cad)
+            file_storage.seek(i*10*1024*1024, os.SEEK_CUR)
+            puntero = file_storage.tell()
+            i += 1
+    else:
+        # comprobando en pedazos de hasta 125 MiB
+        pedazoTam = 125*1024*1024
+        cad = file_storage.read(pedazoTam)
+        h.update(cad)
+        tAnt = -1
+        tAct = file_storage.tell()
+        while tAnt != tAct:
+            cad = file_storage.read(pedazoTam)
+            h.update(cad)
+            tAnt = tAct
+            tAct = file_storage.tell()
+    return h.hexdigest()
+    
+
 def edadArchivo(nombreYRuta, archivo=None):
     ''' Retorna la edad o tiempo (en la unidad de tiempo usada globalmente)
     desde que el archivo ha sido creado '''
@@ -139,6 +193,15 @@ def edadArchivo(nombreYRuta, archivo=None):
         return edadSegundos
     return 0
 
+def existeArchivoEnFs(cat, nombreArchivo):
+    ''' Verifica si un archivo con ese nombre existe
+    :param cat: Categoria
+    :param nombreArchivo: Nombre del archivo
+
+    :return boolean: True si existe, False si no
+    '''
+    
+    
 def nombreArchivo(nombreYRuta):
     tupla = nombreYRuta.split(os.sep)
     return tupla[-1]

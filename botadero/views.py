@@ -20,7 +20,6 @@ botaderoBp = Blueprint('botadero', __name__, url_prefix='')
 @botaderoBp.route('/', defaults={ 'cat':'Misc'})
 @botaderoBp.route('/<string:cat>/')
 def categoriaView(cat):
-    # co.comprobarTiempoBorradoListaArchivos(cat)
     
     html_page = u.obtenerHtmlListado(categoria=cat)
 
@@ -44,7 +43,22 @@ def descargaDesdeIndexView(cat, nombreArchivo):
     #return (str(cat+'/'+nombreArchivo))
 
 # vista de subida de archivos
-# @botaderoBp.route('/almacen/<string:cat>/upload', defaults={ 'cat': 'Misc' })
-# @botaderoBp.route('/almacen/upload')
-# def subidaArchivos(cat, nombreArchivo):
+@botaderoBp.route('/<string:cat>//upload_file', defaults={ 'cat': 'Misc' }, methods=['GET', 'POST'])
+def subidaArchivos(cat):
+    print('.........<<<<<<>Z>>>')
+    for upload in request.files.getlist("file"):
+        print('filename', upload.filename)
+    print('>>>>>>')
+    for f in request.files:
+        print(f)
+        print('..........')
     
+    print ("[upload file request]: %r" % str(request.files['file']))
+    if 'file' not in request.files:
+        return 'Debe subir un archivo'
+    file = request.files['file']
+    if file.filename == '':
+        return 'Invalido'
+
+    hashedPassword = ''
+    return co.subirArchivo(cat, file, hashedPassword)

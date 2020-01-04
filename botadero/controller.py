@@ -3,8 +3,10 @@ this file is part of "El Botadero"
 copyright 2018 Rodrigo Garcia <strysg@riseup.net>
 AGPL liberated.
 '''
-# El objetivo de este archivo es albergar la logica compleja del botadero
+# El objetivo de este archivo es albergar la logica de gestion de archivos y comportamiento general de la aplicacion
 import os
+from datetime import datetime as dt
+from werkzeug.utils import secure_filename
 
 from .shared import globalParams, gr
 from . import utils as u
@@ -22,9 +24,101 @@ def descargarArchivo(cat, nombreArchivo):
     pathf = u.descargarArchivo(cat, nombreArchivo)
     return pathf
 
-# def subirArchivo(cat, nombreArchivo):
-#     if 
+def subirArchivo(cat, file, hashedPassword=''):
+    ''' Verifica el archivo siendo subido, lo guarda en el directorio de
+    almacenamiento y lo registra en la BD. Tambien marca la categoria a la
+    que pertenece el archivo para que se renderize el html de listado.
 
+    :param cat: Categoria o subcarpeta donde se guarda el archivo
+    :param file: objeto instancia de 'FileStorage' (werkzeug) del archivo
+
+    :return: Si la subida es exitosa, retorna el registro en la base de 
+    datos recien creado. Si no, retorna un diccionario de la forma:
+    { tipoError: (entero), 
+      mensaje: 'mensaje de error', 
+      redirect: 'link redireccion en caso de ya existir un archivo'
+    }
+    '''
+    filename = secure_filename(file.filename)
+    categoria = ''
+    if cat != 'Misc':
+        categoria = cat
+
+    # comprobando existencia
+    filepath = os.path.join(globalParams.uploadDirectory, categoria, filename)
+    try:
+        f = open(filepath, 'r')
+        f.close()
+        print('Archivo siendo subido ya existe:', filepath)
+        return {
+            'tipoError': 1,
+            'mensaje': 'El archivo ' + filename + 'ya existen en ' + filepath,
+            'redirect': categoria
+        }
+    except IOError as E:
+        pass
+
+    # comprobando hash
+    digestCheck = ''
+    if globalParams.digestCheck:
+        digestCheck = u.hashFileStorage(file,
+                                        accelerateHash=globalParams.digestAccelerated)
+        regDb = Archivo.query.filter_by(digestCheck=digestCheck).first()
+        if regDb is not None:
+            # existe un registro con el mismo digestCheck
+            file.close()
+            cat = u.categoriaArchivo(regDb.path)
+            if cat == globalParams.uploadDirectory:
+                cat = ''
+            cat += '/'
+            print ('Ya existe un archivo con el mismo digestCheck', digestCheck, 'encontrado', str(regDb))
+            return {
+                'tipoError': 2,
+                'mensaje': 'Ya existe un archivo con el mismo digestCheck ' + digestCheck + ' con nombre ' + regDb.name,
+                'redirect': categoria + regDb.name
+            }
+
+    # procediendo a registrar el archivo en BD
+    file.seek(0, os.SEEK_END)
+    fsize = file.tell()
+    file.seek(0)
+
+    remainingTime = u.tiempoBorradoArchivo(fsize)
+    uploadedAtTime = dt.now()
+
+    # TODO: comprobar espacio de almacenamiento disponible
+    # ...
+    
+    # guardando en el sistema de archivos
+    try:
+        file.save(os.path.join(globalParams.uploadDirectory, categoria, filename))
+        print('✓ Archivo guardado en sistema de archivos: %r' % os.path.join(globalParams.uploadDirectory, categoria, filename))
+    except Exception as E:
+        print('✕ Excepcion al guardar archivo %r en el sistema de archivos:\n%r' % (filename, str(E)))
+        return {
+            'tipoError': 4,
+            'mensaje': 'Error interno al guardar el archivo ' + filename,
+            'redirect': categoria
+        }
+    # creando registro en la BD
+    arch = Archivo.create(name=filename,
+                          path=filepath, size=fsize,
+                          extension=u.extensionArchivo(filename),
+                          digestCheck=digestCheck,
+                          digestAlgorithm=globalParams.digestAlgorithm,
+                          uploadedAtTime=uploadedAtTime,
+                          remainingTime=remainingTime,
+                          hashedPassword=hashedPassword)
+    print('✓ Archivo registrado en BD', arch)
+    # marcando la pagina HTML para ser renderizada nuevamente
+    if categoria == 'Misc':
+        marcarPaginaListaParaRenderizar(categoria='Misc')
+    else:
+        marcarPaginaListaParaRenderizar(categoria=categoria)
+    
+    return arch
+    
+    
 # definir una funcion para comprobar la lista de archivos y su tiempo de 
 # borrado
 def comprobarTiempoBorradoListaArchivos(categoria, hdd=False):

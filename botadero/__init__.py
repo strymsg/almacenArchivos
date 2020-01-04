@@ -57,6 +57,9 @@ def create_app(config=None, instance_path=None, db_path='sqlite:///db.sqlite3', 
     print ('Configs cargadas--')
     print (shared.globalParams)
 
+    app.config['UPLOAD_FOLDER'] = shared.globalParams.uploadDirectory
+    app.config['MAX_CONTENT_LENGTH'] = int(shared.globalParams.sizeLimitsAndTimeToDelete[-1][0])
+    
     # base de datos
     print ('\nBase de datos setup---')
     from . import database
