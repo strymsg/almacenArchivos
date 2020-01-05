@@ -19,6 +19,9 @@ $(document).ready(function() {
   // current category
   
   CATEGORIA_ACTUAL = document.getElementById('categoria_actual').innerHTML;
+  if (CATEGORIA_ACTUAL == 'Misc') {
+    UPLOAD_URL = '/Misc/upload_file_a';
+  }
   // UPLOAD_URL = CATEGORIA_ACTUAL + '/upload_file_a';
   // if (CATEGORIA_ACTUAL != "Misc")
   //   // UPLOAD_URL = "/almacen/"+CATEGORIA_ACTUAL+"/upload_file_a";
