@@ -22,10 +22,6 @@ $(document).ready(function() {
   if (CATEGORIA_ACTUAL == 'Misc') {
     UPLOAD_URL = '/Misc/upload_file_a';
   }
-  // UPLOAD_URL = CATEGORIA_ACTUAL + '/upload_file_a';
-  // if (CATEGORIA_ACTUAL != "Misc")
-  //   // UPLOAD_URL = "/almacen/"+CATEGORIA_ACTUAL+"/upload_file_a";
-  //   UPLOAD_URL = CATEGORIA_ACTUAL+"/upload_file_a";
 
   console.log('upload URL:', UPLOAD_URL);
   
@@ -98,10 +94,32 @@ function doUpload() {
     cache: false,
     data: fd,
     success: function(data) {
+      console.log('respuesta:::', data);
       $progressBar.css({"width": "100%"});
       $estadoRecepcion.text("Guardando archivo(s) en el servidor ...");
-      data = JSON.parse(data);
-      
+      // data = JSON.parse(data);
+
+      // inspeccionando y actualizando respuesta
+      var texto = '';
+      if (data.exitosos.length > 0) {
+        for (let i = 0; i < data.exitosos.length; i++) {
+          texto += "&check; <b>" + data.exitosos[i] + "</b><br>";
+        }
+      }
+      if (data.erroneos.length > 0) {
+        for (let i = 0; i < data.erroneos.length; i++) {
+          texto += "&#x2715; " + data.erroneos[i].redirect + "(" + data.erroneos[i].mensaje + ")<br>";
+        }
+      }
+      console.log('texto', texto);
+      var $dropbox = $('#dropbox');
+      $dropbox.html('');
+      $dropbox.html(texto);
+
+      setTimeout(function() {
+        location.reload();
+      }, 1500);
+      /*
       // How'd it go?
       if (data.status === "error") {
         // Uh-oh.
@@ -112,7 +130,7 @@ function doUpload() {
       else {
 	// Ok
 	var delayInMilliseconds = 1000; //1 second
-	
+
 	setTimeout(function() {
 	  // luego del reatardo se recarga la pagina
 	  location.reload(true);
@@ -121,6 +139,7 @@ function doUpload() {
 	// redirection
 	//window.location = NEXT_URL;
       }
+       */
     },
   });
 }
@@ -129,7 +148,7 @@ function doUpload() {
 function collectFormData() {
   // Go through all the form fields and collect their names/values.
   var fd = new FormData();
-  console.log('fd::::', fd);
+
   $("#upload-file :input").each(function() {
     var $this = $(this);
     var name  = $this.attr("name");
