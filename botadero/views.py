@@ -9,7 +9,7 @@ from . import utils as u
 
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, url_for,
-    send_file
+    send_file, jsonify
 )
 
 botaderoBp = Blueprint('botadero', __name__, url_prefix='')
@@ -55,9 +55,15 @@ def subidaArchivo(cat):
 
     hashedPassword = ''
     resultado = co.subirArchivo(cat, file, hashedPassword)
-    print('resultado:', resultado)
-    # retornando a pagina
-    return 'Done'
+
+    if not isinstance(resultado, dict):
+        # caso exitoso, se debe actualizar
+        co.sincronizarArchivos()
+        return jsonify(redirect=categoria)
+    else:
+        return jsonify(tipoError=resultado['tipoError'],
+                       mensaje=resultado['mensaje'],
+                       redirect=resultado['redirect'])
 
 # vista de subida de varios archivos
 @botaderoBp.route('/<string:cat>/upload_file_a', methods=['GET', 'POST'])
@@ -67,12 +73,22 @@ def subidaArchivos(cat):
         cat = 'Misc'
 
     hashedPassword = ''
-    subidos = []
+    exitosos = []
+    erroneos = []
+
     for upload in request.files.getlist("file"):
         print('* filename', upload.filename)
-        subidos.append(co.subirArchivo(cat, upload, hashedPassword))
-
-    for subido in subidos:
-        print('subir archivo resultado:', str(subido))
-    hashedPassword = ''
-    return 'Hechos ' + str(len(subidos))
+        resultado = co.subirArchivo(cat, upload, hashedPassword)
+        if not isinstance(resultado, dict):
+            print('exitoso:', resultado.name)
+            exitosos.append(resultado.name)
+        else:
+            print('errorneo:', str(resultado))
+            erroneos.append(resultado)
+    # actualizando
+    if len(exitosos) > 0:
+        co.sincronizarArchivos()
+    # retornando respuesta
+    print('exitosos', exitosos)
+    print('erroneos', erroneos)
+    return jsonify(exitosos=exitosos, erroneos=erroneos)

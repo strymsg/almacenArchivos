@@ -34,16 +34,6 @@ def test_sincronizarArchivos(db):
     assert len(borrados2) > 0
     os.remove(f2)
 
-# def test_sincronizarArchivosConFiltro(db):
-#     from botadero.utils import addRelativeFileName
-#     from botadero.database.models import Archivo
-#     from botadero.controller import sincronizarArchivos
-    
-#     l1, l2 = sincronizarArchivos(['.gitignore'])
-#     for filename in l1:
-#         assert addRelativeFileName(filename) in l2
-#     assert len(l1) == len(l2)
-
 # utils para pruebas
 def crearArchivoPrueba(numCadenas=5000, dir=None):
     db_fd, db_path = tempfile.mkstemp(suffix='.txt', dir=dir)

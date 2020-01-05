@@ -38,6 +38,9 @@ def subirArchivo(cat, file, hashedPassword=''):
       mensaje: 'mensaje de error', 
       redirect: 'link redireccion en caso de ya existir un archivo'
     }
+
+    NOTA: En caso de subir exitosamente, la funcion que lo llama deberia
+    llamar a sincronizarArchivo() para actualizar los registros.
     '''
     print('subirArchivo(cat="%r", file="%r", hashedPassword="%r"' % (cat, file, hashedPassword))
     filename = secure_filename(file.filename)
@@ -52,7 +55,7 @@ def subirArchivo(cat, file, hashedPassword=''):
         print('Archivo siendo subido ya existe:', filepath)
         return {
             'tipoError': 1,
-            'mensaje': 'El archivo ' + filename + 'ya existen en ' + filepath,
+            'mensaje': 'El archivo "' + filename + '" ya existen en ' + filepath,
             'redirect': categoria
         }
     except IOError as E:
@@ -71,7 +74,7 @@ def subirArchivo(cat, file, hashedPassword=''):
             if cat == globalParams.uploadDirectory:
                 cat = ''
             cat += '/'
-            print ('Ya existe un archivo con el mismo digestCheck', digestCheck, 'encontrado', str(regDb))
+            print ('Ya existe un archivo con el mismo digestCheck ', digestCheck, 'encontrado', str(regDb))
             return {
                 'tipoError': 2,
                 'mensaje': 'Ya existe un archivo con el mismo digestCheck ' + digestCheck + ' con nombre ' + regDb.name,
@@ -110,15 +113,6 @@ def subirArchivo(cat, file, hashedPassword=''):
                           remainingTime=remainingTime,
                           hashedPassword=hashedPassword)
     print('✓ Archivo registrado en BD', arch)
-
-    # actualizando
-    sincronizarArchivos()
-    # marcando la pagina HTML para ser renderizada nuevamente
-    # if categoria == 'Misc':
-    #     marcarPaginaListaParaRenderizar(categoria='')
-    # else:
-    #     marcarPaginaListaParaRenderizar(categoria=categoria)
-    
     return arch
     
     
