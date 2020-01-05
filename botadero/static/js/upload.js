@@ -1,4 +1,4 @@
-/* Code extracted from "Flask Multi Upload Demo" */
+/* Most of this code was extracted from "Flask Multi Upload Demo" */
 
 // var MAX_UPLOAD_FILE_SIZE = 1024*1024; // 1 MB
 var UPLOAD_URL = "upload_file_a";
