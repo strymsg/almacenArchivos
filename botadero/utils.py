@@ -504,9 +504,13 @@ def actualizarEstadisticasGenerales():
     disponible y el total de archivos. Guarda los cambios en objeto 
     gr del modulo params.
     '''
+    print('. storageUsed:', shared.gr['storageUsed'])
+    print('. sotrageTotal:', shared.gr['storageTotal'])
+    print('. filesNumber:', shared.gr['filesNumber'])
+    
     shared.gr['storageTotal'] = shared.globalParams.totalStorage
     registros = Archivo.query.all()
-    almacenamientoUsado = 0
+    almacenamientoUsado = 1
     for registro in registros:
         almacenamientoUsado += registro.size
     shared.gr['storageUsed'] = almacenamientoUsado

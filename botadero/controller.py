@@ -89,8 +89,16 @@ def subirArchivo(cat, file, hashedPassword=''):
     remainingTime = u.tiempoBorradoArchivo(fsize)
     uploadedAtTime = dt.now()
 
-    # TODO: comprobar espacio de almacenamiento disponible
-    # ...
+    # comprobando espacio de almacenamiento disponible
+    if gr['storageUsed'] == 0:
+        u.actualizarEstadisticasGenerales()
+    if gr['storageUsed'] + fsize > gr['storageTotal']:
+        print('No se cuenta con espacio de almacenamiento suficiente, requiere', str(fsize), 'se cuenta', str(gr['storageTotal'] - gr['storageUsed']))
+        return {
+            'tipoError': 3,
+            'mensaje': 'No se cuenta con espacio suficiente',
+            'redirect': categoria
+        }
     
     # guardando en el sistema de archivos
     try:
@@ -163,7 +171,7 @@ def marcarPaginaListaParaRenderizar(categoria='Misc'):
         # modificando
         try:
             html_page.save(renderHtml=True)
-            print('modificado::::::::', html_page.name, str(html_page.renderHtml))
+            print('marcado para generar html:', html_page.name, str(html_page.renderHtml))
             return True
         except Exception as E:
             print ('Excepcion modificando html_page %r', (name))
