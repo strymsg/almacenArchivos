@@ -481,14 +481,37 @@ def renderizarHtmlListado(category='Misc'):
                                     ignorar=['.gitkeep', '.gitkeep~'])
     cats = categorias()
     cats.insert(0, 'Misc')
+
+    actualizarEstadisticasGenerales()
+    
     dv = {
         'esquemaColores': esquemaColoresRandom(),
         'maxFilesize': int(shared.globalParams.sizeLimitsAndTimeToDelete[-1][0]),
         'timeLapseMax': shared.globalParams.sizeLimitsAndTimeToDelete[-1][1],
         'timeLapseMin': shared.globalParams.sizeLimitsAndTimeToDelete[0][1],
         'categoriaActual': category,
+        'storageUsed': shared.gr['storageUsed'],
+        'storageRemaining': shared.gr['storageTotal'] - shared.gr['storageUsed'],
+        'storageTotal': shared.gr['storageTotal'],
+        'filesNumber': shared.gr['filesNumber'],
         'categorias': cats,
         'archivos': l
     }
     return render_template("index.html", dv=dv)
     
+def actualizarEstadisticasGenerales():
+    ''' Actualiza estadisticas generales como el alamacenamiento usado,
+    disponible y el total de archivos. Guarda los cambios en objeto 
+    gr del modulo params.
+    '''
+    shared.gr['storageTotal'] = shared.globalParams.totalStorage
+    registros = Archivo.query.all()
+    almacenamientoUsado = 0
+    for registro in registros:
+        almacenamientoUsado += registro.size
+    shared.gr['storageUsed'] = almacenamientoUsado
+    shared.gr['filesNumber'] = len(registros)
+    print('- storageUsed:', shared.gr['storageUsed'])
+    print('- sotrageTotal:', shared.gr['storageTotal'])
+    print('- filesNumber:', shared.gr['filesNumber'])
+    print('- remaining storage: %r (%d)' % (shared.gr['storageTotal'] - shared.gr['storageUsed'], ((shared.gr['storageTotal'] - shared.gr['storageUsed']) * 100)/shared.gr['storageTotal']))

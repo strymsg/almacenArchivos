@@ -11,9 +11,7 @@ from .configs import Parameters
 # objetos globales y otros
 globalParams = None
 gr = {
-    'reload': True,
-    'esapacioConsumido': 0,
-}
-htmls = {
-    'htmlLista': ''
+    'storageUsed': 0,
+    'storageTotal': 0,
+    'filesNumber': 0
 }

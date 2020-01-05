@@ -244,6 +244,7 @@ def sincronizarArchivos(ignorar=[]):
             r = u.borrarRegistroArchivoEnBd(u.nombreArchivo(reg))
             borrados.append(reg)
             marcarPaginaListaParaRenderizar(categoria=u.categoriaArchivo(reg))
+
     print ('\nsincronización completa')
     return registrados, borrados, actualizados
 

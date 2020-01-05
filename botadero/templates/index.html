@@ -67,7 +67,9 @@
 
 	<!-- Estadisticas generales -->
 	<p>
-	  { pendiente} MB disponibles (<b>{ pendiente}%</b>) Total de <b>{ pendiente }</b> archivos
+	  {{ dv['storageRemaining']//(1024*1024) }} MB disponibles  
+	  (<b>{{ (dv['storageRemaining'] * 100)//dv['storageTotal'] }} %</b>)  
+	  Total de <b> {{ dv['filesNumber'] }}</b> archivos.  
 	</p>
 
 	<!-- Listado de Archivos -->	
