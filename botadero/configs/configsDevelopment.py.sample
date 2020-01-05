@@ -1,4 +1,5 @@
 ###### Archivo de configuración (desarrollo) del Botadero ######
+APPLICATION_TITLE = 'Almacén de archivos'
 
 # Tamaño máximo en bytes que se puede almacenar
 # (para este ejemplo se usa 10.5 GB)

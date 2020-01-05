@@ -17,6 +17,7 @@ class Parameters():
     digestAccelerated = False
     passwordUse = False
     captchaUse = False
+    applicationTitle = 'Almacén público de archivos'
 
     def create(self, app=None):
         if app is None:
@@ -31,6 +32,7 @@ class Parameters():
         self.digestAccelerated = app.config['DIGEST_ACCELERATED']
         self.passwordUse = app.config['PASSWORD_USE']
         self.captchaUse = app.config['CAPTCHA_USE']
+        self.applicationTitle = app.config['APPLICATION_TITLE']
     
     def __init__(self, app=None):
         self.create(app=app)
@@ -45,7 +47,8 @@ class Parameters():
             '\ndigestCheck: '+str(self.digestCheck) + \
             '\ndigestAlgorithm: '+self.digestAlgorithm + \
             '\npasswordUse: '+str(self.passwordUse) + \
-            '\ncaptchaUse: '+str(self.captchaUse)
+            '\ncaptchaUse: '+str(self.captchaUse) + \
+            '\napplicationTitle: '+str(self.applicationTitle)
 
     def __repr__(self):
         return '-- Parameters '+ \
@@ -57,4 +60,5 @@ class Parameters():
             '\ndigestCheck: '+str(self.digestCheck) + \
             '\ndigestAlgorithm: '+self.digestAlgorithm + \
             '\npasswordUse: '+str(self.passwordUse) + \
-            '\ncaptchaUse: '+str(self.captchaUse)
+            '\ncaptchaUse: '+str(self.captchaUse) + \
+            '\napplicationTitle: '+str(self.applicationTitle)

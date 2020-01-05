@@ -485,6 +485,7 @@ def renderizarHtmlListado(category='Misc'):
     actualizarEstadisticasGenerales()
     
     dv = {
+        'title': shared.globalParams.applicationTitle,
         'esquemaColores': esquemaColoresRandom(),
         'maxFilesize': int(shared.globalParams.sizeLimitsAndTimeToDelete[-1][0]),
         'timeLapseMax': shared.globalParams.sizeLimitsAndTimeToDelete[-1][1],
