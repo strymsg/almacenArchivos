@@ -312,12 +312,15 @@ def tiempoBorradoArchivo(size):
     ''' retorna el tiempo en que el archivo debe ser borrado 
     '''
     timeToDel = 0
+    # TODO: Hay un error al inicializar y aplicar sort a esta propiedad, mientras no se corrija es necesario ordenar esta lista en esta funcion
+    shared.globalParams.sizeLimitsAndTimeToDelete.sort(reverse=False) 
+    # print(shared.globalParams.sizeLimitsAndTimeToDelete)
     for lim in shared.globalParams.sizeLimitsAndTimeToDelete:
         if int(size) <= int(lim[0]):
-            # print (' (*) tamanyo para', str(size), '>', str(int(lim[1])))
+            print (' (*) tamanyo para', str(size), '>', str(int(lim[1])))
             return int(lim[1])
         else:
-            # print (' (*) tamanyo para', str(size), '>', str(int(lim[1])))
+            print (' (*) tamanyo para', str(size), '>', str(int(lim[1])))
             timeToDel = int(lim[1])
     return timeToDel
 
