@@ -41,7 +41,7 @@ def descargaDesdeIndexView(cat, nombreArchivo):
                                esquemaColores=u.esquemaColoresRandom())
     return send_file(pathf, as_attachment=True)
 
-# vista de subida de archivo (individual)
+# vista de subida de archivo (individual) este caso se asume que no se usa javascript.
 @botaderoBp.route('/<string:cat>/upload_file', methods=['GET', 'POST'])
 def subidaArchivo(cat):
     print('⮉ request (individual)', request.files.get('file', 'No se ha proporcionado archivo'), ', method=', request.method, 'categoria=', cat)
@@ -51,7 +51,8 @@ def subidaArchivo(cat):
         return 'Debe subir un archivo'
     file = request.files['file']
     if file.filename == '':
-        return 'Invalido'
+        html_page = u.obtenerHtmlListado(categoria=cat)
+        return html_page.html
 
     hashedPassword = ''
     resultado = co.subirArchivo(cat, file, hashedPassword)
@@ -59,11 +60,11 @@ def subidaArchivo(cat):
     if not isinstance(resultado, dict):
         # caso exitoso, se debe actualizar
         co.sincronizarArchivos()
-        return jsonify(redirect=categoria)
+        html_page = u.obtenerHtmlListado(categoria=cat)
+        return html_page.html
     else:
-        return jsonify(tipoError=resultado['tipoError'],
-                       mensaje=resultado['mensaje'],
-                       redirect=resultado['redirect'])
+        html_page = u.obtenerHtmlListado(categoria=cat)
+        return html_page.html
 
 # vista de subida de varios archivos
 @botaderoBp.route('/<string:cat>/upload_file_a', methods=['GET', 'POST'])
