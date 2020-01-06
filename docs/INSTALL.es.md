@@ -1,5 +1,7 @@
 # Instalación de aplicación el almacén de archivos
 
+Este manual asume que se está trabajando sobre una distribución de GNU/Linux derivada de Debian.
+
 Primero es necesario instalar las dependencias de la aplicación, se necesita que este instalado en el sistema `python3 pip3 virtualenv`.
 
 ```bash
@@ -15,7 +17,6 @@ virtualenv --python=python3 venv
 # instalar dependencias
 pip install -r requirements.txt
 ```
-
 ## Modo Desarrollo
 
 ### Archivo de configuración
@@ -129,3 +130,42 @@ Como se menciona arriba la aplicación **necesita** que se ejecute el script `cr
 ```
 Que ejecuta como usuario `user` cada 2 minutos el script `cronjobs.py`.
 
+
+### Ejemplo despliegue con supervisorctl
+
+Si se usa supervisor un archivo de ejemplo sería este asumiendo que el proyecto esta instalado en `/srv/almacen_archivos` y aprovechamos el archivo `run.sh`:
+
+```
+[unix_http_server]
+file=/var/run/supervisor.sock   ; (the path to the socket file)
+
+[supervisord]
+logfile=/tmp/supervisord.log ; (main log file;default $CWD/supervisord.log)
+logfile_maxbytes=50MB       ; (max main logfile bytes b4 rotation;default 50MB)
+logfile_backups=5          ; (num of main logfile rotation backups;default 10)
+loglevel=info               ; (log level;default info; others: debug,warn,trace)
+pidfile=/tmp/supervisord.pid ; (supervisord pidfile;default supervisord.pid)
+nodaemon=false              ; (start in foreground if true;default false)
+minfds=1024                 ; (min. avail startup file descriptors;default 1024)
+minprocs=200                ; (min. avail process descriptors;default 200)
+
+[supervisorctl]
+serverurl=unix:///srv/botadero/almacen_archivos.sock
+
+[program:almacen_archivos]
+command=/bin/sh /srv/almacen_archivos/run.sh
+directory=/srv/almacen_archivos/
+user=www-data
+autostart=true
+autorestart=true
+stdout_logfile=/srv/alamcen_archivos/uwsgi.log ; log file
+redirect_stderr=true
+stopsignal=QUIT
+```
+
+Luego se recarga la configuracion y reinicia el servicio con supervisor:
+
+```bash
+$ sudo supervisorctl reread
+$ sudo supervisorctl restart almacen_archivos
+```

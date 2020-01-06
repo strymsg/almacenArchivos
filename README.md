@@ -115,7 +115,7 @@ soon.
 The aplication requires the script `cronjob.py` to be executed, this *updates* the files ramaining time and also removes them if necesary. It is recomended to make the execution of this script a cronjob, on UNIX system for instance adding to /etc/crontab.
 
 ```
-5/* *    * * *   user    cd /home/user/almacenArchivos/venv/bin/python3 cronjobs.py
+*/2 *    * * *   user    export FLASK_ENV=production; /home/user/almacenArchivos/venv/bin/python3 cronjobs.py
 ```
 
 #### Deploy ####
