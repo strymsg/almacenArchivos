@@ -16,114 +16,109 @@
   <body>
     <h1>{{ dv['title']}}</h1>
     <div class="qu">
-      Un sitio <b>público</b> para compartir archivos
+      Un sitio para <b>compartir</b> archivos.
     </div>
 
-    <!-- Categorias -->
-    <span id="categoria_actual" value="{{ dv['categoriaActual'] }}" hidden>{{ dv['categoriaActual'] }}</span>
+    <div id="wrap">
+      <div class="row">
+	<div class="col fifth">
+	  <!-- Categorias -->
+	  <span id="categoria_actual" value="{{ dv['categoriaActual'] }}" hidden>{{ dv['categoriaActual'] }}</span>
 
-    <div id="categorias">
-      {% for catName in dv['categorias'] %}
-	{% if catName == 'Misc.' %}
-	  <span {% if catName == dv['categoriaActual'] %}class="categoria"{% endif %}><a href="/">#{{ catName }}/</a></span>
-	{% else %}
-	  <span {% if catName == dv['categoriaActual'] %}class="categoria"{% endif %}><a href="/{{ catName }}/">#{{ catName }}</a> </span>
-	{% endif %}
-      {% endfor %}
-    </div>
-
-    <!-- Subida de archivos -->
-    <form method="POST" id="upload_file" action="/{{ dv['categoriaActual'] }}/upload_file" enctype="multipart/form-data">
-
-    <!-- caja drag and drop -->
-    <div id="dropbox">
-      Arrastra archivos aquí
-    </div>
-
-    <!-- input multiple files -->
-    <input id="file-picker" type="file" name="file" multiple>
-    
-    <!-- <input type="file" name="file"/> -->
-    <input type="submit" class="btn large" id="upload-button" value="Compartir archivo(s)"/>
-    
-    <div class="nota">
-      <p> Los archivos se eliminan después de {{ dv['timeLapseMax'] }} a {{ dv['timeLapseMin'] }} días, dependiendo de su tamaño (máximo <i>{{ dv['maxFilesize']//1000000 }}</i> MB).
-	<span id="max_filesize" hidden>{{ dv['maxFilesize'] }}</span> 
-	<a href="/info" >ver información</a>
-      </p>
-    </div>
-
-	</form>	
-
-	<!-- Barra de progreso -->
-	<fieldset id="progress" style="display: none">
-	  <legend id="estado-recepcion">Recibiendo archivo(s):</legend>
-	  <div class="progress-trough">
-	    <div id="progress-bar" class="progress-bar">0%</div>
+	  <div id="categorias">
+	      {% for catName in dv['categorias'] %}
+		{% if catName == 'Misc.' %}
+		  <span {% if catName == dv['categoriaActual'] %}class="categoria"{% endif %}><a href="/">#{{ catName }}/</a></span>
+		  <br><br>
+		{% else %}
+		  <span {% if catName == dv['categoriaActual'] %}class="categoria"{% endif %}><a href="/{{ catName }}/">#{{ catName }}/</a> </span>
+		  <br><br>
+		{% endif %}
+	      {% endfor %}
 	  </div>
-	</fieldset>
 
-	<!-- Estadisticas generales -->
-	<p>
-	  {{ dv['storageRemaining']//(1024*1024) }} MB disponibles  
-	  (<b>{{ (dv['storageRemaining'] * 100)//dv['storageTotal'] }} %</b>)  
-	  Total de <b> {{ dv['filesNumber'] }}</b> archivos.  
-	</p>
+	  <!-- Estadísticas generales -->
+	  <div>
+	    <p>
+	      Total de <big><big> {{ dv['filesNumber'] }}</big></big> <a href="#dropbox">archivos</a>.
+	    </p>
+	    <p>
+	      {{ dv['storageRemaining']//(1024*1024) }} MB disponibles  
+	      (<b>{{ (dv['storageRemaining'] * 100)//dv['storageTotal'] }} %</b>)
+	    </p>
+	  </div>
 
-	<!-- Listado de Archivos -->	
-	<div id="caja_archivos" class="caja_lista_archivos">
+	  <div class="nota">
+	    <p> Los archivos se eliminan después de {{ dv['timeLapseMax'] }} a {{ dv['timeLapseMin'] }} días, dependiendo de su tamaño (máximo <i>{{ dv['maxFilesize']//1000000 }}</i> MB).
+	      <span id="max_filesize" hidden>{{ dv['maxFilesize'] }}</span> 
+	      <a href="/info" >ver información</a>
+	    </p>
+	  </div>
+	</div>
+	<div class="col fill">
+	  <!-- Subida de archivos -->
+	  <form method="POST" id="upload_file" action="/{{ dv['categoriaActual'] }}/upload_file" enctype="multipart/form-data">
 
-	  {% for archivoObj in dv['archivos'] %}
-	    <p class="lista_archivos_elemento">
+	    <!-- caja drag and drop -->
+	    <div id="dropbox">
+	      Arrastra archivos aquí
+	    </div>
+
+	    <!-- input multiple files -->
+	    <input id="file-picker" type="file" name="file" multiple>
+	    
+	    <!-- <input type="file" name="file"/> -->
+	    <input type="submit" class="btn large" id="upload-button" value="Compartir archivo(s)"/>
+	  </form>	
+
+	  <!-- Barra de progreso -->
+	  <fieldset id="progress" style="display: none">
+	    <legend id="estado-recepcion">Recibiendo archivo(s):</legend>
+	    <div class="progress-trough">
+	      <div id="progress-bar" class="progress-bar">0%</div>
+	    </div>
+	  </fieldset>
+
+	  <!-- Listado de Archivos -->	
+	  <div id="caja_archivos" class="caja_lista_archivos">
+
+	    {% for archivoObj in dv['archivos'] %}
+	      <p class="lista_archivos_elemento">
 		<a href="/almacen/{{ dv['categoriaActual'] }}/{{ archivoObj['name'] }}" title="descargar">{{ archivoObj['name'] }}</a>
 
-	      {% if archivoObj['size'] < 1000 %}
-		<span class="label" title="tamaño">{{ archivoObj['size'] }} B</span>
-	      {% elif archivoObj['size'] >= 1000 and archivoObj['size'] < 1000000 %}
-		<span class="label" title="tamaño">{{ '%0.2f'|format(archivoObj['size']/1000) }} KB</span>
-	      {% elif archivoObj['size'] >= 1000000 and archivoObj['size'] < 1000000000 %}
-		<span class="label" title="tamaño">{{ '%0.2f'|format(archivoObj['size']/1000000) }} MB</span>
-	      {% elif archivoObj['size'] >= 1000000000 %}
-		<span class="label" title="tamaño">{{ '%0.2f'|format(archivoObj['size']/1000000000) }} GB</span>
-	      {% endif %}
+		{% if archivoObj['size'] < 1000 %}
+		  <span class="label" title="tamaño">{{ archivoObj['size'] }} B</span>
+		{% elif archivoObj['size'] >= 1000 and archivoObj['size'] < 1000000 %}
+		  <span class="label" title="tamaño">{{ '%0.2f'|format(archivoObj['size']/1000) }} KB</span>
+		{% elif archivoObj['size'] >= 1000000 and archivoObj['size'] < 1000000000 %}
+		  <span class="label" title="tamaño">{{ '%0.2f'|format(archivoObj['size']/1000000) }} MB</span>
+		{% elif archivoObj['size'] >= 1000000000 %}
+		  <span class="label" title="tamaño">{{ '%0.2f'|format(archivoObj['size']/1000000000) }} GB</span>
+		{% endif %}
 
-	      {% if archivoObj['restante'] >= 10 %}
-		<span class="label success" title="restantes">{{ archivoObj['restante'] }} días</span>
-	      {% elif archivoObj['restante'] < 10 and  archivoObj['restante'] > 3 %}
-		<span class="label warning" title="restantes">{{ archivoObj['restante'] }} días</span>
-	      {% elif archivoObj['restante'] <= 3 %}
-		<span class="label important" title="restantes">{{ archivoObj['restante'] }} días</span>
-	      {% endif %}
-	    </p>
-	  {% endfor %}
+		{% if archivoObj['restante'] >= 10 %}
+		  <span class="label success" title="restantes">{{ archivoObj['restante'] }} días</span>
+		{% elif archivoObj['restante'] < 10 and  archivoObj['restante'] > 3 %}
+		  <span class="label warning" title="restantes">{{ archivoObj['restante'] }} días</span>
+		{% elif archivoObj['restante'] <= 3 %}
+		  <span class="label important" title="restantes">{{ archivoObj['restante'] }} días</span>
+		{% endif %}
+	      </p>
+	    {% endfor %}
+	  </div>
+	  <!-- div fill -->
 	</div>
-	<br>
-	<!-- Categorias -->
-	<div id="categorias">
-	  {% for catName in dv['categorias'] %}
-	    {% if catName == 'Misc.' %}
-	      <span {% if catName == dv['categoriaActual'] %}class="categoria"{% endif %}><a href="/">#{{ catName }}/</a></span>
-	    {% else %}
-	      <span {% if catName == dv['categoriaActual'] %}class="categoria"{% endif %}><a href="/{{ catName }}/">#{{ catName }}</a> </span>
-	    {% endif %}
-	  {% endfor %}
-	</div>
-
-	<div class="nota">
-	  <p>Revisa las <a href="/estadisticas" > estadísticas </a> de los archivos.
-	  </p>
-	</div>
-	
-	<!-- Notas al pie -->
-	<div class="qu">
-	  " La sabiduría crece cuando se comparte los conocimientos "
-	  <p> <a href="https://notabug.org/strysg/botadero">Código fuente</a> de esta aplicación.</p>
-	</div>
-
-
-	<!-- javascript -->
-	<script type="text/javascript" src="{{ url_for('static', filename='js/jquery-2.1.1.min.js') }}"></script>
-	<script type="text/javascript" src="{{ url_for('static', filename='js/upload.js') }}"></script>
+	<!-- div row -->
+      </div>
+      <!-- Notas al pie -->
+      <div class="qu">
+	" La sabiduría crece cuando se comparten los conocimientos "
+	<p> <a href="https://notabug.org/strysg/botadero">Código fuente</a> de esta aplicación.</p>
+      </div>
+    </div>    
+    <!-- javascript -->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-2.1.1.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/upload.js') }}"></script>
 	
   </body>
 
