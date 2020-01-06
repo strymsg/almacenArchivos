@@ -55,7 +55,7 @@ Despliegue en producción en [docs/INSTALL.es.md](docs/INSTALL.es.md)
 La aplicación necesita que se ejecute el script `cronjobs.py` que se encarga de **actualizar** el tiempo restante de los archivos y eliminarlos. Es recomendable agregar la ejecución de este script como tarea programada, en sistemas UNIX por ejemplo agregando una entrada en /etc/crontab.
 
 ```
-*/2 *    * * *   user    export FLASK_ENV=production; /home/user/almacenArchivos/venv/bin/python3 /home/user/almacenArchivos/cronjobs.py
+*/1 *   * * *   user    cd /home/user/alamcenArchivos; export FLASK_ENV=production;venv/bin/python3 cronjobs.py >> cronjobs.log 2>&1
 ```
 #### Despliegue ####
 
