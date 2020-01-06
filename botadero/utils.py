@@ -317,10 +317,10 @@ def tiempoBorradoArchivo(size):
     # print(shared.globalParams.sizeLimitsAndTimeToDelete)
     for lim in shared.globalParams.sizeLimitsAndTimeToDelete:
         if int(size) <= int(lim[0]):
-            print (' (*) tamanyo para', str(size), '>', str(int(lim[1])))
+            # print (' (*) tamanyo para', str(size), '>', str(int(lim[1])))
             return int(lim[1])
         else:
-            print (' (*) tamanyo para', str(size), '>', str(int(lim[1])))
+            # print (' (*) tamanyo para', str(size), '>', str(int(lim[1])))
             timeToDel = int(lim[1])
     return timeToDel
 

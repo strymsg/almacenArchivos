@@ -30,7 +30,7 @@ Esta aplicación no guarda datos sobre quién sube los archivos, licencia **AGPL
 
 Se utiliza python3 con el micro framework Flask, se puede instalar con los siguientes pasos:
 
-pronto.
+Despliegue en producción en [docs/INSTALL.es.md](docs/INSTALL.es.md)
 
 ##### Para desarrollo #####
 
@@ -55,7 +55,7 @@ pronto.
 La aplicación necesita que se ejecute el script `cronjobs.py` que se encarga de **actualizar** el tiempo restante de los archivos y eliminarlos. Es recomendable agregar la ejecución de este script como tarea programada, en sistemas UNIX por ejemplo agregando una entrada en /etc/crontab.
 
 ```
-5/* *    * * *   user    cd /home/user/almacenArchivos/venv/bin/python3 cronjobs.py
+5/* *    * * *   user    export FLASK_ENV=development; /home/user/almacenArchivos/venv/bin/python3 cronjobs.py
 ```
 #### Despliegue ####
 
