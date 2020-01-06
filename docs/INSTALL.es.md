@@ -126,7 +126,7 @@ gpasswd -a www-data usuario
 Como se menciona arriba la aplicación **necesita** que se ejecute el script `cronjobs.py`. En producción es conveniente agregar una tarea programada por ejemplo para sistemas UNIX en /etc/crontab.
 
 ```
-*/2 *    * * *   user    export FLASK_ENV=production; /home/user/almacenArchivos/venv/bin/python3 cronjobs.py
+*/2 *    * * *   user    export FLASK_ENV=production; /home/user/almacenArchivos/venv/bin/python3 /home/user/almacenArchivos/cronjobs.py
 ```
 Que ejecuta como usuario `user` cada 2 minutos el script `cronjobs.py`.
 
