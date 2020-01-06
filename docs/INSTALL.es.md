@@ -72,6 +72,9 @@ Se hace usando el archivo `app.ini` y si es necesario hay que ajsutarlo. Se ejec
 
 ```bash
 # Asumiendo que se tiene el entorno virtual inicializado
+export FLASK_ENV=production
+export FLASK_APP=botadero
+
 uwsgi --ini app.ini
 
 # Si no se tiene iniciado el entorno virtual python funciona también
