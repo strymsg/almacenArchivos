@@ -25,7 +25,7 @@ html {
 body {
 	margin: 0;
 	padding: 14px;
-	background-image: url("../botadero_resources/logo.png");
+	/* background-image: url("../botadero_resources/logo.png"); */
 	background-repeat: no-repeat;
 }
 
@@ -928,6 +928,7 @@ a.label:hover {
 	outline-width: 2px;
 	outline-style: solid;
 	padding: 10px;
+	margin-bottom: 2em;
 	
 	/* -C- */
 	background-color: #9BB1D4;

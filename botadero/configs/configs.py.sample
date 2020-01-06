@@ -42,6 +42,10 @@ PASSWORD_USE = False
 # Usar un reto captcha al subir archivos
 CAPTCHA_USE = False
 
+# Estilos css
+# En la lista se ponen los nombres estilos css que la aplicacion puede seleccionar, las carpetas con los css deben estar dentro de botadero/static/css
+CSS_SCHEMES = ('gris1', 'verde1', 'azul1', 'amarillo1', 'rojo1', 'cafe1')
+
 ######### Opciones de configuración de FLASK ##########
 
 # cuando se pone la app en produccion Usar DEBUG = False

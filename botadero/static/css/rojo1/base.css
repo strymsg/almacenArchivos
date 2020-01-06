@@ -1015,6 +1015,7 @@ a.label:hover {
 	outline-width: 2px;
 	outline-style: solid;
 	padding: 10px;
+	margin-bottom: 2em;
 	
 	/* -C- */
 	background-color: #F99795;
