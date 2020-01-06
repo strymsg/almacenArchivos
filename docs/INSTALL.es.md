@@ -126,10 +126,9 @@ gpasswd -a www-data usuario
 Como se menciona arriba la aplicación **necesita** que se ejecute el script `cronjobs.py`. En producción es conveniente agregar una tarea programada por ejemplo para sistemas UNIX en /etc/crontab.
 
 ```
-*/2 *    * * *   user    export FLASK_ENV=production; /home/user/almacenArchivos/venv/bin/python3 /home/user/almacenArchivos/cronjobs.py
+*/2 *   * * *   www-data    cd /srv/almacen_archivos; export FLASK_ENV=production;venv/bin/python3 cronjobs.py >> cronjobs.log 2>&1
 ```
-Que ejecuta como usuario `user` cada 2 minutos el script `cronjobs.py`.
-
+Que ejecuta como usuario `www-data` cada 2 minutos el script `cronjobs.py` y guarda el resultado (incluyendo errores) en un archivo cronjobs.log.
 
 ### Ejemplo despliegue con supervisorctl
 
