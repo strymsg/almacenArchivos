@@ -9,9 +9,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <link rel="shortcut icon" href="{{ url_for('static', filename='botadero_resources/favicon.png') }}">
     <title>{{ dv['title'] }}</title>
-    {% set archivo_esquema_colores = dv['esquemaColores'] + "/base.css" %}
+    {% set archivo_esquema_colores = "css/" + dv['esquemaColores'] + "/base.css" %}
     <link rel="stylesheet" href="{{ url_for('static', filename=archivo_esquema_colores) }}" type="text/css" />
-
   </head>
   
   <body>
