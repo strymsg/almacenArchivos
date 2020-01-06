@@ -127,8 +127,9 @@ textarea {
  * ------------------------------------------------------------------------------------------- */
 body {
   /* -C- */
-  background-color: #CEDAAF;
-  color: #232B21;
+  background-color: #BFD8AF;
+  /* background-color: #CEDAAF; */
+  color: #1D211C;
   
   background-size: 80px;
   margin: 0;
@@ -159,7 +160,7 @@ body {
 
 a {
   /* -C- */
-  color: #1E4933;
+  color: #1B5631;
   border-bottom: 1px #628464;
   
   border-bottom-style: dotted;
@@ -1017,8 +1018,8 @@ a.label:hover {
   margin-bottom: 2em;
   
   /* -C- */
-  background-color: #A4D49B#;
-  outline-color: #7DB28E;;
+  background-color: #A4D49B;
+  outline-color: #7DB28E;
   -webkit-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1), 0 0 8px rgba(103, 168, 123, 0.82);
   -moz-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1), 0 0 8px rgba(103, 168, 123, 0.82);;
   box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1), 0 0 8px rgba(159, 139, 113, 0.82);
@@ -1035,7 +1036,7 @@ a.label:hover {
   font-size: 14px;
   
   /* -C- */
-  background-color: #BBD2A5;
+  background-color: #B7D09E;
 }
 
 #dias_muchos{
@@ -1084,7 +1085,7 @@ a.label:hover {
   width: 50%;
   height: 100%;
   /* -C- */
-  background-color: #A4D49B;
+  background-color: #15C055;
 }
 
 /* --------------column wraps----------------- */

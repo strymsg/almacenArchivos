@@ -18,7 +18,7 @@ class Parameters():
     passwordUse = False
     captchaUse = False
     applicationTitle = 'Almacén público de archivos'
-    cssSchemas = ('gris1', 'verde1','azul1','amarillo1', 'rojo1','cafe1')
+    cssSchemes = ('gris1', 'verde1','azul1','amarillo1', 'rojo1','cafe1')
     
     def create(self, app=None):
         if app is None:
@@ -35,7 +35,7 @@ class Parameters():
         self.captchaUse = app.config['CAPTCHA_USE']
         self.applicationTitle = app.config['APPLICATION_TITLE']
         self.cssSchemes = app.config['CSS_SCHEMES']
-
+        
     def __init__(self, app=None):
         self.create(app=app)
         
