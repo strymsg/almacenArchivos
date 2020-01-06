@@ -24,8 +24,8 @@ html {
 
 body {
 	margin: 0;
-	padding: 27px;
-	background-image: url("../botadero_resources/logo.png");
+	padding: 14px;
+	background-image: url("../../botadero_resources/logo.png");
 	background-repeat: no-repeat;
 }
 
@@ -126,17 +126,17 @@ textarea {
  * Basic and global styles for generating a grid system, structural layout, and page templates
  * ------------------------------------------------------------------------------------------- */
 body {
-	/* -C- */
-    background-color: #CABC9B;
-    color: #23261C;
-	
-    background-size: 80px;
-    margin: 0;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-size: 15px;
-    font-weight: normal;
-    line-height: 18px;
-    padding-top: 38px;
+  /* -C- */
+  background-color: #CABC9B;
+  color: #23261C;
+  
+  background-size: 80px;
+  margin: 0;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 15px;
+  font-weight: normal;
+  line-height: 18px;
+  padding-top: 24px;
 }
 
 .container {
@@ -226,9 +226,9 @@ h6 small {
 }
 
 h1 {
-	margin-bottom: 18px;
-	font-size: 30px;
-	line-height: 36px;
+	margin-bottom: 12px;
+	font-size: 26px;
+	line-height: 30px;
 	text-align: center;
 	font-family: serif;
 }

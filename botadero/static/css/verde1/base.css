@@ -24,7 +24,7 @@ html {
 
 body {
 	margin: 0;
-	padding: 27px;
+	padding: 14;
 	background-image: url("../botadero_resources/logo.png");
 	background-repeat: no-repeat;
 }
@@ -1085,3 +1085,115 @@ a.label:hover {
     /* -C- */
     background-color: #A4D49B;
 }
+
+/* --------------column wraps----------------- */
+div#wrap {
+    min-height: 100%;
+    padding:1.5em 1.5em 1.8em 1.5em;
+}
+
+@media screen and (max-width: 2200px) {
+    div#wrap {
+	padding:1em 1.2em 1.5em 1.2em;
+    }
+}
+
+@media screen and (max-width: 1440px) {
+    div#wrap {
+	padding:1em 1em 1.5em 1em;
+    }
+}
+
+@media screen and (max-width: 1024px) {
+    div#wrap {
+	padding:.5em 0.4em 1.5em 0.4em;
+    }
+}
+
+@media screen and (max-width: 800px) {
+    div#wrap {
+	padding:1em .1em 1.5em .1em;
+    }
+}
+
+.row,.col,
+.row:after,.col:after,
+.row:before,.col:before{
+    -webkit-box-sizing:border-box;
+    -moz-box-sizing:border-box;
+    box-sizing:border-box
+}
+/* clearfix */
+.row{*zoom:1}
+.row:before,
+.row:after{
+    display:table;
+    content:"";
+    line-height:0}
+.row:after{clear:both}
+.row{
+    padding:0;
+    margin:0;
+}
+/* should probably put *zoom:1; here but for clarity it's separated*/
+ul.row,
+li.col{ list-style-type:none }
+.col{float:left}
+.col,
+.fill{width:100%}
+
+.tc{width: 85%;}
+
+/* grid mq */
+@media (min-width:40em){
+    .col:not(.fill){width:50%}
+    .col.third:nth-child(3),
+    .col.fifth:nth-child(5),
+    .col.fourth+div:nth-child(3).fill,
+    .col.fifth+div:nth-child(3).fill{width:100%}
+    .col+.fill{width:50%}
+}
+@media (min-width:55em){
+    .col.half{width:50%}
+    .col.half+.fill{width:50%}
+    .col.third,
+    .col.third:nth-child(3){width:33.333%}
+    .col.third+.fill{width:66.666%}
+    .col.fourth{width:25%}
+    .col.fourth+.fill{width:75%}
+    .col.fourth+div:nth-child(3).fill{width:50%;}
+    .col.fifth,
+    .col.fifth:nth-child(5){width:20%}
+    .col.fifth+.fill{width:80%}
+    .col.fifth+div:nth-child(3).fill{width:60%;}
+    .col.fifth+div:nth-child(4).fill{width:40%;}
+}
+/* ie8 overrides - I'd suggest using conditionals with either ".ie-8 class or loading in a separate legacy stylesheet with conditionals */
+
+/* @media (min-width:30em){ */
+/* 	.row>.col{width:50%} */
+/* 	.row>.fill.col{width:100%} */
+/* 	.row>.half.col+.fill, */
+/* 	.row>.third.col+.fill, */
+/* 	.row>.fourth.col+.fill, */
+/* 	.row>.fifth.col+.fill, */
+/* 	.row>.fifth.col+div+div+.fill{width:50%} */
+/* 	.row>.fourth.col+div+.fill, */
+/* 	.row>.fifth.col+div+.fill, */
+/* 	.row>.third.col+div+div, */
+/* 	.row>.fifth.col+div+div+div+div{width:100%} */
+/* } */
+@media (min-width:40em){
+    .row>.third.col,
+    .row>.third.col+div+div{width:33.333%}
+    .row>.third.col+.fill{width:66.666%}
+    .row>.fourth.col{width:25%}
+    .row>.fourth.col+.fill{width:75%}
+    .row>.fourth.col+div+.fill{width:50%}
+    .row>.fifth.col+.fill{width:80%}
+    .row>.fifth.col,
+    .row>.fifth.col+div+div+div+div{width:20%}
+    .row>.fifth.col+div+.fill{width:60%}
+    .row>.fifth.col+div+div+.fill{width:40%}
+}
+/* ----------------- */
