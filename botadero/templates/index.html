@@ -53,7 +53,8 @@
 
 	    {% for archivoObj in dv['archivos'] %}
 	    <p class="lista_archivos_elemento">
-	      <a href="/almacen/{{ dv['categoriaActual'] }}/{{ archivoObj['name'] }}" title="descargar">{{ archivoObj['name'] }}</a>
+	      <a id="archivo_{{ archivoObj['name'] }}"
+		 href="/almacen/{{ dv['categoriaActual'] }}/{{ archivoObj['name'] }}" title="descargas: {{ archivoObj['descargas'] }}">{{ archivoObj['name'] }}</a>
 
 	      {% if archivoObj['size'] < 1000 %}
 	      <span class="label" title="tamaño">{{ archivoObj['size'] }} B</span>
@@ -82,15 +83,25 @@
 	  <span id="categoria_actual" value="{{ dv['categoriaActual'] }}" hidden>{{ dv['categoriaActual'] }}</span>
 
 	  <div id="categorias">
-	    {% for catName in dv['categorias'] %}
-	    {% if catName == 'Misc.' %}
-	    <span {% if catName == dv['categoriaActual'] %}class="categoria"{% endif %}><a href="/">#{{ catName }}/</a></span>
-	    <br><br>
-	    {% else %}
-	    <span {% if catName == dv['categoriaActual'] %}class="categoria"{% endif %}><a href="/{{ catName }}/">#{{ catName }}/</a> </span>
-	    <br><br>
-	    {% endif %}
+	    {% for catName, catDetails in dv['catStats'].items() %}
+	      {% if catName == 'Misc.' %}
+		<span {% if catName == dv['categoriaActual'] %}class="categoria"{% endif %}><a href="/">#{{ catName }}</a>({{ catDetails['filesNumber']}})</span>
+		<br><br>
+	      {% else %}
+		<span {% if catName == dv['categoriaActual'] %}class="categoria"{% endif %}><a href="/{{ catName }}/">#{{ catName }}</a>({{ catDetails['filesNumber']}}) </span>
+		<br><br>
+	      {% endif %}
 	    {% endfor %}
+	    
+	    {# {% for catName in dv['categorias'] %} #}
+	    {# {% if catName == 'Misc.' %} #}
+	    {# <span {% if catName == dv['categoriaActual'] %}class="categoria"{% endif %}><a href="/">#{{ catName }}/</a></span> #}
+	    {# <br><br> #}
+	    {# {% else %} #}
+	    {# <span {% if catName == dv['categoriaActual'] %}class="categoria"{% endif %}><a href="/{{ catName }}/">#{{ catName }}/</a> </span> #}
+	    {# <br><br> #}
+	    {# {% endif %} #}
+	    {# {% endfor %} #}
 	  </div>
 
 	  <!-- Estadísticas generales -->

@@ -406,9 +406,9 @@ def listaArchivosParaRenderizar(categoria=None, ignorar=[]):
     archivos de esa categoria.
 
     Ej:
-    [ {'name': 'archi1.jpeg', 'size': 4991, date: '2018-06-14 19:49:17.427922', 'restante': 2},
-      {'name': 'arc.jpeg', 'size': 199, date: '2018-08-14 19:49:17.427922', 'restante': 2},
-      {'name': '9g.mp3', 'size': 83981, date: '2018-08-14 19:49:19.427922', 'restante': 9}
+    [ {'name': 'archi1.jpeg', 'size': 4991, date: '2018-06-14 19:49:17.427922', 'restante': 2, 'descargas': 3},
+      {'name': 'arc.jpeg', 'size': 199, date: '2018-08-14 19:49:17.427922', 'restante': 2, 'descargas': 9},
+      {'name': '9g.mp3', 'size': 83981, date: '2018-08-14 19:49:19.427922', 'restante': 9, 'descargas': 0}
     ]
     '''
     lista = []
@@ -427,7 +427,8 @@ def listaArchivosParaRenderizar(categoria=None, ignorar=[]):
             'name':archivo.name,
             'size':archivo.size,
             'date':archivo.uploadedAtTime,
-            'restante':archivo.remainingTime
+            'restante':archivo.remainingTime,
+            'descargas': archivo.downloads
         }
         archivos.append(obj)
     return archivos
@@ -486,7 +487,21 @@ def renderizarHtmlListado(category='Misc'):
     cats.insert(0, 'Misc')
 
     actualizarEstadisticasGenerales()
-    
+
+    # estadisticas de archivos por categorias
+    catStats = {}
+    to = 0
+    for cat in cats:
+        if cat != 'Misc': # caso especial
+            filtro = os.path.join(os.path.curdir,
+                                  shared.globalParams.uploadDirectory,
+                                  cat, '%')
+            count = Archivo.query.filter(Archivo.path.ilike(filtro)).count()
+            to += count
+            catStats[cat] = { 'filesNumber':  count }
+    # caso Misc
+    catStats['Misc'] = { 'filesNumber': shared.gr['filesNumber'] - to }
+
     dv = {
         'title': shared.globalParams.applicationTitle,
         'esquemaColores': esquemaColoresRandom(),
@@ -499,6 +514,7 @@ def renderizarHtmlListado(category='Misc'):
         'storageTotal': shared.gr['storageTotal'],
         'filesNumber': shared.gr['filesNumber'],
         'categorias': cats,
+        'catStats': catStats,
         'archivos': l
     }
     return render_template("index.html", dv=dv)
@@ -515,6 +531,7 @@ def actualizarEstadisticasGenerales():
         almacenamientoUsado += registro.size
     shared.gr['storageUsed'] = almacenamientoUsado
     shared.gr['filesNumber'] = len(registros)
+        
     print('- storageUsed:', shared.gr['storageUsed'])
     print('- sotrageTotal:', shared.gr['storageTotal'])
     print('- filesNumber:', shared.gr['filesNumber'])
