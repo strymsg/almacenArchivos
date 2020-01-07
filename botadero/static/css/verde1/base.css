@@ -127,9 +127,9 @@ textarea {
  * ------------------------------------------------------------------------------------------- */
 body {
   /* -C- */
-  background-color: #BFD8AF;
+  background-color: #B4E6CC;
   /* background-color: #CEDAAF; */
-  color: #1D211C;
+  color: #172814;
   
   background-size: 80px;
   margin: 0;
@@ -160,8 +160,8 @@ body {
 
 a {
   /* -C- */
-  color: #1B5631;
-  border-bottom: 1px #628464;
+  color: #1B4621;
+  border-bottom: 1px #126424;
   
   border-bottom-style: dotted;
   text-decoration: none;
@@ -172,7 +172,7 @@ a {
 
 a:hover {
   /* -C- */
-  color: #0E0E03;
+  color: #0E1E03;
   
   font-weight: bolder;
   border-bottom-width: 2px;
@@ -1016,13 +1016,14 @@ a.label:hover {
   outline-style: solid;
   padding: 10px;
   margin-bottom: 2em;
-  
+
   /* -C- */
-  background-color: #A4D49B;
-  outline-color: #7DB28E;
-  -webkit-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1), 0 0 8px rgba(103, 168, 123, 0.82);
-  -moz-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1), 0 0 8px rgba(103, 168, 123, 0.82);;
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1), 0 0 8px rgba(159, 139, 113, 0.82);
+  /* background-color: #14a76c; */
+  background-color: #14C76c;
+  outline-color: #21D382;
+  -webkit-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1), 0 0 8px rgba(29, 191, 57, 0.82);
+  -moz-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1), 0 0 8px rgba(35, 169, 55, 0.82);;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1), 0 0 8px rgba(19, 36, 22, 0.82);
 }
 
 .lista_archivos_elemento {
@@ -1036,7 +1037,7 @@ a.label:hover {
   font-size: 14px;
   
   /* -C- */
-  background-color: #B7D09E;
+  background-color: #56DF99;
 }
 
 #dias_muchos{
