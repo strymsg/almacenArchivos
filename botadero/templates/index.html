@@ -22,38 +22,7 @@
     <div id="wrap">
       <div class="row">
 	<div class="col fifth">
-	  <!-- Categorias -->
-	  <span id="categoria_actual" value="{{ dv['categoriaActual'] }}" hidden>{{ dv['categoriaActual'] }}</span>
-
-	  <div id="categorias">
-	      {% for catName in dv['categorias'] %}
-		{% if catName == 'Misc.' %}
-		  <span {% if catName == dv['categoriaActual'] %}class="categoria"{% endif %}><a href="/">#{{ catName }}/</a></span>
-		  <br><br>
-		{% else %}
-		  <span {% if catName == dv['categoriaActual'] %}class="categoria"{% endif %}><a href="/{{ catName }}/">#{{ catName }}/</a> </span>
-		  <br><br>
-		{% endif %}
-	      {% endfor %}
-	  </div>
-
-	  <!-- Estadísticas generales -->
-	  <div>
-	    <p>
-	      Total de <big><big> {{ dv['filesNumber'] }}</big></big> <a href="#dropbox">archivos</a>.
-	    </p>
-	    <p>
-	      {{ dv['storageRemaining']//(1024*1024) }} MB disponibles  
-	      (<b>{{ (dv['storageRemaining'] * 100)//dv['storageTotal'] }} %</b>)
-	    </p>
-	  </div>
-
-	  <div class="nota">
-	    <p> Los archivos se eliminan después de {{ dv['timeLapseMax'] }} a {{ dv['timeLapseMin'] }} días, dependiendo de su tamaño (máximo <i>{{ dv['maxFilesize']//1000000 }}</i> MB).
-	      <span id="max_filesize" hidden>{{ dv['maxFilesize'] }}</span> 
-	      <a href="/info" >ver información</a>
-	    </p>
-	  </div>
+	  <!-- no borrar -->
 	</div>
 	<div class="col fill">
 	  <!-- Subida de archivos -->
@@ -83,30 +52,64 @@
 	  <div id="caja_archivos" class="caja_lista_archivos">
 
 	    {% for archivoObj in dv['archivos'] %}
-	      <p class="lista_archivos_elemento">
-		<a href="/almacen/{{ dv['categoriaActual'] }}/{{ archivoObj['name'] }}" title="descargar">{{ archivoObj['name'] }}</a>
+	    <p class="lista_archivos_elemento">
+	      <a href="/almacen/{{ dv['categoriaActual'] }}/{{ archivoObj['name'] }}" title="descargar">{{ archivoObj['name'] }}</a>
 
-		{% if archivoObj['size'] < 1000 %}
-		  <span class="label" title="tamaño">{{ archivoObj['size'] }} B</span>
-		{% elif archivoObj['size'] >= 1000 and archivoObj['size'] < 1000000 %}
-		  <span class="label" title="tamaño">{{ '%0.2f'|format(archivoObj['size']/1000) }} KB</span>
-		{% elif archivoObj['size'] >= 1000000 and archivoObj['size'] < 1000000000 %}
-		  <span class="label" title="tamaño">{{ '%0.2f'|format(archivoObj['size']/1000000) }} MB</span>
-		{% elif archivoObj['size'] >= 1000000000 %}
-		  <span class="label" title="tamaño">{{ '%0.2f'|format(archivoObj['size']/1000000000) }} GB</span>
-		{% endif %}
+	      {% if archivoObj['size'] < 1000 %}
+	      <span class="label" title="tamaño">{{ archivoObj['size'] }} B</span>
+	      {% elif archivoObj['size'] >= 1000 and archivoObj['size'] < 1000000 %}
+	      <span class="label" title="tamaño">{{ '%0.2f'|format(archivoObj['size']/1000) }} KB</span>
+	      {% elif archivoObj['size'] >= 1000000 and archivoObj['size'] < 1000000000 %}
+	      <span class="label" title="tamaño">{{ '%0.2f'|format(archivoObj['size']/1000000) }} MB</span>
+	      {% elif archivoObj['size'] >= 1000000000 %}
+	      <span class="label" title="tamaño">{{ '%0.2f'|format(archivoObj['size']/1000000000) }} GB</span>
+	      {% endif %}
 
-		{% if archivoObj['restante'] >= 10 %}
-		  <span class="label success" title="restantes">{{ archivoObj['restante'] }} días</span>
-		{% elif archivoObj['restante'] < 10 and  archivoObj['restante'] > 3 %}
-		  <span class="label warning" title="restantes">{{ archivoObj['restante'] }} días</span>
-		{% elif archivoObj['restante'] <= 3 %}
-		  <span class="label important" title="restantes">{{ archivoObj['restante'] }} días</span>
-		{% endif %}
-	      </p>
+	      {% if archivoObj['restante'] >= 10 %}
+	      <span class="label success" title="restantes">{{ archivoObj['restante'] }} días</span>
+	      {% elif archivoObj['restante'] < 10 and  archivoObj['restante'] > 3 %}
+	      <span class="label warning" title="restantes">{{ archivoObj['restante'] }} días</span>
+	      {% elif archivoObj['restante'] <= 3 %}
+	      <span class="label important" title="restantes">{{ archivoObj['restante'] }} días</span>
+	      {% endif %}
+	    </p>
 	    {% endfor %}
 	  </div>
 	  <!-- div fill -->
+	</div>
+	<div class="col fifth">
+	  <!-- Categorias -->
+	  <span id="categoria_actual" value="{{ dv['categoriaActual'] }}" hidden>{{ dv['categoriaActual'] }}</span>
+
+	  <div id="categorias">
+	    {% for catName in dv['categorias'] %}
+	    {% if catName == 'Misc.' %}
+	    <span {% if catName == dv['categoriaActual'] %}class="categoria"{% endif %}><a href="/">#{{ catName }}/</a></span>
+	    <br><br>
+	    {% else %}
+	    <span {% if catName == dv['categoriaActual'] %}class="categoria"{% endif %}><a href="/{{ catName }}/">#{{ catName }}/</a> </span>
+	    <br><br>
+	    {% endif %}
+	    {% endfor %}
+	  </div>
+
+	  <!-- Estadísticas generales -->
+	  <div>
+	    <p>
+	      Total de <big><big> {{ dv['filesNumber'] }}</big></big> <a href="#dropbox">archivos</a>.
+	    </p>
+	    <p>
+	      {{ dv['storageRemaining']//(1024*1024) }} MB disponibles  
+	      (<b>{{ (dv['storageRemaining'] * 100)//dv['storageTotal'] }} %</b>)
+	    </p>
+	  </div>
+
+	  <div class="nota">
+	    <p> Los archivos se eliminan después de {{ dv['timeLapseMax'] }} a {{ dv['timeLapseMin'] }} días, dependiendo de su tamaño (máximo <i>{{ dv['maxFilesize']//1000000 }}</i> MB).
+	      <span id="max_filesize" hidden>{{ dv['maxFilesize'] }}</span> 
+	      <a href="/info" >ver información</a>
+	    </p>
+	  </div>
 	</div>
 	<!-- div row -->
       </div>

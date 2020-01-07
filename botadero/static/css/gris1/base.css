@@ -1010,6 +1010,7 @@ a.label:hover {
   outline-width: 2px;
   outline-style: solid;
   padding: 10px;
+  margin-right: 1em;
   margin-bottom: 2em;
 
   /* -C- */
@@ -1066,6 +1067,7 @@ a.label:hover {
   font-family: monospace;
   font-size: 10px;
   padding: 20px;
+  margin-right: 1em;
 }
 
 #dropbox.active {
