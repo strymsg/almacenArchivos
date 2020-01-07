@@ -18,59 +18,59 @@
 /* -C- */
 
 html {
-	margin: 0;
-	padding: 0;
+  margin: 0;
+  padding: 0;
 }
 
 body {
-	margin: 0;
-	padding: 14px;
-	/* background-image: url("../botadero_resources/logo.png"); */
-	background-repeat: no-repeat;
+  margin: 0;
+  padding: 14px;
+  /* background-image: url("../botadero_resources/logo.png"); */
+  background-repeat: no-repeat;
 }
 
 h1, h2, h3, h4, h5, h6, p, pre, a, abbr, acronym, code, del, em, img, q, s,
 small, strike, strong, sub, sup, tt, var, dd, dl, dt, li, ol, ul, fieldset,
 form, label, legend, button, table, caption, tbody, tfoot, thead, tr, th, td {
-	margin: 0;
-	padding: 0;
-	border: 0;
-	font-weight: normal;
-	font-style: normal;
-	font-size: 100%;
-	line-height: 1;
-	font-family: inherit;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-weight: normal;
+  font-style: normal;
+  font-size: 100%;
+  line-height: 1;
+  font-family: inherit;
 }
 
 table {
-	border-collapse: collapse;
-	border-spacing: 1;
-	/* -C- */
-	border-color: #A1A095;
-	border-style: solid;
-	border-width: 2px;	
+  border-collapse: collapse;
+  border-spacing: 1;
+  /* -C- */
+  border-color: #A1A095;
+  border-style: solid;
+  border-width: 2px;	
 }
 
 ol, ul {
-	list-style: none;
+  list-style: none;
 }
 
 html {
-	overflow-y: scroll;
-	font-size: 100%;
-	-webkit-text-size-adjust: 100%;
-	-ms-text-size-adjust: 100%;
+  overflow-y: scroll;
+  font-size: 100%;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
 }
 
 a:focus {
-	outline: thin dotted;
+  outline: thin dotted;
 }
 
 a:hover, a:active {
-	font-weight: bolder;
-	border-bottom-width: 2px;
-	border-bottom-style: solid;
-	outline: 0;
+  font-weight: bolder;
+  border-bottom-width: 2px;
+  border-bottom-style: solid;
+  outline: 0;
 }
 
 button,
@@ -78,47 +78,47 @@ input,
 select,
 option,
 textarea {
-	font-size: 100%;
-	margin: 0;
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	box-sizing: border-box;
-	vertical-align: baseline;
-	*vertical-align: middle;
+  font-size: 100%;
+  margin: 0;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  vertical-align: baseline;
+  *vertical-align: middle;
 }
 
 button, input {
-	line-height: normal;
-	*overflow: visible;
+  line-height: normal;
+  *overflow: visible;
 }
 
 button::-moz-focus-inner, input::-moz-focus-inner {
-	border: 0;
-	padding: 0;
+  border: 0;
+  padding: 0;
 }
 
 button,
 input[type="button"],
 input[type="reset"],
 input[type="submit"] {
-	cursor: pointer;
-	-webkit-appearance: button;
+  cursor: pointer;
+  -webkit-appearance: button;
 }
 
 input[type="search"] {
-	-webkit-appearance: textfield;
-	-webkit-box-sizing: content-box;
-	-moz-box-sizing: content-box;
-	box-sizing: content-box;
+  -webkit-appearance: textfield;
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
 }
 
 input[type="search"]::-webkit-search-decoration {
-	-webkit-appearance: none;
+  -webkit-appearance: none;
 }
 
 textarea {
-	overflow: auto;
-	vertical-align: top;
+  overflow: auto;
+  vertical-align: top;
 }
 
 /*
@@ -226,9 +226,9 @@ h6 small {
 }
 
 h1 {
-  margin-bottom: 18px;
-  font-size: 30px;
-  line-height: 36px;
+  margin-bottom: 10px;
+  font-size: 26px;
+  line-height: 30px;
   text-align: center;
   font-family: serif;
 }
@@ -937,6 +937,9 @@ a.label:hover {
   -moz-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1), 0 0 8px rgba(38, 67, 112, 0.82);
   box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1), 0 0 8px rgba(38, 67, 112, 0.82);
 }
+.caja_lista_archivos a {
+  border-bottom-style: none;
+}
 
 .lista_archivos_elemento {
   padding-left: 5px;
@@ -949,7 +952,7 @@ a.label:hover {
   font-size: 14px;
   
   /* -C- */
-  background-color: #A3ADCA;
+  background-color: #B4BEDC;
 }
 
 #dias_muchos{
@@ -963,93 +966,93 @@ a.label:hover {
 }
 
 #dias_pocos{
-	color: #DD1719;
-	font-weight: bolder;
+  color: #DD1719;
+  font-weight: bolder;
 }
 
 #categorias{
-	padding-top: 5px;
-	padding-bottom: 7px;
+  padding-top: 5px;
+  padding-bottom: 7px;
 }
 
 .categoria{
-	font-size: 22px;
+  font-size: 22px;
 }
 
 #dropbox {
-    border: 2px dashed #000000;
-    font-family: monospace;
-    font-size: 10px;
-    padding: 20px;
+  border: 2px dashed #000000;
+  font-family: monospace;
+  font-size: 10px;
+  padding: 20px;
 }
 
 #dropbox.active {
-    border: 4px dashed #FF0A0E;
+  border: 4px dashed #FF0A0E;
 }
 
 .progress-trough {
-    border: 1px solid #000000;
-    height: 18px;
-    width: 100%;
-    position: relative;
+  border: 1px solid #000000;
+  height: 18px;
+  width: 100%;
+  position: relative;
 }
 
 .progress-bar {
-    width: 50%;
-    height: 100%;
-    /* -C- */
-    background-color: #9BB1D4;
+  width: 50%;
+  height: 100%;
+  /* -C- */
+  background-color: #9BB1D4;
 }
 
 
 /* --------------column wraps----------------- */
 div#wrap {
-    min-height: 100%;
-    padding:1.5em 1.5em 1.8em 1.5em;
+  min-height: 100%;
+  padding:1.5em 1.5em 1.8em 1.5em;
 }
 
 @media screen and (max-width: 2200px) {
-    div#wrap {
-	padding:1em 1.2em 1.5em 1.2em;
-    }
+  div#wrap {
+    padding:1em 1.2em 1.5em 1.2em;
+  }
 }
 
 @media screen and (max-width: 1440px) {
-    div#wrap {
-	padding:1em 1em 1.5em 1em;
-    }
+  div#wrap {
+    padding:1em 1em 1.5em 1em;
+  }
 }
 
 @media screen and (max-width: 1024px) {
-    div#wrap {
-	padding:.5em 0.4em 1.5em 0.4em;
-    }
+  div#wrap {
+    padding:.5em 0.4em 1.5em 0.4em;
+  }
 }
 
 @media screen and (max-width: 800px) {
-    div#wrap {
-	padding:1em .1em 1.5em .1em;
-    }
+  div#wrap {
+    padding:1em .1em 1.5em .1em;
+  }
 }
 
 .row,.col,
 .row:after,.col:after,
 .row:before,.col:before{
-    -webkit-box-sizing:border-box;
-    -moz-box-sizing:border-box;
-    box-sizing:border-box
+  -webkit-box-sizing:border-box;
+  -moz-box-sizing:border-box;
+  box-sizing:border-box
 }
 /* clearfix */
 .row{*zoom:1}
 .row:before,
 .row:after{
-    display:table;
-    content:"";
-    line-height:0}
+  display:table;
+  content:"";
+  line-height:0}
 .row:after{clear:both}
 .row{
-    padding:0;
-    margin:0;
+  padding:0;
+  margin:0;
 }
 /* should probably put *zoom:1; here but for clarity it's separated*/
 ul.row,
@@ -1062,27 +1065,27 @@ li.col{ list-style-type:none }
 
 /* grid mq */
 @media (min-width:40em){
-    .col:not(.fill){width:50%}
-    .col.third:nth-child(3),
-    .col.fifth:nth-child(5),
-    .col.fourth+div:nth-child(3).fill,
-    .col.fifth+div:nth-child(3).fill{width:100%}
-    .col+.fill{width:50%}
+  .col:not(.fill){width:50%}
+  .col.third:nth-child(3),
+  .col.fifth:nth-child(5),
+  .col.fourth+div:nth-child(3).fill,
+  .col.fifth+div:nth-child(3).fill{width:100%}
+  .col+.fill{width:50%}
 }
 @media (min-width:55em){
-    .col.half{width:50%}
-    .col.half+.fill{width:50%}
-    .col.third,
-    .col.third:nth-child(3){width:33.333%}
-    .col.third+.fill{width:66.666%}
-    .col.fourth{width:25%}
-    .col.fourth+.fill{width:75%}
-    .col.fourth+div:nth-child(3).fill{width:50%;}
-    .col.fifth,
-    .col.fifth:nth-child(5){width:20%}
-    .col.fifth+.fill{width:80%}
-    .col.fifth+div:nth-child(3).fill{width:60%;}
-    .col.fifth+div:nth-child(4).fill{width:40%;}
+  .col.half{width:50%}
+  .col.half+.fill{width:50%}
+  .col.third,
+  .col.third:nth-child(3){width:33.333%}
+  .col.third+.fill{width:66.666%}
+  .col.fourth{width:25%}
+  .col.fourth+.fill{width:75%}
+  .col.fourth+div:nth-child(3).fill{width:50%;}
+  .col.fifth,
+  .col.fifth:nth-child(5){width:20%}
+  .col.fifth+.fill{width:80%}
+  .col.fifth+div:nth-child(3).fill{width:60%;}
+  .col.fifth+div:nth-child(4).fill{width:40%;}
 }
 /* ie8 overrides - I'd suggest using conditionals with either ".ie-8 class or loading in a separate legacy stylesheet with conditionals */
 
@@ -1100,16 +1103,16 @@ li.col{ list-style-type:none }
 /* 	.row>.fifth.col+div+div+div+div{width:100%} */
 /* } */
 @media (min-width:40em){
-    .row>.third.col,
-    .row>.third.col+div+div{width:33.333%}
-    .row>.third.col+.fill{width:66.666%}
-    .row>.fourth.col{width:25%}
-    .row>.fourth.col+.fill{width:75%}
-    .row>.fourth.col+div+.fill{width:50%}
-    .row>.fifth.col+.fill{width:80%}
-    .row>.fifth.col,
-    .row>.fifth.col+div+div+div+div{width:20%}
-    .row>.fifth.col+div+.fill{width:60%}
-    .row>.fifth.col+div+div+.fill{width:40%}
+  .row>.third.col,
+  .row>.third.col+div+div{width:33.333%}
+  .row>.third.col+.fill{width:66.666%}
+  .row>.fourth.col{width:25%}
+  .row>.fourth.col+.fill{width:75%}
+  .row>.fourth.col+div+.fill{width:50%}
+  .row>.fifth.col+.fill{width:80%}
+  .row>.fifth.col,
+  .row>.fifth.col+div+div+div+div{width:20%}
+  .row>.fifth.col+div+.fill{width:60%}
+  .row>.fifth.col+div+div+.fill{width:40%}
 }
 /* ----------------- */
