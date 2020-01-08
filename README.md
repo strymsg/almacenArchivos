@@ -31,9 +31,8 @@ Esta aplicación no guarda datos sobre quién sube los archivos, licencia **AGPL
 
 #### Instalación ####
 
-Se utiliza python3 con el micro framework Flask, se puede instalar con los siguientes pasos:
-
-Despliegue en producción en [docs/INSTALL.es.md](docs/INSTALL.es.md)
+- Despliegue con nginx: [docs/INSTALL.es.md](docs/INSTALL.es.md)
+- Se utiliza python3 con el micro framework Flask, se puede instalar con los siguientes pasos:
 
 ##### Para desarrollo #####
 
@@ -60,11 +59,7 @@ La aplicación necesita que se ejecute el script `cronjobs.py` que se encarga de
 ```
 */1 *   * * *   user    cd /home/user/alamcenArchivos; export FLASK_ENV=production;venv/bin/python3 cronjobs.py >> cronjobs.log 2>&1
 ```
-#### Despliegue ####
-
-pronto.
-
-<h3 id="en">El Botadero</h3>
+<h3 id="en">Archive store</h3>
 
 - Repositorio Original: https://notabug.org/strysg/botadero
 - Mirror github: https://github.com/strymsg/almacenArchivos
@@ -72,6 +67,9 @@ pronto.
 Centralized web server to share files on a local network or over the internet. 
 
 A public directory where anyone can upload files and so they can be freely downlaoded.
+
+![front1](botadero/static/botadero_resources/front1.png)
+![front2](botadero/static/botadero_resources/front2.png)
 
 To save storage, files are deleted after an adjustable number of days and file duplication is avoided by using sha1, md5, sha256, etc. digests.
 
@@ -84,16 +82,15 @@ Some customizable features are:
 * Verbosity level to log files.
 * Digest algorithm selection.
 * Accelerated digest.
-* File deletion using password.
-* Time unit.
+* File protection using password (not implemented yet).
+* Time unit adjustment.
 
 This application does not store data about who upload files, **AGPL** License.
 
 #### Install ####
 
-It uses python3 and micro framework Flask, can be installed following:
-
-soon.
+- Deploy with nginx: [docs/INSTALL.es.md](docs/INSTALL.es.md)
+- It uses python3 and micro framework Flask, can be installed following:
 	
 ##### For development #####
 
@@ -120,8 +117,4 @@ The aplication requires the script `cronjob.py` to be executed, this *updates* t
 ```
 */2 *    * * *   user    export FLASK_ENV=production; /home/user/almacenArchivos/venv/bin/python3 /home/user/almacenArchivos/cronjobs.py
 ```
-
-#### Deploy ####
-
-soon.
 
