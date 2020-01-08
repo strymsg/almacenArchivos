@@ -66,13 +66,15 @@
 	      <span class="label" title="tamaño">{{ '%0.2f'|format(archivoObj['size']/1000000000) }} GB</span>
 	      {% endif %}
 
+	      <img src={{ url_for('static', filename='botadero_resources/clock-delete-32.png') }} height="16" title="Se borrará en {{ archivoObj['restante']}} {{ dv['timeUnit'] }}">
 	      {% if archivoObj['restante'] >= 10 %}
-	      <span class="label success" title="restantes">{{ archivoObj['restante'] }} días</span>
+		<span class="label success" title="Se borrará en {{ archivoObj['restante']}} {{ dv['timeUnit'] }}">{{ archivoObj['restante'] }}</span>
 	      {% elif archivoObj['restante'] < 10 and  archivoObj['restante'] > 3 %}
-	      <span class="label warning" title="restantes">{{ archivoObj['restante'] }} días</span>
+		<span class="label warning" title="Se borrará en {{ archivoObj['restante']}} {{ dv['timeUnit'] }}">{{ archivoObj['restante'] }} </span>
 	      {% elif archivoObj['restante'] <= 3 %}
-	      <span class="label important" title="restantes">{{ archivoObj['restante'] }} días</span>
+		<span class="label important" title="Se borrará en {{ archivoObj['restante']}} {{ dv['timeUnit'] }}">{{ archivoObj['restante'] }} </span>
 	      {% endif %}
+
 	    </p>
 	    {% endfor %}
 	  </div>
@@ -92,16 +94,6 @@
 		<br><br>
 	      {% endif %}
 	    {% endfor %}
-	    
-	    {# {% for catName in dv['categorias'] %} #}
-	    {# {% if catName == 'Misc.' %} #}
-	    {# <span {% if catName == dv['categoriaActual'] %}class="categoria"{% endif %}><a href="/">#{{ catName }}/</a></span> #}
-	    {# <br><br> #}
-	    {# {% else %} #}
-	    {# <span {% if catName == dv['categoriaActual'] %}class="categoria"{% endif %}><a href="/{{ catName }}/">#{{ catName }}/</a> </span> #}
-	    {# <br><br> #}
-	    {# {% endif %} #}
-	    {# {% endfor %} #}
 	  </div>
 
 	  <!-- Estadísticas generales -->

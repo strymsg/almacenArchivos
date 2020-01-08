@@ -502,12 +502,21 @@ def renderizarHtmlListado(category='Misc'):
     # caso Misc
     catStats['Misc'] = { 'filesNumber': shared.gr['filesNumber'] - to }
 
+    timeUnit = ''
+    if shared.globalParams.timeUnit == 'day':
+        timeUnit = 'días'
+    elif shared.globalParams.timeUnit == 'minute':
+        timeUnit = 'minutos'
+    elif shared.globalParams.timeUnit == 'second':
+        timeUnit = 'segundos'
+        
     dv = {
         'title': shared.globalParams.applicationTitle,
         'esquemaColores': esquemaColoresRandom(),
         'maxFilesize': int(shared.globalParams.sizeLimitsAndTimeToDelete[-1][0]),
         'timeLapseMax': shared.globalParams.sizeLimitsAndTimeToDelete[-1][1],
         'timeLapseMin': shared.globalParams.sizeLimitsAndTimeToDelete[0][1],
+        'timeUnit': timeUnit,
         'categoriaActual': category,
         'storageUsed': shared.gr['storageUsed'],
         'storageRemaining': shared.gr['storageTotal'] - shared.gr['storageUsed'],
