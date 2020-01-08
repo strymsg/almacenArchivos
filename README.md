@@ -10,6 +10,9 @@ Servicio web centralizado para compartir archivos en una red local o internet.
 
 Un directorio público donde cualquiera puede subir archivos y estos se pueden descargar libremente.
 
+![front1](botadero/static/botadero_resources/front1.png)
+![front2](botadero/static/botadero_resources/front2.png)
+
 Para ahorrar espacio de almacenamiento, los archivos se borran después de un número ajustable de tiempo (días, minutos o segundos) y también se evita la posiblidad de subir archivos duplicados usando algoritmos para obtener digestos sha1, md5, sha256, etc. 
 
 Entre las funcionalidades que se pueden ajustar están:
@@ -18,11 +21,11 @@ Entre las funcionalidades que se pueden ajustar están:
 * Almacenamiento máximo para archivos.
 * Almacenamiento máximo por tamaño de archivo.
 * Intervalo de borrado por tamaño de archivos.
-* Nivel de verbosidad en archivos de reportes.
 * Selección de algoritmo para digestos.
 * Comprobación acelerada de digestos.
-* Borrado de archivos usando passwords.
-* Unidad de tiempo.
+* Protección de archivos usando passwords (pendiente).
+* Ajuste de unidad de tiempo.
+* Selección de estilos de apariencia.
 
 Esta aplicación no guarda datos sobre quién sube los archivos, licencia **AGPL**.
 
