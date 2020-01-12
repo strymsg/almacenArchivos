@@ -60,17 +60,25 @@
                      {# TODO: Implementar para archivos protegidos #}
 		     {{ archivoObj['name'] }}
 		   </a>
-
-		     <span class="label" title="tamaño">{{ '%0.2f'|format(archivoObj['size']/1000000000) }} GB</span>
-		   <img src={{ url_for('static', filename='botadero_resources/clock-delete-32.png') }} height="16" title="Se borrará en {{ archivoObj['restante']}} {{ dv['timeUnit'] }}">
-		     {% if archivoObj['restante'] >= 10 %}
-		       <span class="label success" title="Se borrará en {{ archivoObj['restante']}} {{ dv['timeUnit'] }}">{{ archivoObj['restante'] }}</span>
-		     {% elif archivoObj['restante'] < 10 and  archivoObj['restante'] > 3 %}
-		       <span class="label warning" title="Se borrará en {{ archivoObj['restante']}} {{ dv['timeUnit'] }}">{{ archivoObj['restante'] }} </span>
-		     {% elif archivoObj['restante'] <= 3 %}
-		       <span class="label important" title="Se borrará en {{ archivoObj['restante']}} {{ dv['timeUnit'] }}">{{ archivoObj['restante'] }} </span>
-		     {% endif %}
-	       </p>
+	      {% if archivoObj['size'] < 1000 %}
+		<span class="label" title="tamaño">{{ archivoObj['size'] }} B</span>
+	      {% elif archivoObj['size'] >= 1000 and archivoObj['size'] < 1000000 %}
+		<span class="label" title="tamaño">{{ '%0.2f'|format(archivoObj['size']/1000) }} KB</span>
+	      {% elif archivoObj['size'] >= 1000000 and archivoObj['size'] < 1000000000 %}
+		<span class="label" title="tamaño">{{ '%0.2f'|format(archivoObj['size']/1000000) }} MB</span>
+	      {% elif archivoObj['size'] >= 1000000000 %}
+		<span class="label" title="tamaño">{{ '%0.2f'|format(archivoObj['size']/1000000000) }} GB</span>
+	      {% endif %}
+	      
+	      <img src={{ url_for('static', filename='botadero_resources/clock-delete-32.png') }} height="16" title="Se borrará en {{ archivoObj['restante']}} {{ dv['timeUnit'] }}">
+		{% if archivoObj['restante'] >= 10 %}
+		  <span class="label success" title="Se borrará en {{ archivoObj['restante']}} {{ dv['timeUnit'] }}">{{ archivoObj['restante'] }}</span>
+		{% elif archivoObj['restante'] < 10 and  archivoObj['restante'] > 3 %}
+		  <span class="label warning" title="Se borrará en {{ archivoObj['restante']}} {{ dv['timeUnit'] }}">{{ archivoObj['restante'] }} </span>
+		{% elif archivoObj['restante'] <= 3 %}
+		  <span class="label important" title="Se borrará en {{ archivoObj['restante']}} {{ dv['timeUnit'] }}">{{ archivoObj['restante'] }} </span>
+		{% endif %}
+		  </p>
 	    {% endfor %}
 	  </div>
 	  <!-- div fill -->
