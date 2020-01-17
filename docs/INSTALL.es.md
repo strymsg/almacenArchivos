@@ -2,7 +2,7 @@
 
 Este manual asume que se está trabajando sobre una distribución de GNU/Linux derivada de Debian.
 
-Primero es necesario instalar las dependencias de la aplicación, se necesita que este instalado en el sistema `python3 pip3 virtualenv`.
+Primero es necesario instalar las dependencias de la aplicación, se necesita que este instalado en el sistema `python3 python3-dev pip3 virtualenv`.
 
 ```bash
 git clone https://notabug.org/strysg/botadero/
