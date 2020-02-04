@@ -25,16 +25,14 @@ def categoriaView(cat='Misc'):
 
     return html_page.html
 
-# vistas de descargas
-@botaderoBp.route('/almacen/<string:nombreArchivo>', defaults={ 'cat': 'Misc'})
+# endpoint descarga 
 @botaderoBp.route('/almacen/<string:cat>/<string:nombreArchivo>')
 def descargaDesdeIndexView(cat, nombreArchivo):
-
+    print('⏬ file:', cat, nombreArchivo)
     if not co.descargaPermitida(cat, nombreArchivo):
         return ('No permitido: '+cat+'/'+nombreArchivo)
 
     pathf = co.descargarArchivo(cat, nombreArchivo)
-    print('Descargando:::', pathf)
     if pathf is None:
         return render_template("noExiste.html",
                                nombre=nombreArchivo,
