@@ -122,6 +122,7 @@ def subirArchivo(cat, file, hashedPassword=''):
                           uploadedAtTime=uploadedAtTime,
                           remainingTime=remainingTime,
                           hashedPassword=hashedPassword)
+    sincronizarArchivos(['.gitkeep', '.gitkeep~', '#.gitkeep', '#.gitkeep#'])
     print('✓ Archivo registrado en BD', arch)
     return arch
     
@@ -180,6 +181,14 @@ def marcarPaginaListaParaRenderizar(categoria='Misc'):
             return False
     return False
 
+def marcarTodasLasPaginasParaRenderizar():
+    ''' Usa la funcion marcarPaginaListaParaRenderizar para marcar
+    todas las paginas y que se vuelva a renderizar el template usando jinja2
+    '''
+    for cat in u.categorias():
+        marcarPaginaListaParaRenderizar(categoria=cat)
+    marcarPaginaListaParaRenderizar() # para categoria Misc
+
 def sincronizarArchivos(ignorar=[]):
     ''' Funcion encargada sincronizar y actualizar la BD segun los archivos
     que se encuentran en el directorio de subidas en el sistema de archivos.
@@ -233,7 +242,8 @@ def sincronizarArchivos(ignorar=[]):
         if archivo not in archivosEnBd:
             print ('(+)', str(archivo), u.categoriaArchivo(archivo))
             arch = u.registrarArchivo(archivo)
-            marcarPaginaListaParaRenderizar(categoria=u.categoriaArchivo(archivo))
+            marcarTodasLasPaginasParaRenderizar()
+            #marcarPaginaListaParaRenderizar(categoria=u.categoriaArchivo(archivo))
             registrados.append(arch)
         else:
             if u.archivoDebeBorrarsePorTiempo(archivo):
@@ -241,19 +251,22 @@ def sincronizarArchivos(ignorar=[]):
                 r = u.borrarArchivo(archivo) # del sistema de archivos y BD
                 borrados.append(archivo)
                 print (' ✗ Registro de archivo borrado', archivo, ' = ', r)
-                marcarPaginaListaParaRenderizar(categoria=u.categoriaArchivo(archivo))
+                marcarTodasLasPaginasParaRenderizar()
+                # marcarPaginaListaParaRenderizar(categoria=u.categoriaArchivo(archivo))
             else:
                 if u.actualizarTiempoRestanteArchivo(archivo):
                     print ('(+-)', str(archivo), u.categoriaArchivo(archivo))
                     actualizados.append(archivo)
-                    marcarPaginaListaParaRenderizar(categoria=u.categoriaArchivo(archivo))
+                    marcarTodasLasPaginasParaRenderizar()
+                    # marcarPaginaListaParaRenderizar(categoria=u.categoriaArchivo(archivo))
     for reg in archivosEnBd:
         # caso de que un archivo se borro del sistema de archivos
         if reg not in archivos:
             print('(bd -)', str(reg), u.categoriaArchivo(reg))
             r = u.borrarRegistroArchivoEnBd(u.nombreArchivo(reg))
             borrados.append(reg)
-            marcarPaginaListaParaRenderizar(categoria=u.categoriaArchivo(reg))
+            marcarTodasLasPaginasParaRenderizar()
+            # marcarPaginaListaParaRenderizar(categoria=u.categoriaArchivo(reg))
 
     print ('\nsincronización completa')
     return registrados, borrados, actualizados
