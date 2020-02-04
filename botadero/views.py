@@ -20,7 +20,6 @@ botaderoBp = Blueprint('botadero', __name__, url_prefix='')
 @botaderoBp.route('/')
 @botaderoBp.route('/<string:cat>/')
 def categoriaView(cat='Misc'):
-    print('categoria::::', cat)
     html_page = u.obtenerHtmlListado(categoria=cat)
 
     return html_page.html

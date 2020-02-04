@@ -22,6 +22,8 @@ def descargaPermitida(cat, nombreArchivo):
 def descargarArchivo(cat, nombreArchivo):
     # agregar descargar de utils
     pathf = u.descargarArchivo(cat, nombreArchivo)
+    # marcando para que se actualice el renderizado de la pagina
+    marcarPaginaListaParaRenderizar(categoria=cat)
     return pathf
 
 def subirArchivo(cat, file, hashedPassword=''):
