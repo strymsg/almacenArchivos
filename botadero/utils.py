@@ -276,6 +276,7 @@ def borrarArchivo(nombreYRuta, archivo=None):
     :return boolean: True o False si se elimina correctamente.
     '''
     rutaCompleta = os.path.realpath(nombreYRuta)
+
     try:
         os.remove(rutaCompleta)
     except OSError as E:

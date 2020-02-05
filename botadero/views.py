@@ -35,7 +35,7 @@ def descargaDesdeIndexView(cat, nombreArchivo):
     if pathf is None:
         return render_template("noExiste.html",
                                nombre=nombreArchivo,
-                               esquemaColores=u.esquemaColoresRandom())
+                               esquemaColores=u.esquemaColoresRandom()), 404
     return send_file(pathf, as_attachment=True)
 
 # vista de subida de archivo (individual) este caso se asume que no se usa javascript.
