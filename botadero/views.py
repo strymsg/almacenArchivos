@@ -29,7 +29,7 @@ def categoriaView(cat='Misc'):
 def descargaDesdeIndexView(cat, nombreArchivo):
     print('⏬ file:', cat, nombreArchivo)
     if not co.descargaPermitida(cat, nombreArchivo):
-        return ('No permitido: '+cat+'/'+nombreArchivo)
+        return ('No permitido: '+cat+'/'+nombreArchivo), 404
 
     pathf = co.descargarArchivo(cat, nombreArchivo)
     if pathf is None:
