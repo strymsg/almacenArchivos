@@ -58,10 +58,10 @@ def subidaArchivo(cat):
         # caso exitoso, se debe actualizar
         co.sincronizarArchivos()
         html_page = u.obtenerHtmlListado(categoria=cat)
-        return html_page.html
+        return redirect("/"+cat, code=302)
     else:
         html_page = u.obtenerHtmlListado(categoria=cat)
-        return html_page.html
+        return redirect("/"+cat, code=302)
 
 # vista de subida de varios archivos
 @botaderoBp.route('/<string:cat>/upload_file_a', methods=['GET', 'POST'])
