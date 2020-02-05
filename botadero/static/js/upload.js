@@ -13,38 +13,54 @@ var MAX_FILESIZE = 0;
 var CATEGORIA_ACTUAL = "";
 
 $(document).ready(function() {
-  // Set up the drag/drop zone.
-  initDropbox();
   
   // current category
-  
   CATEGORIA_ACTUAL = document.getElementById('categoria_actual').innerHTML;
   if (CATEGORIA_ACTUAL == 'Misc') {
     UPLOAD_URL = '/Misc/upload_file_a';
   }
 
-  console.log('upload URL:', UPLOAD_URL);
-  
+  var testExp = new RegExp('Android|webOS|iPhone|iPad|' +
+    		           'BlackBerry|Windows Phone|'  +
+    		           'Opera Mini|IEMobile|Mobile' , 
+    		           'i');
+  console.log('>>>', navigator.userAgent, '::', testExp.test(navigator.userAgent));
+  var deviceType = 'desktop';
+  if (testExp.test(navigator.userAgent)) {
+    deviceType = 'mobile';
+  }
+
+  // checking mobile devices
+  if (deviceType == 'mobile') {
+    // quitando propiedad multiple de file-picker para que haya mas soporte en dispositivos móviles
+    $('#file-picker')[0].multiple = false;
+  }   
+  // Set up the drag/drop zone.
+  initDropbox(deviceType);
+
   // Set up the handler for the file input box.
   $("#file-picker").on("change", function() {
     handleFiles(this.files);
   });
+  
+  if (deviceType != 'mobile') {
+    // Handle the submit button.
+    $("#upload-button").on("click", function(e) {
+      // If the user has JS disabled, none of this code is running but the
+      // file multi-upload input box should still work. In this case they'll
+      // just POST to the upload endpoint directly. However, with JS we'll do
+      // the POST using ajax and then redirect them ourself when done.
+      e.preventDefault();
+      doUpload(deviceType);
+    });
+  }
 
-  // Handle the submit button.
-  $("#upload-button").on("click", function(e) {
-    // If the user has JS disabled, none of this code is running but the
-    // file multi-upload input box should still work. In this case they'll
-    // just POST to the upload endpoint directly. However, with JS we'll do
-    // the POST using ajax and then redirect them ourself when done.
-    e.preventDefault();
-    doUpload();
-  });
 });
 
 
-function doUpload() {
+function doUpload(deviceType) {
   $("#progress").show();
-  var $progressBar   = $("#progress-bar");
+  var $progressBar = $("#progress-bar");
   var $estadoRecepcion = $("#estado-recepcion");
 
   var $caja_archivos = $("#caja_archivos");
@@ -171,7 +187,6 @@ function collectFormData() {
   return fd;
 }
 
-
 function handleFiles(files) {
   var fs = document.getElementById('max_filesize');
   MAX_FILESIZE = parseInt(document.
@@ -190,10 +205,12 @@ function handleFiles(files) {
   }
 }
 
-
-function initDropbox() {
+function initDropbox(deviceType) {
   var $dropbox = $("#dropbox");
-
+  
+  if (deviceType === 'mobile') {
+    $dropbox.html('Arrastra tu archivo aquí');
+  }
   // On drag enter...
   $dropbox.on("dragenter", function(e) {
     e.stopPropagation();
