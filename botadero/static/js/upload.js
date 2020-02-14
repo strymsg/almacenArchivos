@@ -24,7 +24,7 @@ $(document).ready(function() {
     		           'BlackBerry|Windows Phone|'  +
     		           'Opera Mini|IEMobile|Mobile' , 
     		           'i');
-  console.log('>>>', navigator.userAgent, '::', testExp.test(navigator.userAgent));
+  // console.log('>>>', navigator.userAgent, '::', testExp.test(navigator.userAgent));
   var deviceType = 'desktop';
   if (testExp.test(navigator.userAgent)) {
     deviceType = 'mobile';
@@ -42,7 +42,11 @@ $(document).ready(function() {
   $("#file-picker").on("change", function() {
     handleFiles(this.files);
   });
-  
+
+  // Para el modal
+  var modalSubir = document.getElementById("modal-subir");
+  var closeModalSubir = document.getElementById("closeModalSubir");
+
   if (deviceType != 'mobile') {
     // Handle the submit button.
     $("#upload-button").on("click", function(e) {
@@ -51,9 +55,25 @@ $(document).ready(function() {
       // just POST to the upload endpoint directly. However, with JS we'll do
       // the POST using ajax and then redirect them ourself when done.
       e.preventDefault();
+
+      // When the user clicks on the button, open the modal
+      modalSubir.style.display = "block";
+      // funcion subir
       doUpload(deviceType);
     });
   }
+
+  // cerrar el modal
+  closeModalSubir.onclick = function() {
+    modalSubir.style.display = 'none';
+  };
+
+  // When the user clicks anywhere outside of the modal, close it
+  window.onclick = function(event) {
+    if (event.target == modalSubir) {
+      modalSubir.style.display = "none";
+    }
+  };
 
 });
 
@@ -83,6 +103,7 @@ function doUpload(deviceType) {
   // Inform the back-end that we're doing this over ajax.
   fd.append("__ajax", "true");
 
+  // peticion subir archivo(s)
   var xhr = $.ajax({
     xhr: function() {
       var xhrobj = $.ajaxSettings.xhr();
