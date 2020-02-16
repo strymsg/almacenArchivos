@@ -27,9 +27,8 @@
           <h2>Subir contenido</h2>
         </div>
         <div class="modal-subir-body">
-          <ul id="lista_archivos_subir">
-            Contenido del modal
-          </ul>
+          <div id="lista_archivos_subir">
+          </div>
           <!-- Barra de progreso -->
 	  <fieldset id="progress" style="display: none">
 	    <legend id="estado-recepcion">Recibiendo:</legend>
@@ -37,8 +36,8 @@
 	      <div id="progress-bar" class="progress-bar">0%</div>
 	    </div>
 	  </fieldset>
-
-          
+          <!-- Boton subir -->
+          <input class="btn large" value="Compartir archivo(s)" onclick="doUploadModal('')"/>
         </div>
       </div>
     </div>
@@ -58,7 +57,7 @@
 	    </div>
 
 	    <!-- input multiple files -->
-	    <input id="file-picker" type="file" name="file" multiple>
+	    <input id="file-picker" type="file" name="file" multiple onchange="actualizarArchivosSubir(this.files)">
 	    
 	    <!-- <input type="file" name="file"/> -->
 	    <input type="submit" class="btn large" id="upload-button" value="Compartir archivo(s)"/>

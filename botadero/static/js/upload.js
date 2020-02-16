@@ -9,6 +9,7 @@ var NEXT_URL = "/";
 var PENDING_FILES  = [];
 var STORED_FILENAMES = [];
 var DUPLICATED_FILES = [];
+var NOT_ALLOWED_FILES = [];
 var MAX_FILESIZE = 0;
 var CATEGORIA_ACTUAL = "";
 
@@ -37,7 +38,12 @@ $(document).ready(function() {
 
     $("#upload-button").on("click", function(e) {
       e.preventDefault();
-      modalSubir.style.display = "block";
+      mostrarModalSubir();
+    });
+
+    $("#upload-button-modal").on("click", function(e) {
+      e.preventDefault();
+      doUpload(deviceType);
     });
   }   
   // Set up the drag/drop zone.
@@ -49,8 +55,8 @@ $(document).ready(function() {
   });
 
   // Para el modal
-  var modalSubir = document.getElementById("modal-subir");
   var closeModalSubir = document.getElementById("closeModalSubir");
+  var modalSubir = document.getElementById("modal-subir");
 
   if (deviceType != 'mobile') {
     // Handle the submit button.
@@ -62,7 +68,7 @@ $(document).ready(function() {
       e.preventDefault();
 
       // When the user clicks on the button, open the modal
-      modalSubir.style.display = "block";
+      mostrarModalSubir();
       // funcion subir
       doUpload(deviceType);
     });
@@ -70,13 +76,13 @@ $(document).ready(function() {
 
   // cerrar el modal
   closeModalSubir.onclick = function() {
-    modalSubir.style.display = 'none';
+    ocultarModalSubir();
   };
 
   // When the user clicks anywhere outside of the modal, close it
   window.onclick = function(event) {
     if (event.target == modalSubir) {
-      modalSubir.style.display = "none";
+      ocultarModalSubir();
     }
   };
 
@@ -85,6 +91,18 @@ $(document).ready(function() {
 function mostrarModalSubir(deviceType) {
   var modalSubir = document.getElementById("modal-subir");
   modalSubir.style.display = "block";
+}
+
+function ocultarModalSubir(deviceType) {
+  var modalSubir = document.getElementById("modal-subir");
+  modalSubir.style.display = "none";
+  PENDING_FILES = [];
+  DUPLICATED_FILES = [];
+  NOT_ALLOWED_FILES = [];
+}
+
+function doUploadModal() {
+  doUpload('');
 }
 
 function doUpload(deviceType) {
@@ -149,7 +167,7 @@ function doUpload(deviceType) {
       var texto = '';
       if (data.exitosos.length > 0) {
         for (let i = 0; i < data.exitosos.length; i++) {
-          texto += "&check; <b>" + data.exitosos[i] + "</b><br>";
+          texto += "<big>&check;</big> <b>" + data.exitosos[i] + "</b><br>";
         }
       }
       if (data.erroneos.length > 0) {
@@ -161,7 +179,9 @@ function doUpload(deviceType) {
       var $dropbox = $('#dropbox');
       $dropbox.html('');
       $dropbox.html(texto);
-
+      
+      $("#lista_archivos_subir").html(texto);
+      
       setTimeout(function() {
         location.reload();
       }, 1500);
@@ -195,6 +215,7 @@ function collectFormData() {
   // Go through all the form fields and collect their names/values.
   var fd = new FormData();
 
+  console.log('collectFormData...');
   $("#upload-file :input").each(function() {
     var $this = $(this);
     var name  = $this.attr("name");
@@ -226,13 +247,32 @@ function handleFiles(files) {
   // Add them to the pending files list.
   for (var i = 0, ie = files.length; i < ie; i++) {
     // checking for duplicated files and max filesize
-    if (STORED_FILENAMES.indexOf(files[i].name) == -1 &&
-	files[i].size <= MAX_FILESIZE) {
+    if (files[i].size >= MAX_FILESIZE) {
+      NOT_ALLOWED_FILES.push(files[i]);
+    } else if (STORED_FILENAMES.indexOf(files[i].name) == -1){
       PENDING_FILES.push(files[i]);
     } else {
       DUPLICATED_FILES.push(files[i]);
     }
   }
+}
+
+function actualizarArchivosSubir(files) {
+  var $listaSubir = $('#lista_archivos_subir');
+  handleFiles(files);
+
+  var texto = "";
+  for (var i = 0; i < PENDING_FILES.length ; i++) {
+    texto += "&check;" + PENDING_FILES[i].name + " (<b>" +PENDING_FILES[i].size +"</b> bytes)<br>";
+  }
+  for (let i = 0; i < DUPLICATED_FILES.length; i++) {
+    texto += "&#x2715;" + DUPLICATED_FILES[i].name + " (duplicado)<br>";
+  }
+  for (let i = 0; i < NOT_ALLOWED_FILES.length; i++) {
+    texto += "&#x2757;" + NOT_ALLOWED_FILES[i].name + " (<b>" + NOT_ALLOWED_FILES[i].size + "</b> bytes) tamaño excedido<br>";
+  }
+  mostrarModalSubir();
+  $listaSubir.html(texto + "<br/><big><b>"+PENDING_FILES.length+"</big></b> archivos.");
 }
 
 function initDropbox(deviceType) {
@@ -271,7 +311,7 @@ function initDropbox(deviceType) {
     // Update the display to acknowledge the number of pending files.
     var texto = "";
     for (var i = 0; i < PENDING_FILES.length ; i++) {
-      texto += "&check;" + PENDING_FILES[i].name + "<br>";
+      texto += "&check;" + PENDING_FILES[i].name + " (<b>" +PENDING_FILES[i].size +"</b> bytes)<br>";
     }
     for (let i = 0; i < DUPLICATED_FILES.length; i++) {
       texto += "&#x2715;" + DUPLICATED_FILES[i].name + " (duplicado)<br>";
