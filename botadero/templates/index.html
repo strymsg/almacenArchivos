@@ -36,8 +36,23 @@
 	      <div id="progress-bar" class="progress-bar">0%</div>
 	    </div>
 	  </fieldset>
+          <!-- check password y menu passwords-->
+          <p>
+            <img src="{{ url_for('static', filename='botadero_resources/lock32.png')}}" height="16"> <span>Proteger con contraseña</span> 
+            <input type="checkbox" id="pwd_check" onclick="menuPassword()">
+          </p>
+          <div id="menu_password" style="display: none">
+            <p id="pwd_msj"></p>
+            <label for="pwd">Contraseña:</label>
+            <input type="password" id="pwd1" name="pwd1">
+
+            <label for="pwd">Confirmar Contraseña:</label>
+            <input type="password" id="pwd2" name="pwd2">
+          </div>
           <!-- Boton subir -->
-          <input class="btn large" value="Compartir archivo(s)" onclick="doUploadModal('')"/>
+          <div>
+            <input class="btn large" value="Compartir archivo(s)" onclick="doUploadModal('')"/>
+          </div>
         </div>
       </div>
     </div>

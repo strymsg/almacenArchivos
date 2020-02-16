@@ -45,7 +45,9 @@ $(document).ready(function() {
       e.preventDefault();
       doUpload(deviceType);
     });
-  }   
+  }
+
+  ocultarModalSubir();
   // Set up the drag/drop zone.
   initDropbox(deviceType);
 
@@ -88,192 +90,6 @@ $(document).ready(function() {
 
 });
 
-function mostrarModalSubir(deviceType) {
-  var modalSubir = document.getElementById("modal-subir");
-  modalSubir.style.display = "block";
-}
-
-function ocultarModalSubir(deviceType) {
-  var modalSubir = document.getElementById("modal-subir");
-  modalSubir.style.display = "none";
-  PENDING_FILES = [];
-  DUPLICATED_FILES = [];
-  NOT_ALLOWED_FILES = [];
-}
-
-function doUploadModal() {
-  doUpload('');
-}
-
-function doUpload(deviceType) {
-  $("#progress").show();
-  var $progressBar = $("#progress-bar");
-  var $estadoRecepcion = $("#estado-recepcion");
-
-  var $caja_archivos = $("#caja_archivos");
-  
-  // Gray out the form.
-  $("#upload-file :input").attr("disabled", "disabled");
-
-  // Initialize the progress bar.
-  $progressBar.css({"width": "0%"});
-
-  // Collect the form data.
-  var fd = collectFormData();
-
-  // Attach the files.
-  for (var i = 0, ie = PENDING_FILES.length; i < ie; i++) {
-    // Collect the other form data.
-    fd.append("file", PENDING_FILES[i]);
-  }
-
-  // Inform the back-end that we're doing this over ajax.
-  fd.append("__ajax", "true");
-
-  // peticion subir archivo(s)
-  var xhr = $.ajax({
-    xhr: function() {
-      var xhrobj = $.ajaxSettings.xhr();
-      if (xhrobj.upload) {
-        xhrobj.upload.addEventListener("progress", function(event) {
-          var percent = 0;
-          var position = event.loaded || event.position;
-          var total    = event.total;
-          if (event.lengthComputable) {
-            percent = Math.ceil(position / total * 100);
-          }
-          // Set the progress bar.
-          $progressBar.css({"width": percent + "%"});
-          $progressBar.text(percent + "% enviado");
-	  if (percent == 100)
-	    $estadoRecepcion.text("Comprobando archivo(s)...");
-        }, false);
-      }
-      return xhrobj;
-    },
-    url: UPLOAD_URL,
-    method: "POST",
-    contentType: false,
-    processData: false,
-    cache: false,
-    data: fd,
-    success: function(data) {
-      console.log('respuesta:::', data);
-      $progressBar.css({"width": "100%"});
-      $estadoRecepcion.text("Guardando archivo(s) en el servidor ...");
-      // data = JSON.parse(data);
-
-      // inspeccionando y actualizando respuesta
-      var texto = '';
-      if (data.exitosos.length > 0) {
-        for (let i = 0; i < data.exitosos.length; i++) {
-          texto += "<big>&check;</big> <b>" + data.exitosos[i] + "</b><br>";
-        }
-      }
-      if (data.erroneos.length > 0) {
-        for (let i = 0; i < data.erroneos.length; i++) {
-          texto += "&#x2715; " + data.erroneos[i].redirect + "(" + data.erroneos[i].mensaje + ")<br>";
-        }
-      }
-      console.log('texto', texto);
-      var $dropbox = $('#dropbox');
-      $dropbox.html('');
-      $dropbox.html(texto);
-      
-      $("#lista_archivos_subir").html(texto);
-      
-      setTimeout(function() {
-        location.reload();
-      }, 1500);
-      /*
-      // How'd it go?
-      if (data.status === "error") {
-        // Uh-oh.
-        window.alert(data.msg);
-        $("#upload-file :input").removeAttr("disabled");
-        return;
-      }
-      else {
-	// Ok
-	var delayInMilliseconds = 1000; //1 second
-
-	setTimeout(function() {
-	  // luego del reatardo se recarga la pagina
-	  location.reload(true);
-	}, delayInMilliseconds);
-
-	// redirection
-	//window.location = NEXT_URL;
-      }
-       */
-    },
-  });
-}
-
-
-function collectFormData() {
-  // Go through all the form fields and collect their names/values.
-  var fd = new FormData();
-
-  console.log('collectFormData...');
-  $("#upload-file :input").each(function() {
-    var $this = $(this);
-    var name  = $this.attr("name");
-    var type  = $this.attr("type") || "";
-    var value = $this.val();
-    console.log(`name: ${name}\nvalue:${value}---'n`);
-    // No name = no care.
-    if (name === undefined) {
-      return;
-    }
-
-    // Skip the file upload box for now.
-    if (type === "file") {
-      return;
-    }
-    
-    fd.append(name, value);
-  });
-
-  return fd;
-}
-
-function handleFiles(files) {
-  var fs = document.getElementById('max_filesize');
-  MAX_FILESIZE = parseInt(document.
-			  getElementById('max_filesize').
-			  innerText);
-  
-  // Add them to the pending files list.
-  for (var i = 0, ie = files.length; i < ie; i++) {
-    // checking for duplicated files and max filesize
-    if (files[i].size >= MAX_FILESIZE) {
-      NOT_ALLOWED_FILES.push(files[i]);
-    } else if (STORED_FILENAMES.indexOf(files[i].name) == -1){
-      PENDING_FILES.push(files[i]);
-    } else {
-      DUPLICATED_FILES.push(files[i]);
-    }
-  }
-}
-
-function actualizarArchivosSubir(files) {
-  var $listaSubir = $('#lista_archivos_subir');
-  handleFiles(files);
-
-  var texto = "";
-  for (var i = 0; i < PENDING_FILES.length ; i++) {
-    texto += "&check;" + PENDING_FILES[i].name + " (<b>" +PENDING_FILES[i].size +"</b> bytes)<br>";
-  }
-  for (let i = 0; i < DUPLICATED_FILES.length; i++) {
-    texto += "&#x2715;" + DUPLICATED_FILES[i].name + " (duplicado)<br>";
-  }
-  for (let i = 0; i < NOT_ALLOWED_FILES.length; i++) {
-    texto += "&#x2757;" + NOT_ALLOWED_FILES[i].name + " (<b>" + NOT_ALLOWED_FILES[i].size + "</b> bytes) tamaño excedido<br>";
-  }
-  mostrarModalSubir();
-  $listaSubir.html(texto + "<br/><big><b>"+PENDING_FILES.length+"</big></b> archivos.");
-}
 
 function initDropbox(deviceType) {
   var $dropbox = $("#dropbox");
@@ -339,4 +155,231 @@ function initDropbox(deviceType) {
   for (var i=0; i<filenames.length; i++){
     STORED_FILENAMES.push(filenames[i].text);
   }
+}
+
+function mostrarModalSubir(deviceType) {
+  var modalSubir = document.getElementById("modal-subir");
+  modalSubir.style.display = "block";
+}
+
+function ocultarModalSubir(deviceType) {
+  var modalSubir = document.getElementById("modal-subir");
+  var dom_passwordCheck = document.getElementById('pwd_check');
+  modalSubir.style.display = "none";
+  dom_passwordCheck.checked = false;
+  menuPassword();
+  PENDING_FILES = [];
+  DUPLICATED_FILES = [];
+  NOT_ALLOWED_FILES = [];
+}
+
+function doUploadModal() {
+  doUpload('');
+}
+
+function doUpload(deviceType) {
+  // comprobando password
+  if (passwordCheck() && comprobarPasswords()) {
+    console.log('TOdo OK ');
+    $('#pwd_msj').html(' ');
+  } else {
+    console.log('>>>xxxx');
+    $('#pwd_msj').html('&#x2715; contraseñas muy cortas o no coinciden');
+    return;
+  }
+
+  $("#progress").show();
+  var $progressBar = $("#progress-bar");
+  var $estadoRecepcion = $("#estado-recepcion");
+
+  var $caja_archivos = $("#caja_archivos");
+  
+  // Gray out the form.
+  $("#upload-file :input").attr("disabled", "disabled");
+
+  // Initialize the progress bar.
+  $progressBar.css({"width": "0%"});
+
+  // Collect the form data.
+  var fd = collectFormData();
+
+  // Attach the files.
+  for (var i = 0, ie = PENDING_FILES.length; i < ie; i++) {
+    // Collect the other form data.
+    fd.append("file", PENDING_FILES[i]);
+  }
+
+  // Inform the back-end that we're doing this over ajax.
+  fd.append("__ajax", "true");
+
+  if (passwordCheck()) {
+    var pwd1 = document.getElementById('pwd1');
+    fd.append('password', pwd1.value);
+  }
+
+  // peticion subir archivo(s)
+  var xhr = $.ajax({
+    xhr: function() {
+      var xhrobj = $.ajaxSettings.xhr();
+      if (xhrobj.upload) {
+        xhrobj.upload.addEventListener("progress", function(event) {
+          var percent = 0;
+          var position = event.loaded || event.position;
+          var total    = event.total;
+          if (event.lengthComputable) {
+            percent = Math.ceil(position / total * 100);
+          }
+          // Set the progress bar.
+          $progressBar.css({"width": percent + "%"});
+          $progressBar.text(percent + "% enviado");
+	  if (percent == 100)
+	    $estadoRecepcion.text("Comprobando archivo(s)...");
+        }, false);
+      }
+      return xhrobj;
+    },
+    url: UPLOAD_URL,
+    method: "POST",
+    contentType: false,
+    processData: false,
+    cache: false,
+    data: fd,
+    success: function(data) {
+      console.log('respuesta:::', data);
+      $progressBar.css({"width": "100%"});
+      $estadoRecepcion.text("Guardando archivo(s) en el servidor ...");
+      // data = JSON.parse(data);
+
+      // inspeccionando y actualizando respuesta
+      var texto = '';
+      if (data.exitosos.length > 0) {
+        for (let i = 0; i < data.exitosos.length; i++) {
+          texto += "<big>&check;</big> <b>" + data.exitosos[i] + "</b><br>";
+        }
+      }
+      if (data.erroneos.length > 0) {
+        for (let i = 0; i < data.erroneos.length; i++) {
+          texto += "&#x2715; " + data.erroneos[i].redirect + "(" + data.erroneos[i].mensaje + ")<br>";
+        }
+      }
+      console.log('texto', texto);
+      var $dropbox = $('#dropbox');
+      $dropbox.html('');
+      $dropbox.html(texto);
+      
+      $("#lista_archivos_subir").html(texto);
+      
+      setTimeout(function() {
+        ocultarModalSubir();
+        location.reload();
+      }, 1500);
+      /*
+      // How'd it go?
+      if (data.status === "error") {
+        // Uh-oh.
+        window.alert(data.msg);
+        $("#upload-file :input").removeAttr("disabled");
+        return;
+      }
+      else {
+	// Ok
+	var delayInMilliseconds = 1000; //1 second
+
+	setTimeout(function() {
+	  // luego del reatardo se recarga la pagina
+	  location.reload(true);
+	}, delayInMilliseconds);
+
+	// redirection
+	//window.location = NEXT_URL;
+      }
+       */
+    },
+  });
+}
+
+function collectFormData() {
+  // Go through all the form fields and collect their names/values.
+  var fd = new FormData();
+
+  console.log('collectFormData...');
+  $("#upload-file :input").each(function() {
+    var $this = $(this);
+    var name  = $this.attr("name");
+    var type  = $this.attr("type") || "";
+    var value = $this.val();
+    console.log(`name: ${name}\nvalue:${value}---'n`);
+    // No name = no care.
+    if (name === undefined) {
+      return;
+    }
+
+    // Skip the file upload box for now.
+    if (type === "file") {
+      return;
+    }
+    
+    fd.append(name, value);
+  });
+
+  return fd;
+}
+
+function handleFiles(files) {
+  var fs = document.getElementById('max_filesize');
+  MAX_FILESIZE = parseInt(document.
+			  getElementById('max_filesize').
+			  innerText);
+  
+  // Add them to the pending files list.
+  for (var i = 0, ie = files.length; i < ie; i++) {
+    // checking for duplicated files and max filesize
+    if (files[i].size >= MAX_FILESIZE) {
+      NOT_ALLOWED_FILES.push(files[i]);
+    } else if (STORED_FILENAMES.indexOf(files[i].name) == -1){
+      PENDING_FILES.push(files[i]);
+    } else {
+      DUPLICATED_FILES.push(files[i]);
+    }
+  }
+}
+
+function actualizarArchivosSubir(files) {
+  var $listaSubir = $('#lista_archivos_subir');
+  handleFiles(files);
+
+  var texto = "";
+  for (var i = 0; i < PENDING_FILES.length ; i++) {
+    texto += "&check;" + PENDING_FILES[i].name + " (<b>" +PENDING_FILES[i].size +"</b> bytes)<br>";
+  }
+  for (let i = 0; i < DUPLICATED_FILES.length; i++) {
+    texto += "&#x2715;" + DUPLICATED_FILES[i].name + " (duplicado)<br>";
+  }
+  for (let i = 0; i < NOT_ALLOWED_FILES.length; i++) {
+    texto += "&#x2757;" + NOT_ALLOWED_FILES[i].name + " (<b>" + NOT_ALLOWED_FILES[i].size + "</b> bytes) tamaño excedido<br>";
+  }
+  mostrarModalSubir();
+  $listaSubir.html(texto + "<br/><big><b>"+PENDING_FILES.length+"</big></b> archivos.");
+}
+
+function passwordCheck() {
+  return document.getElementById("pwd_check").checked;
+}
+
+function menuPassword() {
+  var menuPassword = document.getElementById("menu_password");
+  if (passwordCheck() == true) {
+    menuPassword.style.display = 'block';
+  } else {
+    menuPassword.style.display = 'none';
+  }
+}
+
+function comprobarPasswords() {
+  var pwd1 = document.getElementById("pwd1");
+  var pwd2 = document.getElementById("pwd2");
+  if (pwd1.value === pwd2.value && pwd1.value.length > 0) {
+    return true;
+  }
+  return false;
 }
