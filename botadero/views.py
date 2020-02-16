@@ -56,7 +56,7 @@ def subidaArchivo(cat):
 
     if not isinstance(resultado, dict):
         # caso exitoso, se debe actualizar
-        co.sincronizarArchivos()
+        co.sincronizarArchivos("['.gitkeep', '.gitkeep~', '#.gitkeep', '#.gitkeep#']")
         html_page = u.obtenerHtmlListado(categoria=cat)
         return redirect("/"+cat, code=302)
     else:
@@ -71,6 +71,9 @@ def subidaArchivos(cat):
         cat = 'Misc'
 
     hashedPassword = ''
+    if request.form.get('password') is not None:
+        hashedPassword = request.form.get('password')
+        
     exitosos = []
     erroneos = []
 

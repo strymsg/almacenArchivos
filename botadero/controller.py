@@ -44,13 +44,14 @@ def subirArchivo(cat, file, hashedPassword=''):
     NOTA: En caso de subir exitosamente, la funcion que lo llama deberia
     llamar a sincronizarArchivo() para actualizar los registros.
     '''
-    print('subirArchivo(cat="%r", file="%r", hashedPassword="%r"' % (cat, file, hashedPassword))
+    print('subirArchivo(cat="%r", file="%r", hashedPassword len="%r"' % (cat, file, len(hashedPassword)))
     filename = secure_filename(file.filename)
     categoria = ''
     if cat != 'Misc':
         categoria = cat
     # comprobando existencia
     filepath = os.path.join(globalParams.uploadDirectory, categoria, filename)
+    filepath = u.addRelativeFileName(filepath)
     try:
         f = open(filepath, 'r')
         f.close()
@@ -113,7 +114,17 @@ def subirArchivo(cat, file, hashedPassword=''):
             'mensaje': 'Error interno al guardar el archivo ' + filename,
             'redirect': categoria
         }
+
+    if len(Archivo.query.filter_by(name=filename).all()) > 1:
+        print('Ya existe un archivo en la BD con nombre: %r ' % filename)
+        return {
+            'tipoError': 1,
+            'mensaje': 'Ya existe (BD) un archivo con nombre ' + filename,
+            'redirect': categoria
+        }        
+    
     # creando registro en la BD
+    # TODO: obtener hash del password enviado `hashedPassword'
     arch = Archivo.create(name=filename,
                           path=filepath, size=fsize,
                           extension=u.extensionArchivo(filename),
@@ -122,8 +133,8 @@ def subirArchivo(cat, file, hashedPassword=''):
                           uploadedAtTime=uploadedAtTime,
                           remainingTime=remainingTime,
                           hashedPassword=hashedPassword)
-    sincronizarArchivos(['.gitkeep', '.gitkeep~', '#.gitkeep', '#.gitkeep#'])
-    print('✓ Archivo registrado en BD', arch)
+    # sincronizarArchivos(['.gitkeep', '.gitkeep~', '#.gitkeep', '#.gitkeep#'])
+    print('✓ Archivo registrado en BD', str(arch), str(len(arch.hashedPassword)))
     return arch
     
     
@@ -209,6 +220,7 @@ def sincronizarArchivos(ignorar=[]):
     archivosEnBd = []
     for reg in listaEnBd:
         archivosEnBd.append(reg.path)
+        # print('i ', reg.path)
     
     archivos = []
 
@@ -237,6 +249,7 @@ def sincronizarArchivos(ignorar=[]):
 
     # actualizando BD
     for archivo in archivos:
+        # print('o ', archivo, archivo not in archivosEnBd)
         if archivo in ignorar:
             continue
         if archivo not in archivosEnBd:

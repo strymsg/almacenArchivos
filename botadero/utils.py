@@ -200,7 +200,7 @@ def existeArchivoEnFs(cat, nombreArchivo):
 
     :return boolean: True si existe, False si no
     '''
-    
+    pass
     
 def nombreArchivo(nombreYRuta):
     tupla = nombreYRuta.split(os.sep)
