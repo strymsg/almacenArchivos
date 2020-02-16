@@ -34,6 +34,11 @@ $(document).ready(function() {
   if (deviceType == 'mobile') {
     // quitando propiedad multiple de file-picker para que haya mas soporte en dispositivos móviles
     $('#file-picker')[0].multiple = false;
+
+    $("#upload-button").on("click", function(e) {
+      e.preventDefault();
+      modalSubir.style.display = "block";
+    });
   }   
   // Set up the drag/drop zone.
   initDropbox(deviceType);
@@ -77,6 +82,10 @@ $(document).ready(function() {
 
 });
 
+function mostrarModalSubir(deviceType) {
+  var modalSubir = document.getElementById("modal-subir");
+  modalSubir.style.display = "block";
+}
 
 function doUpload(deviceType) {
   $("#progress").show();
@@ -228,6 +237,7 @@ function handleFiles(files) {
 
 function initDropbox(deviceType) {
   var $dropbox = $("#dropbox");
+  var $listaSubir = $('#lista_archivos_subir');
   
   if (deviceType === 'mobile') {
     $dropbox.html('Arrastra tu archivo aquí');
@@ -266,8 +276,9 @@ function initDropbox(deviceType) {
     for (let i = 0; i < DUPLICATED_FILES.length; i++) {
       texto += "&#x2715;" + DUPLICATED_FILES[i].name + " (duplicado)<br>";
     }
-    
-    $dropbox.html(texto + "<br/><big><b>"+PENDING_FILES.length+"</big></b> archivos.");
+
+    mostrarModalSubir();
+    $listaSubir.html(texto + "<br/><big><b>"+PENDING_FILES.length+"</big></b> archivos.");
   });
 
   // If the files are dropped outside of the drop zone, the browser will

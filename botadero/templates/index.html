@@ -19,12 +19,27 @@
       Un sitio para <b>compartir</b> archivos.
     </div>
 
-
     <!-- Modal form con previsualización y opciones -->
     <div id="modal-subir" class="modal_subir">
       <div class="modal-subir-content">
-        <span id="closeModalSubir" class="closeModalSubir">&times;</span>
-        <p>Archivos a subir:</p>
+        <div class="modal-subir-header">
+          <span id="closeModalSubir" class="closeModalSubir">&times;</span>
+          <h2>Subir contenido</h2>
+        </div>
+        <div class="modal-subir-body">
+          <ul id="lista_archivos_subir">
+            Contenido del modal
+          </ul>
+          <!-- Barra de progreso -->
+	  <fieldset id="progress" style="display: none">
+	    <legend id="estado-recepcion">Recibiendo:</legend>
+	    <div class="progress-trough">
+	      <div id="progress-bar" class="progress-bar">0%</div>
+	    </div>
+	  </fieldset>
+
+          
+        </div>
       </div>
     </div>
     
@@ -48,14 +63,6 @@
 	    <!-- <input type="file" name="file"/> -->
 	    <input type="submit" class="btn large" id="upload-button" value="Compartir archivo(s)"/>
 	  </form>	
-
-	  <!-- Barra de progreso -->
-	  <fieldset id="progress" style="display: none">
-	    <legend id="estado-recepcion">Recibiendo archivo(s):</legend>
-	    <div class="progress-trough">
-	      <div id="progress-bar" class="progress-bar">0%</div>
-	    </div>
-	  </fieldset>
           
 	  <!-- Listado de Archivos -->	
 	  <div id="caja_archivos" class="caja_lista_archivos">
