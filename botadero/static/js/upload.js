@@ -179,13 +179,15 @@ function doUploadModal() {
 
 function doUpload(deviceType) {
   // comprobando password
-  if (passwordCheck() && comprobarPasswords()) {
-    console.log('TOdo OK ');
-    $('#pwd_msj').html(' ');
-  } else {
-    console.log('>>>xxxx');
-    $('#pwd_msj').html('&#x2715; contraseñas muy cortas o no coinciden');
-    return;
+  if (passwordCheck()) {
+    if (comprobarPasswords()) {
+      console.log('TOdo OK ');
+      $('#pwd_msj').html(' ');
+    } else {
+      console.log('>>>xxxx');
+      $('#pwd_msj').html('&#x2715; contraseñas muy cortas o no coinciden');
+      return;
+    } 
   }
 
   $("#progress").show();
