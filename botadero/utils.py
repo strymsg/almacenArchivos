@@ -407,9 +407,9 @@ def listaArchivosParaRenderizar(categoria=None, ignorar=[]):
     archivos de esa categoria.
 
     Ej:
-    [ {'name': 'archi1.jpeg', 'size': 4991, date: '2018-06-14 19:49:17.427922', 'restante': 2, 'descargas': 3},
-      {'name': 'arc.jpeg', 'size': 199, date: '2018-08-14 19:49:17.427922', 'restante': 2, 'descargas': 9},
-      {'name': '9g.mp3', 'size': 83981, date: '2018-08-14 19:49:19.427922', 'restante': 9, 'descargas': 0}
+    [ {'name': 'archi1.jpeg', 'size': 4991, date: '2018-06-14 19:49:17.427922', 'restante': 2, 'descargas': 3, protegido: True},
+      {'name': 'arc.jpeg', 'size': 199, date: '2018-08-14 19:49:17.427922', 'restante': 2, 'descargas': 9, protegido: False},
+      {'name': '9g.mp3', 'size': 83981, date: '2018-08-14 19:49:19.427922', 'restante': 9, 'descargas': 0, protegido: False}
     ]
     '''
     lista = []
@@ -424,12 +424,16 @@ def listaArchivosParaRenderizar(categoria=None, ignorar=[]):
         lista = listaDeArchivosEnBd(ignorar=ignorar)
     archivos = []
     for archivo in lista:
+        protegido = False
+        if len(archivo.hashedPassword) > 0:
+            protegido = True
         obj = {
             'name':archivo.name,
             'size':archivo.size,
             'date':archivo.uploadedAtTime,
             'restante':archivo.remainingTime,
-            'descargas': archivo.downloads
+            'descargas': archivo.downloads,
+            'protegido': protegido
         }
         archivos.append(obj)
     return archivos

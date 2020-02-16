@@ -45,8 +45,8 @@
             <p id="pwd_msj"></p>
             <label for="pwd">Contraseña:</label>
             <input type="password" id="pwd1" name="pwd1">
-
-            <label for="pwd">Confirmar Contraseña:</label>
+            <br>
+            <label for="pwd">Confirmar:</label>
             <input type="password" id="pwd2" name="pwd2">
           </div>
           <!-- Boton subir -->
@@ -85,11 +85,15 @@
 	      <p class="lista_archivos_elemento">
 		<a id="archivo_{{ archivoObj['name'] }}"
 		   href="/almacen/{{ dv['categoriaActual'] }}/{{ archivoObj['name'] }}" title="descargas: {{ archivoObj['descargas'] }}">
-		     {# archivos normales #}
-		   <img src="{{ url_for('static', filename='botadero_resources/archivo.png')}}" height="16" title="click para descargar">
-                     {# TODO: Implementar para archivos protegidos #}
-		     {{ archivoObj['name'] }}
-		   </a>
+		  {# archivos normales #}
+                  {% if archivoObj['protegido'] == True %}
+		    <img src="{{ url_for('static', filename='botadero_resources/archivo-protegido.png')}}" height="16" title="click para descargar">
+                  {% else %}
+                    <img src="{{ url_for('static', filename='botadero_resources/archivo.png')}}" height="16" title="click para descargar">
+                    {# TODO implementar formulario #}
+                  {% endif %}
+		  {{ archivoObj['name'] }}
+		</a>
 	      {% if archivoObj['size'] < 1000 %}
 		<span class="label" title="tamaño">{{ archivoObj['size'] }} B</span>
 	      {% elif archivoObj['size'] >= 1000 and archivoObj['size'] < 1000000 %}
