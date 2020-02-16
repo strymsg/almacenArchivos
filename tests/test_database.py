@@ -18,6 +18,13 @@ def test_crearArchivo(db):
     a = Archivo.create(name=name, extension='')
     assert Archivo.query.filter_by(name=name) is not None
 
+def test_crearArchivo2(db):
+    from botadero.database.models import Archivo
+    name = uuid.uuid4().hex
+    a = Archivo.create(name=name, extension='', hashedPassword='123123123')
+    aq = Archivo.query.filter_by(name=name).first()
+    assert aq.hashedPassword == '123123123'
+    
 def test_eliminarArchivo(db):
     from botadero.database.models import Archivo
     name = uuid.uuid4().hex
@@ -25,7 +32,13 @@ def test_eliminarArchivo(db):
     a.delete()
     l = Archivo.query.filter_by(name=name).all()
     assert len(l) == 0
-    
+
+def test_crearArchivoIncorrecto(db):
+    from botadero.database.models import Archivo
+    name = uuid.uuid4().hex
+    a = Archivo.create(extension='py')
+    assert a.name == 'undefined'
+
 def test_listarArchivo(db):
     from botadero.database.models import Archivo
     name = uuid.uuid4().hex
