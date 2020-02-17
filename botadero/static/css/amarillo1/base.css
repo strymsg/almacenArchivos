@@ -144,13 +144,13 @@ body {
   max-width: 480px;
   margin-left: auto;
   margin-right: auto;
-  zoom: 1;
+  transform: scale();
 }
 
 .container:before, .container:after {
   display: table;
   content: "";
-  zoom: 1;
+  transform: scale();
 }
 
 .container:after {
@@ -1046,7 +1046,7 @@ div#wrap {
     box-sizing:border-box
 }
 /* clearfix */
-.row{*zoom:1}
+.row{*transform:scale()}
 .row:before,
 .row:after{
     display:table;
