@@ -14,7 +14,7 @@ from flask import current_app
 
 # NOTA: para ver los mensajes en print usar: pytest -s
 
-def test_listaDeArchivos():
+def test_listaDeArchivos(db):
     from botadero.utils import listaDeArchivos, categorias
 
     # categorias
@@ -30,7 +30,7 @@ def test_listaDeArchivos():
         print ('Error listando archivos')
         assert 1 == 0
 
-def test_hashArchivo_sinAceleracion():
+def test_hashArchivo_sinAceleracion(db):
     from botadero.utils import hashArchivo
 
     archivo = os.path.join(os.path.abspath(os.curdir),
@@ -53,7 +53,7 @@ def test_hashArchivo_sinAceleracion():
     print ('hash sin aceleracion pasto1.jpg', hexdigest)
     assert hexdigest == '1da479d184c1cf9a7d8df498c842ab258912a482'
 
-def test_hashArchivo_conAceleracion():
+def test_hashArchivo_conAceleracion(db):
     from botadero.utils import hashArchivo
 
     # archivo chico
@@ -118,6 +118,25 @@ def test_descargarAchivo(db):
     a = Archivo.query.filter_by(path=nombreYRuta).first()
     assert a.downloads == 1
 
+def test_hashPassword():
+    from botadero.utils import hashPassword, checkHashedPassword
+    hashed = hashPassword('abeced')
+    assert checkHashedPassword('abeced', hashed) is True
+
+def test_crearArchivoConPassword(db):
+    from botadero.utils import hashPassword, checkHashedPassword
+    from botadero.utils import registrarArchivo, comprobarPassword
+    from botadero.utils import descargarArchivo, borrarArchivo, existeArchivo
+    
+    nombreYRuta = crearArchivoPrueba()
+    hashedPassword = hashPassword('123456')
+    registrado = registrarArchivo(nombreYRuta, hashedPassword=hashedPassword)
+    assert descargarArchivo(cat='', nombreArchivo=nombreYRuta) is not None
+    assert comprobarPassword(nombreYRuta, '123456')
+
+    assert borrarArchivo(nombreYRuta) is True
+    assert existeArchivo(nombreYRuta) is None
+    
 # @pytest.fixture
 # def test_crearHtmlListado_forzado(db):
 #     #flaskr.app.config['TESTING'] = True

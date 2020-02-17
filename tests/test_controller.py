@@ -34,6 +34,23 @@ def test_sincronizarArchivos(db):
     assert len(borrados2) > 0
     os.remove(f2)
 
+# def test_subirArchivo(db):
+#     from botadero.controller import subirArchivo
+#     from botadero.utils import nombreArchivo, borrarArchivo, existeArchivo
+
+#     db_fd, db_path = tempfile.mkstemp(suffix='.txt', dir=shared.globalParams.uploadDirectory)
+#     with open(db_path, 'w') as file:
+#         i = 5000
+#         cont = ''
+#         while i > 10:
+#             cont += ',' + str(random.randint(1,i))
+#             i -= 1
+#         file.write(cont)
+#         resp = subirArchivo('', file, '123456')
+#         assert 'tipoError' not in resp
+#         assert existeArchivo(db_path) is not None
+#     assert borrarArchivo(db_path) is True
+
 # utils para pruebas
 def crearArchivoPrueba(numCadenas=5000, dir=None):
     db_fd, db_path = tempfile.mkstemp(suffix='.txt', dir=dir)
@@ -46,3 +63,5 @@ def crearArchivoPrueba(numCadenas=5000, dir=None):
             i -= 1
         file.write(cont)
     return db_path
+
+

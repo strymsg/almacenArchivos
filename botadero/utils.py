@@ -6,6 +6,7 @@ AGPL liberated.
 import os, sys, hashlib, re, random
 from datetime import datetime as dt
 from sqlalchemy import desc
+from passlib.hash import sha256_crypt
 
 from . import shared
 from .database import get_db
@@ -339,10 +340,26 @@ def archivoDebeBorrarsePorTiempo(nombreYRuta='', archivo=None):
     print ('verificando edad archivo:', archivo.name, '  edad:', str(edad),  'borrado max', str(tiempoBorrado))
     return tiempoBorrado < edad
 
+def hashPassword(password):
+    ''' retorna un digesto + salt seguro del password '''
+    return sha256_crypt.encrypt(password)
+
+def checkHashedPassword(password, hashedPassword):
+    ''' retorno True o False si la comprobacion hash es correcta '''
+    return sha256_crypt.verify(password, hashedPassword)
+
 def comprobarPassword(nombreYRuta, password):
     ''' Consulta en la BD y comprueba si el archivo ha sido guardado usando el password dado.
+    - param: nombreYRuta (string): Nombre y ruta del archivo guardado
+    - param: password (string): password con el que se quiere comprobar
+    return True o False en caso fallido.
     '''
-    return True
+    try:
+        archivo = Archivo.query.filter_by(path=nombreYRuta).first()
+        return checkHashedPassword(password, archivo.hashedPassword)
+    except Exception as E:
+        print('Error comprobando password %r: %r' % (nombreYRuta, str(E)))
+        return False
 
 def esquemaColoresRandom():
     '''

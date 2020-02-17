@@ -122,9 +122,10 @@ def subirArchivo(cat, file, hashedPassword=''):
             'mensaje': 'Ya existe (BD) un archivo con nombre ' + filename,
             'redirect': categoria
         }        
+
+    hashedPassword = u.hashPassword(hashedPassword)
     
     # creando registro en la BD
-    # TODO: obtener hash del password enviado `hashedPassword'
     arch = Archivo.create(name=filename,
                           path=filepath, size=fsize,
                           extension=u.extensionArchivo(filename),
