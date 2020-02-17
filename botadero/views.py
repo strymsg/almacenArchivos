@@ -9,7 +9,7 @@ from . import utils as u
 
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, url_for,
-    send_file, jsonify
+    send_file, jsonify, make_response
 )
 
 botaderoBp = Blueprint('botadero', __name__, url_prefix='')
@@ -54,7 +54,7 @@ def descargarArchivoProtegidoAjax(cat):
                 'code': 1
             }
         }
-        return jsonify(resultados)
+        return make_response(jsonify(resultados), 400)
     password = request.form.get('pwd_archivo')
     if not co.descargaPermitida(cat, nombreArchivo):
         resultados = {
@@ -63,7 +63,7 @@ def descargarArchivoProtegidoAjax(cat):
                 'code': 3
             }
         }
-        return jsonify(resultados)
+        return make_response(jsonify(resultados), 401)
     pathf = co.descargarArchivo(cat, nombreArchivo, password=password)
     if isinstance(pathf, dict):
         resultados = {
@@ -72,7 +72,7 @@ def descargarArchivoProtegidoAjax(cat):
                 'code': pathf['tipoError']
             }
         }
-        return jsonify(resultados)
+        return make_response(jsonify(resultados), 403)
     return send_file(pathf, as_attachment=True)
     
 # vista de subida de archivo (individual) este caso se asume que no se usa javascript.

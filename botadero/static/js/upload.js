@@ -97,6 +97,65 @@ $(document).ready(function() {
     }
   };
 
+  // descargar de archivos protegidos
+  $("#download_protected")
+    .submit(function(event) {
+      event.preventDefault();
+      var post_url = $(this).attr("action"); //get form action url
+      var request_method = $(this).attr("method"); //get form GET/POST method
+
+      // parece que jquery tiene errores con las respuestas blob de archivos grandes, por eso se usa XMLHTttpRequest
+      var request = new XMLHttpRequest();
+      request.open(request_method, post_url, true);
+      request.responseType = 'blob';
+      
+      request.onload = function() {
+        if (request.status == 200) {
+          var filename = document.getElementById("nombre_archivo_protegido_label").innerHTML;
+          $("#pwd_msj_download").html('');
+          var blob = new Blob([request.response], { type: 'application/download' });          
+          var link = document.createElement('a');
+          link.href = window.URL.createObjectURL(blob);
+          link.download = filename;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        } else {
+          // TODO: convertir a objeto por que la respuesta de error es de tipo JSON
+          //console.log(request.response);
+          $("#pwd_msj_download").html('&#x2715; Contraseña incorrecta');
+        }
+      };
+      var form_data = new FormData(document.getElementById('download_protected'));
+      request.send(form_data);
+    });
+
+    //   $.ajax({
+    //     url: post_url,
+    //     type: request_method,
+    //     data: form_data,
+    //   }).
+    //     done(function(response, textStatus, request) {
+    //       // respuesta correcta creando un enlace para descargar el archivo
+    //       $("#pwd_msj_download").html('');
+
+    //       // The actual download
+    //       // source solution: https://nehalist.io/downloading-files-from-post-requests/
+
+    //       var blob = new Blob([request.response], { type: 'application/download' });
+    //       var link = document.createElement('a');
+    //       link.href = window.URL.createObjectURL(blob);
+    //       var filename = document.getElementById("nombre_archivo_protegido_label").innerHTML;
+    //       link.download = filename;
+    //       document.body.appendChild(link);
+    //       link.click();
+    //       document.body.removeChild(link);
+    //     }).
+    //     error(function(response) {
+    //       $("#pwd_msj_download").html(response.responseJSON.error.msj);
+    //     });
+      // });
+
 });
 
 
@@ -410,3 +469,4 @@ function descargarProtegido(nombre) {
   document.getElementById("nombre_archivo_protegido_label").innerHTML = nombre;
   mostrarModalPassword(nombre);
 }
+

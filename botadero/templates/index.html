@@ -44,14 +44,14 @@
           <div id="menu_password" style="display: none">
             <p id="pwd_msj"></p>
             <label for="pwd">Contraseña:</label>
-            <input type="password" id="pwd1" name="pwd1">
+            <input type="password" id="pwd1" name="pwd1" minlength=1>
             <br>
             <label for="pwd">Confirmar:</label>
-            <input type="password" id="pwd2" name="pwd2">
+            <input type="password" id="pwd2" name="pwd2" minlength=1>
           </div>
           <!-- Boton subir -->
           <div>
-            <input class="btn large" value="Compartir archivo(s)" onclick="doUploadModal('')"/>
+            <input type="button" class="btn large" value="Compartir archivo(s)" onclick="doUploadModal('')">
           </div>
         </div>
       </div>
@@ -66,15 +66,16 @@
           <img src="{{ url_for('static', filename='botadero_resources/archivo-protegido.png')}}" height="32" title="click para descargar">
         </div>
         <div class="modal-subir-body">
-          <p ></p>
           <form method="POST" id="download_protected" action="/{{ dv['categoriaActual'] }}/download_protected">
             <label for="pwd">Contraseña:</label>
             <input type="text" id="nombre_archivo_protegido" name="nombre_archivo_protegido" hidden>
             <br>
-            <input type="password" id="pwd_archivo" name="pwd_archivo">
+            <input type="password" id="pwd_archivo" name="pwd_archivo" minlength=1>
             <!-- descargar -->
+            <label id="pwd_msj_download"></label>
             <div>
-              <input type="submit" class="btn large" value="descargar"/>
+              <!-- <input type="submit" class="btn large" value="descargar"/> -->
+              <input type="submit" class="btn large" value="descargar" />
             </div>
           </form>
         </div>
