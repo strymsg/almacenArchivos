@@ -38,6 +38,24 @@ def descargaDesdeIndexView(cat, nombreArchivo):
                                esquemaColores=u.esquemaColoresRandom()), 404
     return send_file(pathf, as_attachment=True)
 
+# endpoint descarga protegida (ajax)
+@botaderoBp.route('/almacen/<string:cat>/download_protected', methods=['GET', 'POST'])
+def descargarArchivoProtegidoAjax(cat):
+    print('⏬ ⚿ file', cat, nombreArchivo)
+    if cat == '':
+        cat = 'Misc'
+    resultados = {}
+    if 'password' not in request.form:
+        resultados = {
+            error: {
+                'msj': 'No se ha proporcionado password',
+                'code': 1
+            }
+        }
+        return jsonify(resultados)
+    
+
+
 # vista de subida de archivo (individual) este caso se asume que no se usa javascript.
 @botaderoBp.route('/<string:cat>/upload_file', methods=['GET', 'POST'])
 def subidaArchivo(cat):
@@ -51,8 +69,11 @@ def subidaArchivo(cat):
         html_page = u.obtenerHtmlListado(categoria=cat)
         return html_page.html
 
-    hashedPassword = ''
-    resultado = co.subirArchivo(cat, file, hashedPassword)
+    resultado = {}
+    if request.form.get('password') is not None:
+        resultado = co.subirArchivo(cat, file, request.form.get('password'))
+    else:
+        resultado = co.subirArchivo(cat, file)
 
     if not isinstance(resultado, dict):
         # caso exitoso, se debe actualizar
@@ -70,16 +91,20 @@ def subidaArchivos(cat):
     if cat == '':
         cat = 'Misc'
 
-    hashedPassword = ''
+    password = ''
     if request.form.get('password') is not None:
-        hashedPassword = request.form.get('password')
-        
+        password = request.form.get('password')
+    print('Pass:', password)
     exitosos = []
     erroneos = []
 
     for upload in request.files.getlist("file"):
         print('* filename', upload.filename)
-        resultado = co.subirArchivo(cat, upload, hashedPassword)
+        resultado = None
+        if password != '':
+            resultado = co.subirArchivo(cat, upload, password)
+        else:
+            resultado = co.subirArchivo(cat, upload)
         if not isinstance(resultado, dict):
             print('exitoso:', resultado.name)
             exitosos.append(resultado.name)

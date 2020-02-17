@@ -26,13 +26,14 @@ def descargarArchivo(cat, nombreArchivo):
     marcarPaginaListaParaRenderizar(categoria=cat)
     return pathf
 
-def subirArchivo(cat, file, hashedPassword=''):
+def subirArchivo(cat, file, password=''):
     ''' Verifica el archivo siendo subido, lo guarda en el directorio de
     almacenamiento y lo registra en la BD. Tambien marca la categoria a la
     que pertenece el archivo para que se renderize el html de listado.
 
-    :param cat: Categoria o subcarpeta donde se guarda el archivo
-    :param file: objeto instancia de 'FileStorage' (werkzeug) del archivo
+    :param cat: Categoria o subcarpeta donde se guarda el archivo.
+    :param file: objeto instancia de 'FileStorage' (werkzeug) del archivo.
+    :param password: Cadena con el password si es '' no se usa.
 
     :return: Si la subida es exitosa, retorna el registro en la base de 
     datos recien creado. Si no, retorna un diccionario de la forma:
@@ -44,7 +45,7 @@ def subirArchivo(cat, file, hashedPassword=''):
     NOTA: En caso de subir exitosamente, la funcion que lo llama deberia
     llamar a sincronizarArchivo() para actualizar los registros.
     '''
-    print('subirArchivo(cat="%r", file="%r", hashedPassword len="%r"' % (cat, file, len(hashedPassword)))
+    print('subirArchivo(cat="%r", file="%r", hashedPassword len="%r"' % (cat, file, len(password)))
     filename = secure_filename(file.filename)
     categoria = ''
     if cat != 'Misc':
@@ -123,7 +124,9 @@ def subirArchivo(cat, file, hashedPassword=''):
             'redirect': categoria
         }        
 
-    hashedPassword = u.hashPassword(hashedPassword)
+    hashedPassword = ''
+    if password != '':
+        hashedPassword = u.hashPassword(hashedPassword)
     
     # creando registro en la BD
     arch = Archivo.create(name=filename,
