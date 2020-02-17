@@ -34,6 +34,28 @@ def test_sincronizarArchivos(db):
     assert len(borrados2) > 0
     os.remove(f2)
 
+def test_descargarArchivoProtegido():
+    from botadero.utils import hashPassword, registrarArchivo, comprobarPassword, borrarArchivo, existeArchivo, descargarArchivo
+    from botadero.controller import descargarArchivo
+    
+    nombreYRuta = crearArchivoPrueba()
+    hashedPassword = hashPassword('123456')
+    registrado = registrarArchivo(nombreYRuta, hashedPassword=hashedPassword)
+    assert not isinstance(descargarArchivo('', nombreYRuta, password='123456'), dict)
+    assert borrarArchivo(nombreYRuta) is True
+    assert existeArchivo(nombreYRuta) is None
+
+def test_descargarArchivoProtegidoError():
+    from botadero.utils import hashPassword, registrarArchivo, comprobarPassword, borrarArchivo, existeArchivo, descargarArchivo
+    from botadero.controller import descargarArchivo
+    
+    nombreYRuta = crearArchivoPrueba()
+    hashedPassword = hashPassword('123456')
+    registrado = registrarArchivo(nombreYRuta, hashedPassword=hashedPassword)
+    assert isinstance(descargarArchivo('', nombreYRuta, password='12vawe'), dict) is True
+    assert borrarArchivo(nombreYRuta) is True
+    assert existeArchivo(nombreYRuta) is None
+    
 # def test_subirArchivo(db):
 #     from botadero.controller import subirArchivo
 #     from botadero.utils import nombreArchivo, borrarArchivo, existeArchivo

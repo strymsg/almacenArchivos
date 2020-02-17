@@ -256,7 +256,7 @@ def listaDeArchivos(categoria=None, orden='fecha_asc'):
     '''
     lista = []
     ruta = shared.globalParams.uploadDirectory
-    print('>>', ruta)
+    print(' *', ruta)
     if categoria is not None:
         ruta = os.path.join(shared.globalParams.uploadDirectory, categoria)
     try:
@@ -355,7 +355,7 @@ def comprobarPassword(nombreYRuta, password):
     return True o False en caso fallido.
     '''
     try:
-        archivo = Archivo.query.filter_by(path=nombreYRuta).first()
+        archivo = Archivo.query.filter_by(name=nombreArchivo(nombreYRuta)).first()
         return checkHashedPassword(password, archivo.hashedPassword)
     except Exception as E:
         print('Error comprobando password %r: %r' % (nombreYRuta, str(E)))

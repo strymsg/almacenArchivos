@@ -19,9 +19,33 @@ def descargaPermitida(cat, nombreArchivo):
         return False
     return True
 
-def descargarArchivo(cat, nombreArchivo):
-    # agregar descargar de utils
+def descargarArchivo(cat, nombreArchivo, password=''):
+    ''' Ayuda a descargar un archivo, retornando la ruta del archivo
+    - cat (string): Categoria del archivo.
+    - nombreArchivo (string):  Nombre del archivo.
+    - password (string): (opcional) Si el archivo esta protegido requiere
+      un password
+    :return (string) pathfile o en caso de error un diccionario de la forma
+    {
+        'tipoError': 2,
+        'mensaje': 'Contraseña incorrecta'
+    }
+    '''
+    # obteniendo ruta del archivo
     pathf = u.descargarArchivo(cat, nombreArchivo)
+    if pathf is None:
+        return {
+            'tipoError': 1,
+            'mensaje': 'Error buscando el archivo'
+        }
+    # comprobando password si es necesario
+    if password != '':
+        if u.comprobarPassword(pathf, password) is False:
+            return {
+                'tipoError': 2,
+                'mensaje': 'Contraseña incorrecta'
+            }
+    
     # marcando para que se actualice el renderizado de la pagina
     marcarPaginaListaParaRenderizar(categoria=cat)
     return pathf
@@ -45,7 +69,7 @@ def subirArchivo(cat, file, password=''):
     NOTA: En caso de subir exitosamente, la funcion que lo llama deberia
     llamar a sincronizarArchivo() para actualizar los registros.
     '''
-    print('subirArchivo(cat="%r", file="%r", hashedPassword len="%r"' % (cat, file, len(password)))
+    print('subirArchivo(cat="%r", file="%r"' % (cat, file))
     filename = secure_filename(file.filename)
     categoria = ''
     if cat != 'Misc':
@@ -126,8 +150,8 @@ def subirArchivo(cat, file, password=''):
 
     hashedPassword = ''
     if password != '':
-        hashedPassword = u.hashPassword(hashedPassword)
-    
+        hashedPassword = u.hashPassword(password)
+
     # creando registro en la BD
     arch = Archivo.create(name=filename,
                           path=filepath, size=fsize,

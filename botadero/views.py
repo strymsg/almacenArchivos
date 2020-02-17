@@ -39,23 +39,42 @@ def descargaDesdeIndexView(cat, nombreArchivo):
     return send_file(pathf, as_attachment=True)
 
 # endpoint descarga protegida (ajax)
-@botaderoBp.route('/almacen/<string:cat>/download_protected', methods=['GET', 'POST'])
+@botaderoBp.route('/<string:cat>/download_protected', methods=['GET', 'POST'])
 def descargarArchivoProtegidoAjax(cat):
+    nombreArchivo = request.form.get('nombre_archivo_protegido')
     print('⏬ ⚿ file', cat, nombreArchivo)
     if cat == '':
         cat = 'Misc'
     resultados = {}
-    if 'password' not in request.form:
+    if 'pwd_archivo' not in request.form or \
+       'nombre_archivo_protegido' not in request.form:
         resultados = {
-            error: {
-                'msj': 'No se ha proporcionado password',
+            'error': {
+                'msj': 'No se han proporcionado datos completos',
                 'code': 1
             }
         }
         return jsonify(resultados)
+    password = request.form.get('pwd_archivo')
+    if not co.descargaPermitida(cat, nombreArchivo):
+        resultados = {
+            'error': {
+                'msj': 'Descarga no permitida',
+                'code': 3
+            }
+        }
+        return jsonify(resultados)
+    pathf = co.descargarArchivo(cat, nombreArchivo, password=password)
+    if isinstance(pathf, dict):
+        resultados = {
+            'error': {
+                'msj': pathf['mensaje'],
+                'code': pathf['tipoError']
+            }
+        }
+        return jsonify(resultados)
+    return send_file(pathf, as_attachment=True)
     
-
-
 # vista de subida de archivo (individual) este caso se asume que no se usa javascript.
 @botaderoBp.route('/<string:cat>/upload_file', methods=['GET', 'POST'])
 def subidaArchivo(cat):
@@ -94,7 +113,6 @@ def subidaArchivos(cat):
     password = ''
     if request.form.get('password') is not None:
         password = request.form.get('password')
-    print('Pass:', password)
     exitosos = []
     erroneos = []
 
