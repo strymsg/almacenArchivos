@@ -24,7 +24,7 @@
       <div class="modal-subir-content">
         <div class="modal-subir-header">
           <span id="closeModalSubir" class="closeModalSubir">&times;</span>
-          <h2>Subir contenido</h2>
+          <h2>Compartir contenido</h2>
         </div>
         <div class="modal-subir-body">
           <div id="lista_archivos_subir">
@@ -56,6 +56,30 @@
         </div>
       </div>
     </div>
+
+    <!-- Modal para introducir password -->
+    <div id="modal-pass" class="modal_subir" style="display: none">
+      <div class="modal-subir-content">
+        <div class="modal-subir-header">
+          <span id="closeModalPassword" class="closeModalSubir">&times;</span>
+          <h2>Descargar: <span id="nombre_archivo_protegido_label"> </span></h2>
+          <img src="{{ url_for('static', filename='botadero_resources/archivo-protegido.png')}}" height="32" title="click para descargar">
+        </div>
+        <div class="modal-subir-body">
+          <p ></p>
+          <form method="POST" id="donwload_protected" action="/{{ dv['categoriaActual'] }}/donwload_protected">
+            <label for="pwd">Contraseña:</label>
+            <input type="text" id="nombre_archivo_protegido" name="nombre_archivo_protegido" hidden>
+            <br>
+            <input type="password" id="pwd_archivo" name="pwd_archivo">
+            <!-- descargar -->
+            <div>
+              <input type="submit" class="btn large" value="descargar"/>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
     
     <div id="wrap">
       <div class="row">
@@ -83,18 +107,25 @@
 
 	    {% for archivoObj in dv['archivos'] %}
 	      <p class="lista_archivos_elemento">
-		<a id="archivo_{{ archivoObj['name'] }}"
-		   href="/almacen/{{ dv['categoriaActual'] }}/{{ archivoObj['name'] }}" title="descargas: {{ archivoObj['descargas'] }}">
-		  {# archivos normales #}
-                  {% if archivoObj['protegido'] == True %}
+		{# archivos normales #}
+                {% if archivoObj['protegido'] == True %}
+                  <a id="archivo_{{ archivoObj['name'] }}"
+                     title="descargas: {{ archivoObj['descargas'] }}"
+                     onclick="descargarProtegido('{{ archivoObj['name'] }}')"
+                  >
 		    <img src="{{ url_for('static', filename='botadero_resources/archivo-protegido.png')}}" height="16" title="click para descargar">
-                  {% else %}
+                    {{ archivoObj['name'] }}
+		  </a>
+                {% else %}
+                  <a id="archivo_{{ archivoObj['name'] }}"
+		     href="/almacen/{{ dv['categoriaActual'] }}/{{ archivoObj['name'] }}" title="descargas: {{ archivoObj['descargas'] }}"
+                  >
                     <img src="{{ url_for('static', filename='botadero_resources/archivo.png')}}" height="16" title="click para descargar">
                     {# TODO implementar formulario #}
-                  {% endif %}
-		  {{ archivoObj['name'] }}
-		</a>
-	      {% if archivoObj['size'] < 1000 %}
+                    {{ archivoObj['name'] }}
+		  </a>
+                {% endif %}
+	        {% if archivoObj['size'] < 1000 %}
 		<span class="label" title="tamaño">{{ archivoObj['size'] }} B</span>
 	      {% elif archivoObj['size'] >= 1000 and archivoObj['size'] < 1000000 %}
 		<span class="label" title="tamaño">{{ '%0.2f'|format(archivoObj['size']/1000) }} KB</span>

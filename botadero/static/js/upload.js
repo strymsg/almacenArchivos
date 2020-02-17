@@ -58,7 +58,9 @@ $(document).ready(function() {
 
   // Para el modal
   var closeModalSubir = document.getElementById("closeModalSubir");
+  var closeModalPassword = document.getElementById("closeModalPassword");
   var modalSubir = document.getElementById("modal-subir");
+  var modalPassword = document.getElementById("modal-pass");
 
   if (deviceType != 'mobile') {
     // Handle the submit button.
@@ -81,10 +83,17 @@ $(document).ready(function() {
     ocultarModalSubir();
   };
 
+  closeModalPassword.onclick = function() {
+    ocultarModalPassword();
+  };
+
   // When the user clicks anywhere outside of the modal, close it
   window.onclick = function(event) {
     if (event.target == modalSubir) {
       ocultarModalSubir();
+    }
+    if (event.target == modalPassword) {
+      ocultarModalPassword();
     }
   };
 
@@ -162,6 +171,16 @@ function mostrarModalSubir(deviceType) {
   modalSubir.style.display = "block";
 }
 
+function mostrarModalPassword(nombre) {
+  var modalPassword = document.getElementById("modal-pass");
+  modalPassword.style.display = "block";
+}
+
+function ocultarModalPassword(nombre) {
+  var modalPassword = document.getElementById("modal-pass");
+  modalPassword.style.display = "none";
+}
+
 function ocultarModalSubir(deviceType) {
   var modalSubir = document.getElementById("modal-subir");
   var dom_passwordCheck = document.getElementById('pwd_check');
@@ -181,10 +200,8 @@ function doUpload(deviceType) {
   // comprobando password
   if (passwordCheck()) {
     if (comprobarPasswords()) {
-      console.log('TOdo OK ');
       $('#pwd_msj').html(' ');
     } else {
-      console.log('>>>xxxx');
       $('#pwd_msj').html('&#x2715; contraseñas muy cortas o no coinciden');
       return;
     } 
@@ -227,15 +244,16 @@ function doUpload(deviceType) {
         xhrobj.upload.addEventListener("progress", function(event) {
           var percent = 0;
           var position = event.loaded || event.position;
-          var total    = event.total;
+          var total = event.total;
           if (event.lengthComputable) {
             percent = Math.ceil(position / total * 100);
           }
           // Set the progress bar.
           $progressBar.css({"width": percent + "%"});
           $progressBar.text(percent + "% enviado");
-	  if (percent == 100)
+	  if (percent == 100) {
 	    $estadoRecepcion.text("Comprobando archivo(s)...");
+          }
         }, false);
       }
       return xhrobj;
@@ -384,4 +402,11 @@ function comprobarPasswords() {
     return true;
   }
   return false;
+}
+
+function descargarProtegido(nombre) {
+  var archivoProtegido = document.getElementById("nombre_archivo_protegido");
+  archivoProtegido.value = nombre;
+  document.getElementById("nombre_archivo_protegido_label").innerHTML = nombre;
+  mostrarModalPassword(nombre);
 }

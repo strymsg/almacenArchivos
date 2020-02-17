@@ -88,7 +88,7 @@ def subidaArchivos(cat):
             erroneos.append(resultado)
     # actualizando
     if len(exitosos) > 0:
-        co.sincronizarArchivos()
+        co.sincronizarArchivos("['.gitkeep', '.gitkeep~', '#.gitkeep', '#.gitkeep#']")
     # retornando respuesta
     print('exitosos', exitosos)
     print('erroneos', erroneos)
