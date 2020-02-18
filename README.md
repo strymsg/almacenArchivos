@@ -12,20 +12,22 @@ Un directorio público donde cualquiera puede subir archivos y estos se pueden d
 
 ![front1](botadero/static/botadero_resources/front1.png)
 ![front2](botadero/static/botadero_resources/front2.png)
+![front3](botadero/static/botadero_resources/front3.png)
 
 Para ahorrar espacio de almacenamiento, los archivos se borran después de un número ajustable de tiempo (días, minutos o segundos) y también se evita la posiblidad de subir archivos duplicados usando algoritmos para obtener digestos sha1, md5, sha256, etc. 
 
 Entre las funcionalidades que se pueden ajustar están:
 
-* Intervalo de borrado.
-* Almacenamiento máximo para archivos.
-* Almacenamiento máximo por tamaño de archivo.
-* Intervalo de borrado por tamaño de archivos.
-* Selección de algoritmo para digestos.
-* Comprobación acelerada de digestos.
-* Protección de archivos usando passwords (pendiente).
-* Ajuste de unidad de tiempo.
-* Selección de estilos de apariencia.
+[x] Intervalo de borrado.
+[x] Almacenamiento máximo para archivos.
+[x] Almacenamiento máximo por tamaño de archivo.
+[x] Intervalo de borrado por tamaño de archivos.
+[x] Selección de algoritmo para digestos.
+[x] Comprobación acelerada de digestos.
+[x] Protección de archivos usando passwords.
+[x] Ajuste de unidad de tiempo.
+[x] Selección de estilos de apariencia.
+[ ] Buen soporte para plataformas móviles
 
 Esta aplicación no guarda datos sobre quién sube los archivos, licencia **AGPL**.
 
@@ -70,20 +72,22 @@ A public directory where anyone can upload files and so they can be freely downl
 
 ![front1](botadero/static/botadero_resources/front1.png)
 ![front2](botadero/static/botadero_resources/front2.png)
+![front3](botadero/static/botadero_resources/front3.png)
 
 To save storage, files are deleted after an adjustable number of days and file duplication is avoided by using sha1, md5, sha256, etc. digests.
 
 Some customizable features are:
 
-* File deletion interval.
-* Maximun file storage size.
-* Maximun file size for files.
-* Deletion interval per file size.
-* Verbosity level to log files.
-* Digest algorithm selection.
-* Accelerated digest.
-* File protection using password (not implemented yet).
-* Time unit adjustment.
+[x] File deletion interval.
+[x] Maximun file storage size.
+[x] Maximun file size for files.
+[x] Deletion interval per file size.
+[x] Verbosity level to log files.
+[x] Digest algorithm selection.
+[x] Accelerated digest.
+[x] File protection using password (not implemented yet).
+[x] Time unit adjustment.
+[ ] Good support for mobile devices
 
 This application does not store data about who upload files, **AGPL** License.
 
