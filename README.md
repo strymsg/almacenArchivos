@@ -18,16 +18,16 @@ Para ahorrar espacio de almacenamiento, los archivos se borran después de un n�
 
 Entre las funcionalidades que se pueden ajustar están:
 
-[x] Intervalo de borrado.
-[x] Almacenamiento máximo para archivos.
-[x] Almacenamiento máximo por tamaño de archivo.
-[x] Intervalo de borrado por tamaño de archivos.
-[x] Selección de algoritmo para digestos.
-[x] Comprobación acelerada de digestos.
-[x] Protección de archivos usando passwords.
-[x] Ajuste de unidad de tiempo.
-[x] Selección de estilos de apariencia.
-[ ] Buen soporte para plataformas móviles
+- [x] Intervalo de borrado.
+- [x] Almacenamiento máximo para archivos.
+- [x] Almacenamiento máximo por tamaño de archivo.
+- [x] Intervalo de borrado por tamaño de archivos.
+- [x] Selección de algoritmo para digestos.
+- [x] Comprobación acelerada de digestos.
+- [x] Protección de archivos usando passwords.
+- [x] Ajuste de unidad de tiempo.
+- [x] Selección de estilos de apariencia.
+- [ ] Buen soporte para plataformas móviles
 
 Esta aplicación no guarda datos sobre quién sube los archivos, licencia **AGPL**.
 
@@ -78,16 +78,16 @@ To save storage, files are deleted after an adjustable number of days and file d
 
 Some customizable features are:
 
-[x] File deletion interval.
-[x] Maximun file storage size.
-[x] Maximun file size for files.
-[x] Deletion interval per file size.
-[x] Verbosity level to log files.
-[x] Digest algorithm selection.
-[x] Accelerated digest.
-[x] File protection using password (not implemented yet).
-[x] Time unit adjustment.
-[ ] Good support for mobile devices
+- [x] File deletion interval.
+- [x] Maximun file storage size.
+- [x] Maximun file size for files.
+- [x] Deletion interval per file size.
+- [x] Verbosity level to log files.
+- [x] Digest algorithm selection.
+- [x] Accelerated digest.
+- [x] File protection using password (not implemented yet).
+- [x] Time unit adjustment.
+- [ ] Good support for mobile devices
 
 This application does not store data about who upload files, **AGPL** License.
 
