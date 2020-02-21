@@ -17,9 +17,12 @@ def descargaPermitida(cat, nombreArchivo):
         return False
     if cat not in u.categorias() and cat != 'Misc':
         return False
+    return True
+
+def tienePassword(nombreArchivo):
     regDb = Archivo.query.filter_by(name=nombreArchivo).first()
     if regDb is not None:
-        return not len(regDb.hashedPassword) > 0
+        return len(regDb.hashedPassword) > 0
     else:
         return False
 

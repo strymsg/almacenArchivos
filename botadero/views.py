@@ -14,9 +14,6 @@ from flask import (
 
 botaderoBp = Blueprint('botadero', __name__, url_prefix='')
 
-# TODO: mover la sincronizacion a un lugar mas convencional
-# u.sincronizarArchivos(ignorar=['gitkeep'])
-
 @botaderoBp.route('/')
 @botaderoBp.route('/<string:cat>/')
 def categoriaView(cat='Misc'):
@@ -31,6 +28,10 @@ def descargaDesdeIndexView(cat, nombreArchivo):
     if not co.descargaPermitida(cat, nombreArchivo):
         return ('No permitido: '+cat+'/'+nombreArchivo), 404
 
+    if co.tienePassword(nombreArchivo):
+        # TODO: redirect a descarga con password
+        return ('No permitido tiene password: '+cat+'/'+nombreArchivo), 404
+    
     pathf = co.descargarArchivo(cat, nombreArchivo)
     if pathf is None:
         return render_template("noExiste.html",
@@ -64,6 +65,14 @@ def descargarArchivoProtegidoAjax(cat):
             }
         }
         return make_response(jsonify(resultados), 401)
+    if not co.tienePassword(nombreArchivo):
+        resultados = {
+            'error': {
+                'msj': 'Este archivo no requiere contraseña',
+                'code': 4
+            }
+        }
+        return make_response(jsonify(resultados), 401)        
     pathf = co.descargarArchivo(cat, nombreArchivo, password=password)
     if isinstance(pathf, dict):
         resultados = {
@@ -74,7 +83,14 @@ def descargarArchivoProtegidoAjax(cat):
         }
         return make_response(jsonify(resultados), 403)
     return send_file(pathf, as_attachment=True)
+
+# @botaderoBp.route('/<string:cat>/<string:nombreArchivo>/descargar_protegido'. methods=['GET'])
+# def descargarArchivoProtegido(cat, nombreArchivo):
+#     print('☱ download file protected (form):', cat, nombreArchivo)
+#     if cat == '':
+#         cat = 'Misc'
     
+
 # vista de subida de archivo (individual) este caso se asume que no se usa javascript.
 @botaderoBp.route('/<string:cat>/upload_file', methods=['GET', 'POST'])
 def subidaArchivo(cat):
