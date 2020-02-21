@@ -132,6 +132,7 @@ def subidaArchivos(cat):
     # actualizando
     if len(exitosos) > 0:
         co.sincronizarArchivos("['.gitkeep', '.gitkeep~', '#.gitkeep', '#.gitkeep#']")
+        co.marcarTodasLasPaginasParaRenderizar()
     # retornando respuesta
     print('exitosos', exitosos)
     print('erroneos', erroneos)

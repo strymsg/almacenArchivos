@@ -27,7 +27,7 @@ Entre las funcionalidades que se pueden ajustar están:
 - [x] Protección de archivos usando passwords.
 - [x] Ajuste de unidad de tiempo.
 - [x] Selección de estilos de apariencia.
-- [ ] Buen soporte para plataformas móviles
+- [ ] Buen soporte para dispositivos móviles.
 
 Esta aplicación no guarda datos sobre quién sube los archivos, licencia **AGPL**.
 
@@ -85,9 +85,9 @@ Some customizable features are:
 - [x] Verbosity level to log files.
 - [x] Digest algorithm selection.
 - [x] Accelerated digest.
-- [x] File protection using password (not implemented yet).
+- [x] File protection using password.
 - [x] Time unit adjustment.
-- [ ] Good support for mobile devices
+- [ ] Good support for mobile devices.
 
 This application does not store data about who upload files, **AGPL** License.
 
