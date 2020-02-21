@@ -130,6 +130,10 @@ $(document).ready(function() {
       request.send(form_data);
     });
 
+  // prevenir ir al enlace por defecto (solo funciona si javascript esta activo)
+  document.getElementsByName("enlace_archivo_protegido").forEach(e => {
+    e.href = "javascript:void(0);";
+  });
     //   $.ajax({
     //     url: post_url,
     //     type: request_method,

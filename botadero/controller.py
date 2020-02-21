@@ -17,7 +17,11 @@ def descargaPermitida(cat, nombreArchivo):
         return False
     if cat not in u.categorias() and cat != 'Misc':
         return False
-    return True
+    regDb = Archivo.query.filter_by(name=nombreArchivo).first()
+    if regDb is not None:
+        return not len(regDb.hashedPassword) > 0
+    else:
+        return False
 
 def descargarArchivo(cat, nombreArchivo, password=''):
     ''' Ayuda a descargar un archivo, retornando la ruta del archivo

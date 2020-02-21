@@ -97,6 +97,7 @@ def subidaArchivo(cat):
     if not isinstance(resultado, dict):
         # caso exitoso, se debe actualizar
         co.sincronizarArchivos("['.gitkeep', '.gitkeep~', '#.gitkeep', '#.gitkeep#']")
+        co.marcarTodasLasPaginasParaRenderizar()
         html_page = u.obtenerHtmlListado(categoria=cat)
         return redirect("/"+cat, code=302)
     else:

@@ -113,6 +113,8 @@
                   <a id="archivo_{{ archivoObj['name'] }}"
                      title="descargas: {{ archivoObj['descargas'] }}"
                      onclick="descargarProtegido('{{ archivoObj['name'] }}')"
+                     href="/almacen/{{ dv['categoriaActual'] }}/{{ archivoObj['name'] }}/descargar_protegido" title="descargas: {{ archivoObj['descargas'] }}/form_archivo_protegido"
+                     name="enlace_archivo_protegido"
                   >
 		    <img src="{{ url_for('static', filename='botadero_resources/archivo-protegido.png')}}" height="16" title="click para descargar">
                     {{ archivoObj['name'] }}
