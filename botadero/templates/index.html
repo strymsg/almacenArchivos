@@ -146,6 +146,20 @@
 		{% elif archivoObj['restante'] <= 3 %}
 		  <span class="label important" title="Se borrará en {{ archivoObj['restante']}} {{ dv['timeUnit'] }}">{{ archivoObj['restante'] }} </span>
 		{% endif %}
+                <!-- boton copiar enlace -->
+                {% if archivoObj['protegido'] == True %}
+                  <button class="label info">
+                    <img src="{{ url_for('static', filename='botadero_resources/copiar-portapapeles.png')}}" height="16" title="copiar enlace de descarga"
+                         name="{{ archivoObj['name'] }}/descargar_protegido"
+                         onclick="copiarEnlace(this.name)">
+                  </button>
+                {% else %}
+                  <button class="label info">
+                    <img src="{{ url_for('static', filename='botadero_resources/copiar-portapapeles.png')}}" height="16" title="copiar enlace de descarga"
+                         name="{{ archivoObj['name'] }}"
+                         onclick="copiarEnlace(this.name)">
+                  </button>
+                {% endif %}
 	      </p>
 	    {% endfor %}
 	  </div>

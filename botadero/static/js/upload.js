@@ -474,3 +474,30 @@ function descargarProtegido(nombre) {
   mostrarModalPassword(nombre);
 }
 
+function copiarEnlace(str) {
+  // solution extracted from: https://hackernoon.com/copying-text-to-clipboard-with-javascript-df4d4988697f
+  var loc = document.URL;
+  var domain = '';
+  var texto = '';
+  if (CATEGORIA_ACTUAL == 'Misc') {
+    // caso especial
+    texto = loc + 'almacen/' + CATEGORIA_ACTUAL + '/' + str;
+    var arr = loc.split('/');
+    if (arr[arr.length - 2] == 'Misc') {
+      var ar = arr.splice(0, arr.length-2);
+      texto = ar.join('/') + '/almacen/' + CATEGORIA_ACTUAL + '/' + str;
+    } else {
+      texto = loc + 'almacen/' + CATEGORIA_ACTUAL + '/' + str;      
+    }
+  } else {
+    domain = loc.split('/'+CATEGORIA_ACTUAL)[0];
+    texto = domain + '/almacen/'+ CATEGORIA_ACTUAL +'/'+ str;
+  }
+  console.log(texto);
+  const el = document.createElement('textarea');
+  el.value = texto;
+  document.body.appendChild(el);
+  el.select();
+  document.execCommand('copy');
+  document.body.removeChild(el);
+};
