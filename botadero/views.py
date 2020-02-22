@@ -73,13 +73,14 @@ def descargarArchivoProtegidoAjax(cat):
             }
         }
         return make_response(jsonify(resultados), 401)
-    if password == '':
+    if len(password) < 2:
         resultados = {
             'error': {
                 'msj': 'Contraseña incorrecta',
                 'code': 2
             }
-        }        
+        }
+        return make_response(jsonify(resultados), 401)
     pathf = co.descargarArchivo(cat, nombreArchivo, password=password)
     if isinstance(pathf, dict):
         resultados = {
