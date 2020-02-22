@@ -549,6 +549,39 @@ def renderizarHtmlListado(category='Misc'):
         'archivos': l
     }
     return render_template("index.html", dv=dv)
+
+def renderizarHtmlArchivoProtegido(category, nombreArchivo):
+    cats = categorias()
+    cats.insert(0, 'Misc')
+    print(category, nombreArchivo)
+    actualizarEstadisticasGenerales()
+
+    catStats = {}
+    to = 0
+    for cat in cats:
+        if cat != 'Misc': # caso especial
+            filtro = os.path.join(os.path.curdir,
+                                  shared.globalParams.uploadDirectory,
+                                  cat, '%')
+            count = Archivo.query.filter(Archivo.path.ilike(filtro)).count()
+            to += count
+            catStats[cat] = { 'filesNumber':  count }
+    # caso Misc
+    catStats['Misc'] = { 'filesNumber': shared.gr['filesNumber'] - to }
+
+    dv = {
+        'title': shared.globalParams.applicationTitle,
+        'esquemaColores': esquemaColoresRandom(),
+        'categoriaActual': category,
+        'nombreArchivo': nombreArchivo,
+        'storageUsed': shared.gr['storageUsed'],
+        'storageRemaining': shared.gr['storageTotal'] - shared.gr['storageUsed'],
+        'storageTotal': shared.gr['storageTotal'],
+        'filesNumber': shared.gr['filesNumber'],
+        'categorias': cats,
+        'catStats': catStats,
+    }
+    return render_template("archivo_protegido.html", dv=dv)
     
 def actualizarEstadisticasGenerales():
     ''' Actualiza estadisticas generales como el alamacenamiento usado,

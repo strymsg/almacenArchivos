@@ -84,13 +84,26 @@ def descargarArchivoProtegidoAjax(cat):
         return make_response(jsonify(resultados), 403)
     return send_file(pathf, as_attachment=True)
 
-# @botaderoBp.route('/<string:cat>/<string:nombreArchivo>/descargar_protegido'. methods=['GET'])
-# def descargarArchivoProtegido(cat, nombreArchivo):
-#     print('☱ download file protected (form):', cat, nombreArchivo)
-#     if cat == '':
-#         cat = 'Misc'
-    
+# formulario de descarga para archivos protegidos
+@botaderoBp.route('/almacen/<string:cat>/<string:nombreArchivo>/descargar_protegido', methods=['GET'])
+def descargarArchivoProtegidoForm(cat, nombreArchivo):
+    print('☱ download file protected (form):', cat, nombreArchivo)
+    if cat == '':
+        cat = 'Misc'
+    if not co.descargaPermitida(cat, nombreArchivo):
+        return ('No permitido: '+cat+'/'+nombreArchivo), 404
 
+    pathf = co.descargarArchivo(cat, nombreArchivo)
+    if pathf is None:
+        return render_template("noExiste.html",
+                               nombre=nombreArchivo,
+                               esquemaColores=u.esquemaColoresRandom()), 404
+    if not co.tienePassword(nombreArchivo):
+        return render_template("noExiste.html",
+                               nombre=nombreArchivo,
+                               esquemaColores=u.esquemaColoresRandom()), 404
+    return u.renderizarHtmlArchivoProtegido(cat, nombreArchivo)
+    
 # vista de subida de archivo (individual) este caso se asume que no se usa javascript.
 @botaderoBp.route('/<string:cat>/upload_file', methods=['GET', 'POST'])
 def subidaArchivo(cat):
