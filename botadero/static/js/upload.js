@@ -345,7 +345,7 @@ function doUpload(deviceType) {
           texto += "&#x2715; " + data.erroneos[i].redirect + "(" + data.erroneos[i].mensaje + ")<br>";
         }
       }
-      console.log('texto', texto);
+      // console.log('texto', texto);
       var $dropbox = $('#dropbox');
       $dropbox.html('');
       $dropbox.html(texto);
@@ -476,7 +476,7 @@ function descargarProtegido(nombre) {
 
 function copiarEnlace(str) {
   // solution extracted from: https://hackernoon.com/copying-text-to-clipboard-with-javascript-df4d4988697f
-  var loc = document.URL;
+  var loc = decodeURI(document.URL);
   var domain = '';
   var texto = '';
   if (CATEGORIA_ACTUAL == 'Misc') {
@@ -493,7 +493,7 @@ function copiarEnlace(str) {
     domain = loc.split('/'+CATEGORIA_ACTUAL)[0];
     texto = domain + '/almacen/'+ CATEGORIA_ACTUAL +'/'+ str;
   }
-  console.log(texto);
+  // console.log(texto);
   const el = document.createElement('textarea');
   el.value = texto;
   document.body.appendChild(el);
