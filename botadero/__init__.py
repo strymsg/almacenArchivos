@@ -58,8 +58,7 @@ def create_app(config=None, instance_path=None, db_path='sqlite:///db.sqlite3', 
     print (shared.globalParams)
 
     app.config['UPLOAD_FOLDER'] = shared.globalParams.uploadDirectory
-    shared.globalParams.sizeLimitsAndTimeToDelete.sort(reverse=True)
-    # app.config['MAX_CONTENT_LENGTH'] = int(shared.globalParams.sizeLimitsAndTimeToDelete[0][0])
+    app.config['MAX_CONTENT_LENGTH'] = int(shared.globalParams.sizeLimitsAndTimeToDelete[0][0])
 
     # base de datos
     print('Max file size:', shared.globalParams.sizeLimitsAndTimeToDelete[0][0])
