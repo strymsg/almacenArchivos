@@ -153,7 +153,7 @@ def subirArchivo(cat, file, password=''):
             'tipoError': 1,
             'mensaje': 'Ya existe (BD) un archivo con nombre ' + filename,
             'redirect': categoria
-        }        
+        }
 
     hashedPassword = ''
     if password != '':

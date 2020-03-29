@@ -159,13 +159,36 @@ $(document).ready(function() {
     //       $("#pwd_msj_download").html(response.responseJSON.error.msj);
     //     });
       // });
-
 });
 
 
 function initDropbox(deviceType) {
   var $dropbox = $("#dropbox");
   var $listaSubir = $('#lista_archivos_subir');
+  Dropzone.autoDiscover = false;
+  
+  var dropzonetest =
+      new Dropzone("#dropzonetest",
+                   {
+                     url: "/file/post",
+                     maxFilesize: 5000, // 5000MB
+                     chunking: true,
+                     chunkSize: 700000, // ~0.7MB
+                     autoProcessQueue: false,
+                     accept: function(file, done) {
+                       // aqui controlar tam. maximo y repetidos
+                       if (file.name == "justinbieber.jpg") {
+                         done("Naha, you don't.");
+                       }
+                       else { console.log('jeya', file);done(); }
+                     }                        
+                   });
+  console.log(dropzonetest);
+
+  $("#upload-button-dz").on("click", function(e) {
+      e.preventDefault();
+    dzEnviarArchivos(dropzonetest);
+    });
   
   if (deviceType === 'mobile') {
     $dropbox.html('Arrastra tu archivo aquí');
@@ -501,3 +524,8 @@ function copiarEnlace(str) {
   document.execCommand('copy');
   document.body.removeChild(el);
 };
+
+// funciones para modificar comportamiento de dropzonejs
+function dzEnviarArchivos(dz) {
+  console.log('queuedFiles\n', dz.getQueuedFiles());
+}

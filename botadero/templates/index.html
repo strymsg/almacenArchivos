@@ -11,6 +11,8 @@
     <title>{{ dv['title'] }}</title>
     {% set archivo_esquema_colores = "css/" + dv['esquemaColores'] + "/base.css" %}
     <link rel="stylesheet" href="{{ url_for('static', filename=archivo_esquema_colores) }}" type="text/css" />
+    {% set archivo_dropzone_css = "css/dropzone.css" %}
+    <link rel="stylesheet" href="{{ url_for('static', filename=archivo_dropzone_css) }}" type="text/css" />
   </head>
   
   <body>
@@ -102,6 +104,14 @@
 	    <!-- <input type="file" name="file"/> -->
 	    <input type="submit" class="btn large" id="upload-button" value="Compartir archivo(s)"/>
 	  </form>	
+
+          <!-- pruebas dropzone -->
+          <form action="/file-upload" class="dropzone" id="dropzonetest">
+            <div class="fallback">
+              <input name="dropzonetest" type="file" multiple />
+            </div>
+          </form>
+          <button class="btn large" id="upload-button-dz" value="Compartir archivo(s)"></button>
           
 	  <!-- Listado de Archivos -->	
 	  <div id="caja_archivos" class="caja_lista_archivos">
@@ -209,6 +219,7 @@
     </div>    
     <!-- javascript -->
     <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-2.1.1.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/dropzone.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/upload.js') }}"></script>
 	
   </body>
