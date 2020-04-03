@@ -92,7 +92,6 @@
 	<div class="col fill">
 	  <!-- Subida de archivos -->
 	  <form method="POST" id="upload_file" action="/{{ dv['categoriaActual'] }}/upload_file" enctype="multipart/form-data">
-
 	    <!-- caja drag and drop -->
 	    <div id="dropbox">
 	      Arrastra archivos aquí
@@ -103,16 +102,33 @@
 	    
 	    <!-- <input type="file" name="file"/> -->
 	    <input type="submit" class="btn large" id="upload-button" value="Compartir archivo(s)"/>
-	  </form>	
+	  </form>
 
-          <!-- pruebas dropzone -->
-          <form action="/file-upload" class="dropzone" id="dropzonetest">
-            <div class="fallback">
-              <input name="dropzonetest" type="file" multiple />
-            </div>
-          </form>
-          <button class="btn large" id="upload-button-dz" value="Compartir archivo(s)"></button>
-          
+          <!-- caja dropzone -->
+          <div style="margin-bottom: 1em;">
+            <form action="/file-upload" class="dropzone" id="dzdropzone">
+              <div class="fallback">
+                <input name="dropzonetest" type="file" multiple />
+              </div>
+            </form>
+          </div>
+          <p>
+            <img src="{{ url_for('static', filename='botadero_resources/lock32.png')}}" height="16"> <span>Proteger con contraseña</span> 
+            <input type="checkbox" id="dz-pwd-check" onclick="dzMenuPassword()">
+          </p>
+          <div id="dz-pwd-menu" style="display: none">
+            <p id="dz-pwd-msj"></p>
+            <label for="pwd">Contraseña:</label>
+            <input type="password" id="dz-pwd1" name="-dzpwd1" minlength=1>
+            <br>
+            <label for="pwd">Confirmar:</label>
+            <input type="password" id="dz-pwd2" name="dz-pwd2" minlength=1>
+          </div>
+
+          <div style="margin-bottom: 1em">
+            <button class="btn large" id="upload-button-dz">Compartir archivo(s)</button>
+          </div>
+
 	  <!-- Listado de Archivos -->	
 	  <div id="caja_archivos" class="caja_lista_archivos">
 

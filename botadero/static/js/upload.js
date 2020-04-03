@@ -51,6 +51,8 @@ $(document).ready(function() {
   // Set up the drag/drop zone.
   initDropbox(deviceType);
 
+  iniciarDzdrop();
+  
   // Set up the handler for the file input box.
   $("#file-picker").on("change", function() {
     handleFiles(this.files);
@@ -165,31 +167,7 @@ $(document).ready(function() {
 function initDropbox(deviceType) {
   var $dropbox = $("#dropbox");
   var $listaSubir = $('#lista_archivos_subir');
-  Dropzone.autoDiscover = false;
-  
-  var dropzonetest =
-      new Dropzone("#dropzonetest",
-                   {
-                     url: "/file/post",
-                     maxFilesize: 5000, // 5000MB
-                     chunking: true,
-                     chunkSize: 700000, // ~0.7MB
-                     autoProcessQueue: false,
-                     accept: function(file, done) {
-                       // aqui controlar tam. maximo y repetidos
-                       if (file.name == "justinbieber.jpg") {
-                         done("Naha, you don't.");
-                       }
-                       else { console.log('jeya', file);done(); }
-                     }                        
-                   });
-  console.log(dropzonetest);
 
-  $("#upload-button-dz").on("click", function(e) {
-      e.preventDefault();
-    dzEnviarArchivos(dropzonetest);
-    });
-  
   if (deviceType === 'mobile') {
     $dropbox.html('Arrastra tu archivo aquí');
   }
@@ -526,6 +504,64 @@ function copiarEnlace(str) {
 };
 
 // funciones para modificar comportamiento de dropzonejs
+function iniciarDzdrop() {
+  Dropzone.autoDiscover = false;
+  var dzdrop =
+      new Dropzone("#dzdropzone",
+                   {
+                     url: "/file/post",
+                     dictDefaultMessage: 'Arrastra archivos o haz click aquí.',
+                     createImageThumbnails: false,
+                     maxFilesize: 5000, // 5000MB
+                     chunking: true,
+                     chunkSize: 700000, // ~0.7MB
+                     autoProcessQueue: false,
+                     accept: function(file, done) {
+                       // aqui controlar tam. maximo y repetidos
+                       if (file.name == "justinbieber.jpg") {
+                         done("Naha, you don't.");
+                       }
+                       else { console.log('jeya', file);done(); }
+                     }                        
+                   });
+  dzdrop.on('addedfile', function(file) {
+    file.previewElement.addEventListener("click", function() {
+      dzdrop.removeFile(file);
+    });
+
+  });
+  
+  console.log(dzdrop);
+
+  $("#upload-button-dz").on("click", function(e) {
+    e.preventDefault();
+    dzEnviarArchivos(dzdrop);
+  });
+
+  var dzCheckpassword = document.getElementById("dz-pwd-check");
+  
+  window.onclick = function(event) {
+    if (event.target == dzCheckpassword) {
+      ocultarModalPassword();
+    }
+  };
+}
+
+function dzPasswordCheck() {
+  return document.getElementById("dz-pwd-check").checked;
+}
+
+function dzMenuPassword() {
+  var menuPassword = document.getElementById("dz-pwd-menu");
+  if (dzPasswordCheck() == true) {
+    menuPassword.style.display = 'block';
+  } else {
+    menuPassword.style.display = 'none';
+  }
+}
+
 function dzEnviarArchivos(dz) {
   console.log('queuedFiles\n', dz.getQueuedFiles());
+  // enviando los archivos
+  dz.processQueue();
 }
