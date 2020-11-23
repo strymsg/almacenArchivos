@@ -37,7 +37,7 @@ Que debería iniciar la aplicación accesible desde http://localhost:5000 en mod
 
 Por [limitaciones del servidor de desarrollo](https://flask.palletsprojects.com/en/1.1.x/patterns/fileuploads/#improving-uploads) cuando se suben archivos grandes se generan errores *connection reset*, esto se corrige al usar `uwsgi` en entorno de producción.
 
-### Sobre actualización
+### Sobre actualización de lista de archivos
 
 La aplicación **necesita** que se ejecute el script `cronjobs.py` que se encarga de controlar el tiempo de borrado de los archivos, cuando estos exceden su tiempo permitido los elimina y actualiza las páginas de templates jinja2.
 
