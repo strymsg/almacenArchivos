@@ -21,10 +21,14 @@ SIZE_LIMITS_AND_TIME_TO_DELETE = [
 TIME_UNIT = 'minute'
 
 # Nivel de verbosidad para guardar registros de eventos
-# 0 = ERROR
-# 1 = INFO
-# 2 = DEBUG
-LOG_LEVEL = 2
+# 'CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG', 'NOSET'
+LOG_LEVEL = 'DEBUG'
+
+# Poner en True si se acumularán logs también en 
+LOG_TODISK = True
+
+# Archivo de configuración ruta completa (la ruta relativa raíz es donde esta el archivo botadero.py)
+LOG_FILENAME = 'logs/logs.log'
 
 # True fuerza la comprobación, False cancela la comprobación al subir archivos
 DIGEST_CHECK = True
