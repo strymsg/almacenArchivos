@@ -5,6 +5,7 @@ AGPL liberated.
 '''
 import os
 from flask import Flask
+from logging.config import dictConfig
 
 from .configs import Parameters
 ######
@@ -34,34 +35,71 @@ def create_app(config=None, instance_path=None, db_path='sqlite:///db.sqlite3', 
     app = Flask(__name__,
                 instance_path=instance_path,
                 instance_relative_config=True)
-    
-    print ('\nINICIANDO\n')
-    print ('os.environ.FLASK_ENV:', str(os.environ['FLASK_ENV']))
-    print ('instance_path:', app.instance_path)
+
+    print('\nINICIANDO\n')
+    print('os.environ.FLASK_ENV:', str(os.environ['FLASK_ENV']))
+    print('instance_path:', app.instance_path)
 
     # instance folders are not automatically created by flask
     if not os.path.exists(app.instance_path):
         os.makedirs(app.instance_path)
 
-    # config file and parameters
+    # Aditional parameters
     # if config is None:
         # nothing yet!
     if os.environ['FLASK_ENV'] == 'development':
         app.config.from_pyfile('../botadero/configs/configsDevelopment.py')
     elif os.environ['FLASK_ENV'] == 'production':
         app.config.from_pyfile('../botadero/configs/configs.py')
-    print ('app.config:', str(app.config), '\n')
+
+    # logs
+    # armando diccionario de logs
+    logsConfig = {
+        'version': 1,
+        'formatters': {'default': {
+            'format': '[%(asctime)s] %(levelname)s in %(module)s: %(message)s',
+        }},
+        'handlers': {
+            'wsgi': {
+                'class': 'logging.StreamHandler',
+                'stream': 'ext://flask.logging.wsgi_errors_stream',
+                'formatter': 'default'
+            }
+        },
+        'root': {
+            'level': app.config['LOG_LEVEL'],
+            'handlers': ['wsgi']
+        }
+    }
+    if app.config['LOG_TODISK'] is True:
+        logsConfig['handlers']['file'] = {
+            'class': 'logging.FileHandler',
+            'filename': app.config['LOG_FILENAME'],
+            'formatter': 'default',
+            'level': app.config['LOG_LEVEL']
+        }
+        logsConfig['root']['handlers'].append('file')
+    if os.environ['FLASK_ENV'] == 'development':
+        logsConfig['handlers']['console'] = {
+            'class': 'logging.StreamHandler',
+            'formatter': 'default',
+            'level': 'DEBUG',
+            'stream': 'ext://sys.stdout'
+        }
+        logsConfig['root']['handlers'].append('console')
+    # cargando logs
+    dictConfig(logsConfig)
+    app.logger.info('app.config:\n {0}\n'.format(str(app.config)))
 
     # configuraciones adicionales
     shared.globalParams = Parameters(app)
-    print ('Configs cargadas--')
-    print (shared.globalParams)
+    app.logger.info ('--Configs cargadas--\n {0}'.format(str(shared.globalParams)))
 
     app.config['UPLOAD_FOLDER'] = shared.globalParams.uploadDirectory
     app.config['MAX_CONTENT_LENGTH'] = int(shared.globalParams.sizeLimitsAndTimeToDelete[0][0])
 
     # base de datos
-    print('Max file size:', shared.globalParams.sizeLimitsAndTimeToDelete[0][0])
+    app.logger.info('Max file size: {0}'.format(shared.globalParams.sizeLimitsAndTimeToDelete[0][0]))
     print ('\nBase de datos setup---')
     from . import database
 
