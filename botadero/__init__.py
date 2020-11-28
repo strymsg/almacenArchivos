@@ -4,7 +4,7 @@ copyright 2018 Rodrigo Garcia <strysg@riseup.net>
 AGPL liberated.
 '''
 import os
-from flask import Flask
+from flask import Flask, g
 from logging.config import dictConfig
 
 from .configs import Parameters
@@ -52,7 +52,36 @@ def create_app(config=None, instance_path=None, db_path='sqlite:///db.sqlite3', 
     elif os.environ['FLASK_ENV'] == 'production':
         app.config.from_pyfile('../botadero/configs/configs.py')
 
-    # logs
+    ctx = app.app_context()
+    ctx.push()
+    
+    init_logs(app, app.config)
+        
+    g.log.warning('app.config:\n {0}\n'.format(str(app.config)))
+
+    # configuraciones adicionales
+    shared.globalParams = Parameters(app)
+    g.log.warning('--Configs cargadas--\n {0}'.format(str(shared.globalParams)))
+
+    app.config['UPLOAD_FOLDER'] = shared.globalParams.uploadDirectory
+    app.config['MAX_CONTENT_LENGTH'] = int(shared.globalParams.sizeLimitsAndTimeToDelete[0][0])
+
+    # base de datos
+    g.log.warning('Max file size: {0}'.format(shared.globalParams.sizeLimitsAndTimeToDelete[0][0]))
+    print ('\nBase de datos setup---')
+    from . import database
+
+    # ctx = app.app_context()
+    # ctx.push()
+    database.setup_db(app, db_path=db_path, testing=testing)
+    
+    # blueprints
+    configure_blueprints(app)
+
+    g.log.warning('\n   Creating app finished!')
+    return app
+
+def init_logs(app, config):
     # armando diccionario de logs
     logsConfig = {
         'version': 1,
@@ -67,16 +96,16 @@ def create_app(config=None, instance_path=None, db_path='sqlite:///db.sqlite3', 
             }
         },
         'root': {
-            'level': app.config['LOG_LEVEL'],
+            'level': config['LOG_LEVEL'],
             'handlers': ['wsgi']
         }
     }
-    if app.config['LOG_TODISK'] is True:
+    if config['LOG_TODISK'] is True:
         logsConfig['handlers']['file'] = {
             'class': 'logging.FileHandler',
-            'filename': app.config['LOG_FILENAME'],
+            'filename': config['LOG_FILENAME'],
             'formatter': 'default',
-            'level': app.config['LOG_LEVEL']
+            'level': config['LOG_LEVEL']
         }
         logsConfig['root']['handlers'].append('file')
     if os.environ['FLASK_ENV'] == 'development':
@@ -89,30 +118,8 @@ def create_app(config=None, instance_path=None, db_path='sqlite:///db.sqlite3', 
         logsConfig['root']['handlers'].append('console')
     # cargando logs
     dictConfig(logsConfig)
-    app.logger.info('app.config:\n {0}\n'.format(str(app.config)))
+    g.log = app.logger
 
-    # configuraciones adicionales
-    shared.globalParams = Parameters(app)
-    app.logger.info ('--Configs cargadas--\n {0}'.format(str(shared.globalParams)))
-
-    app.config['UPLOAD_FOLDER'] = shared.globalParams.uploadDirectory
-    app.config['MAX_CONTENT_LENGTH'] = int(shared.globalParams.sizeLimitsAndTimeToDelete[0][0])
-
-    # base de datos
-    app.logger.info('Max file size: {0}'.format(shared.globalParams.sizeLimitsAndTimeToDelete[0][0]))
-    print ('\nBase de datos setup---')
-    from . import database
-
-    ctx = app.app_context()
-    ctx.push()
-    database.setup_db(app, db_path=db_path, testing=testing)
-    
-    # blueprints
-    configure_blueprints(app)
-
-    print ('\nCreating app finished!')
-    return app
-    
 def configure_blueprints(app):
     from . import views
     app.register_blueprint(views.botaderoBp)

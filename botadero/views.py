@@ -12,19 +12,20 @@ from flask import (
     send_file, jsonify, make_response
 )
 
+log = g.log
+
 botaderoBp = Blueprint('botadero', __name__, url_prefix='')
 
 @botaderoBp.route('/')
 @botaderoBp.route('/<string:cat>/')
 def categoriaView(cat='Misc'):
     html_page = u.obtenerHtmlListado(categoria=cat)
-
     return html_page.html
 
 # endpoint descarga 
 @botaderoBp.route('/almacen/<string:cat>/<string:nombreArchivo>')
 def descargaDesdeIndexView(cat, nombreArchivo):
-    print('⏬ file:', cat, nombreArchivo)
+    log.info('⏬ file: {0} {1}'.format(cat, nombreArchivo))
     if not co.descargaPermitida(cat, nombreArchivo):
         return ('No permitido: '+cat+'/'+nombreArchivo), 404
 
@@ -43,7 +44,7 @@ def descargaDesdeIndexView(cat, nombreArchivo):
 @botaderoBp.route('/<string:cat>/download_protected', methods=['GET', 'POST'])
 def descargarArchivoProtegidoAjax(cat):
     nombreArchivo = request.form.get('nombre_archivo_protegido')
-    print('⏬ ⚿ file', cat, nombreArchivo)
+    log.info('⏬ ⚿ file {0}: {1}'.format(cat, nombreArchivo))
     if cat == '':
         cat = 'Misc'
     resultados = {}
@@ -95,7 +96,8 @@ def descargarArchivoProtegidoAjax(cat):
 # formulario de descarga para archivos protegidos
 @botaderoBp.route('/almacen/<string:cat>/<string:nombreArchivo>/descargar_protegido', methods=['GET'])
 def descargarArchivoProtegidoForm(cat, nombreArchivo):
-    print('☱ download file protected (form):', cat, nombreArchivo)
+    log.info('☱ download file protected (form): categoria={0}, nombre={1}'
+                    , cat, nombreArchivo)
     if cat == '':
         cat = 'Misc'
     if not co.descargaPermitida(cat, nombreArchivo):
@@ -115,7 +117,10 @@ def descargarArchivoProtegidoForm(cat, nombreArchivo):
 # vista de subida de archivo (individual) este caso se asume que no se usa javascript.
 @botaderoBp.route('/<string:cat>/upload_file', methods=['GET', 'POST'])
 def subidaArchivo(cat):
-    print('⮉ request (individual)', request.files.get('file', 'No se ha proporcionado archivo'), ', method=', request.method, 'categoria=', cat)
+    log.info('⮉ request (individual): name={0}, method={1}, categoria={2}'
+                    .format(
+                        request.files.get('file', 'No se ha proporcionado archivo'), \
+                        request.method, cat))
     if cat == '':
         cat = 'Misc'
     if 'file' not in request.files:
@@ -144,7 +149,7 @@ def subidaArchivo(cat):
 # vista de subida de varios archivos
 @botaderoBp.route('/<string:cat>/upload_file_a', methods=['GET', 'POST'])
 def subidaArchivos(cat):
-    print('⮉ request (multiple):', request.files.getlist("file"))
+    log.info('⮉ request (multiple): files={0}'.format(request.files.getlist("file")))
     if cat == '':
         cat = 'Misc'
 
@@ -155,23 +160,23 @@ def subidaArchivos(cat):
     erroneos = []
 
     for upload in request.files.getlist("file"):
-        print('* filename', upload.filename)
+        log.debug('* filename', upload.filename)
         resultado = None
         if password != '':
             resultado = co.subirArchivo(cat, upload, password)
         else:
             resultado = co.subirArchivo(cat, upload)
         if not isinstance(resultado, dict):
-            print('exitoso:', resultado.name)
+            log.debug('exitoso: {0}'.format(resultado.name))
             exitosos.append(resultado.name)
         else:
-            print('errorneo:', str(resultado))
+            log.debug('errorneo: {0}'.format(str(resultado)))
             erroneos.append(resultado)
     # actualizando
     if len(exitosos) > 0:
         co.sincronizarArchivos("['.gitkeep', '.gitkeep~', '#.gitkeep', '#.gitkeep#']")
         co.marcarTodasLasPaginasParaRenderizar()
     # retornando respuesta
-    print('exitosos', exitosos)
-    print('erroneos', erroneos)
+    log.debug('exitosos:\n {0}'.format(str(exitosos)))
+    log.debug('erroneos:\n {0}'.format(str(erroneos)))
     return jsonify(exitosos=exitosos, erroneos=erroneos)

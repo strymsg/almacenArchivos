@@ -15,6 +15,10 @@ from .database.models import Archivo, HtmlPage
 from flask import Flask
 from flask import render_template
 
+from flask import g
+
+log = g.log
+
 def registrarArchivo(nombreYRuta, digestCheck=None, digestAlgorithm=None, accelerateHash=False, hashedPassword=''):
     ''' Dado un archivo en el sistema de archivos hace una serie de comprobaciones 
     y lo registra en la base de datos como un nuevo archivo.
@@ -67,7 +71,7 @@ def registrarArchivo(nombreYRuta, digestCheck=None, digestAlgorithm=None, accele
 def borrarRegistroArchivoEnBd(name):
     a = Archivo.query.filter_by(name=name).first()
     if a is not None:
-        print('Eliminando registro de archivo en BD:', name)
+        log.debug('Eliminando registro de archivo en BD: {0}'.format(name))
         return a.delete()
     else:
         return None
@@ -224,7 +228,7 @@ def existeArchivo(nombreYRuta, comprobarCategoria=False, hashCheck=None):
     nombre = nombreArchivo(nombreYRuta)
     #path = categoriaArchivo(nombreYRuta)
     path = addRelativeFileName(nombreYRuta)
-    #print('>>>>>>>>>>', path)
+    #log.debug('>>>>>>>>>>', path)
     return Archivo.query.filter_by(name=nombre, path=path).first()
 
 def listaDeArchivosEnBd(categoria=None, ignorar=[]):
@@ -242,7 +246,7 @@ def listaDeArchivosEnBd(categoria=None, ignorar=[]):
                     lista.append(archivo)
             else:
                 lista.append(archivo)
-    #print ('  retornando lista>>>>', lista)
+    #log.debug ('  retornando lista>>>>', lista)
     return lista
 
 def listaDeArchivos(categoria=None, orden='fecha_asc'):
@@ -256,14 +260,14 @@ def listaDeArchivos(categoria=None, orden='fecha_asc'):
     '''
     lista = []
     ruta = shared.globalParams.uploadDirectory
-    print(' *', ruta)
+    log.debug(' *{}'.format(ruta))
     if categoria is not None:
         ruta = os.path.join(shared.globalParams.uploadDirectory, categoria)
     try:
         ow = os.walk(ruta)
         p,d,files = next(ow)
     except OSError:
-        print ("[REG] - Error: Can't os.walk() on %s except OSError.")
+        log.error("[REG] - Can't os.walk() on %s except OSError.")
     else:
         lista = [os.path.join(ruta, f) for f in files]
         reverse = False
@@ -281,11 +285,12 @@ def borrarArchivo(nombreYRuta, archivo=None):
     try:
         os.remove(rutaCompleta)
     except OSError as E:
-        print ('Error no se pudo borrar el archivo', rutaCompleta, '\nError:', str(E))
+        log.error('No se pudo borrar el archivo: {0} \n{1}'
+                  .format(rutaCompleta, str(E)))
         # borrando de la BD
         return Archivo.query.filter_by(path=nombreYRuta).first().delete() is None
     except Exception as E:
-        print ('Error general al borrar el archivo', rutaCompleta, 'E:', str(E))
+        log.error('General al borrar el archivo: {0} \n{1}'.format(rutaCompleta,str(E)))
         return False
     return Archivo.query.filter_by(path=nombreYRuta).first().delete() is None
 
@@ -307,7 +312,7 @@ def actualizarTiempoRestanteArchivo(nombreYRuta, archivo=None):
         archivo.save(remainingTime=restante)
         return True
     except Exception as E:
-        print('Excepcion actualizando tiempo restante de archivo en BD:', str(E))
+        log.error('Excepcion actualizando tiempo restante de archivo en BD:\n{1}'.format(str(E)))
         return False
 
 def tiempoBorradoArchivo(size):
@@ -316,13 +321,13 @@ def tiempoBorradoArchivo(size):
     timeToDel = 0
     # TODO: Hay un error al inicializar y aplicar sort a esta propiedad, mientras no se corrija es necesario ordenar esta lista en esta funcion
     shared.globalParams.sizeLimitsAndTimeToDelete.sort(reverse=False) 
-    # print(shared.globalParams.sizeLimitsAndTimeToDelete)
+    # log.debug(shared.globalParams.sizeLimitsAndTimeToDelete)
     for lim in shared.globalParams.sizeLimitsAndTimeToDelete:
         if int(size) <= int(lim[0]):
-            # print (' (*) tamanyo para', str(size), '>', str(int(lim[1])))
+            # log.debug (' (*) tamanyo para', str(size), '>', str(int(lim[1])))
             return int(lim[1])
         else:
-            # print (' (*) tamanyo para', str(size), '>', str(int(lim[1])))
+            # log.debug (' (*) tamanyo para', str(size), '>', str(int(lim[1])))
             timeToDel = int(lim[1])
     return timeToDel
 
@@ -337,7 +342,8 @@ def archivoDebeBorrarsePorTiempo(nombreYRuta='', archivo=None):
         archivo = Archivo.query.filter_by(path=nombreYRuta).first()
     tiempoBorrado = tiempoBorradoArchivo(archivo.size)
     edad = edadArchivo(archivo.path, archivo)
-    print ('verificando edad archivo:', archivo.name, '  edad:', str(edad),  'borrado max', str(tiempoBorrado))
+    log.debug('verificando edad archivo: {0}  edad: {1}  borrado max: {2}'
+              .format(archivo.name,str(edad),str(tiempoBorrado)))
     return tiempoBorrado < edad
 
 def hashPassword(password):
@@ -358,7 +364,7 @@ def comprobarPassword(nombreYRuta, password):
         archivo = Archivo.query.filter_by(name=nombreArchivo(nombreYRuta)).first()
         return checkHashedPassword(password, archivo.hashedPassword)
     except Exception as E:
-        print('Error comprobando password %r: %r' % (nombreYRuta, str(E)))
+        log.debug('Error comprobando password {0}: \n{1}'.format(nombreYRuta, str(E)))
         return False
 
 def esquemaColoresRandom():
@@ -371,13 +377,13 @@ def esquemaColoresRandom():
 def addRelativeFileName(filename):
     if filename.startswith(os.path.sep):
         # no deberia permitirse archivos con rutas absolutas
-        print(filename, 'ruta absoluta detectada')
+        log.debug('ruta absoluta detectada: {0}'.format(filename))
         return filename
     if not filename.startswith(os.path.curdir):
-        # print ('ret:::', os.path.join((os.path.curdir + os.path.sep), filename))
+        # log.debug ('ret:::', os.path.join((os.path.curdir + os.path.sep), filename))
         return os.path.join((os.path.curdir + os.path.sep), filename)
     else:
-        # print ('ret:', filename)
+        # log.debug ('ret:', filename)
         return filename
 
 def categorias():
@@ -390,7 +396,7 @@ def categorias():
 def descargarArchivo(cat, nombreArchivo):
     ''' Devuelve la ruta para descargar (enviar el archivo al cliente) e
     incrementa su contador de descargas'''
-    # print(cat, '"',nombreArchivo,'"')
+    # log.debug(cat, '"',nombreArchivo,'"')
     pathf = '' # para ruta absoluta
     pathr = '' # para ruta relativa
     # rutas
@@ -472,34 +478,35 @@ def obtenerHtmlListado(categoria='Misc', force=False):
         # creando registro en BD
         html = renderizarHtmlListado(category=categoria)
         try:
-            print('Creando nuevo registro en BD pagina: %r' % (name))
+            log.debug('Creando nuevo registro en BD pagina: {0}'.format(name))
             html_page = HtmlPage.create(name=name, category=categoria, html=html)
             return html_page
         except Exception as E:
-            print ('Excepcion creando htmlListado en BD:', str(E))
+            log.error('Excepcion creando htmlListado en BD:\n{0}'.format(str(E)))
             raise E
     # existe registro en BD
     if force:
         html = renderizarHtmlListado(category=categoria)
         try:
-            print('Forzando modificacion registro en BD pagina: %r' % (name))
+            log.debug('Forzando modificacion registro en BD pagina: {0}'.format(name))
             html_page.save(name=name, category=categoria, html=html)
             return html_page
         except Exception as E:
-            print ('Excepcion modificando htmlListado en BD:', str(E))
+            log.error('Excepcion modificando htmlListado en BD:\n{0}'.format(str(E)))
             raise E
     if html_page.renderHtml:
         html = renderizarHtmlListado(category=categoria)
         try:
-            print('Renderizando pagina por flag en BD pagina: %r' % (name))
+            log.debug('Renderizando pagina por flag en BD pagina: {0}'.format(name))
             html_page.save(name=name, category=categoria, html=html,
                            renderHtml=False)
             return html_page
         except Exception as E:
-            print ('Excepcion modificando htmlListado en BD:', str(E))
+            log.error('Excepcion modificando htmlListado en BD:\n{0}'.format(str(E)))
             raise E
     else:
-        print('No se necesita renderizar html desde template jinja2 pagina: %r' % (name))
+        log.debug('No se necesita renderizar html desde template jinja2 pagina: {0}'
+                  .format(name))
         return html_page
     
 def renderizarHtmlListado(category='Misc'):
@@ -553,7 +560,7 @@ def renderizarHtmlListado(category='Misc'):
 def renderizarHtmlArchivoProtegido(category, nombreArchivo):
     cats = categorias()
     cats.insert(0, 'Misc')
-    print(category, nombreArchivo)
+    log.debug('category={0}, nombre={1}'.format(category, nombreArchivo))
     actualizarEstadisticasGenerales()
 
     catStats = {}
@@ -596,7 +603,9 @@ def actualizarEstadisticasGenerales():
     shared.gr['storageUsed'] = almacenamientoUsado
     shared.gr['filesNumber'] = len(registros)
         
-    print('- storageUsed:', shared.gr['storageUsed'])
-    print('- sotrageTotal:', shared.gr['storageTotal'])
-    print('- filesNumber:', shared.gr['filesNumber'])
-    print('- remaining storage: %r (%d)' % (shared.gr['storageTotal'] - shared.gr['storageUsed'], ((shared.gr['storageTotal'] - shared.gr['storageUsed']) * 100)/shared.gr['storageTotal']))
+    log.debug('- storageUsed: {0}'.format(shared.gr['storageUsed']))
+    log.debug('- sotrageTotal: {0}'.format(shared.gr['storageTotal']))
+    log.debug('- filesNumber: {0}'.format(shared.gr['filesNumber']))
+    log.debug('- remaining storage: {0} ({1:2.3f}%)'.
+              format((shared.gr['storageTotal'] - shared.gr['storageUsed']),
+                     ((shared.gr['storageTotal'] - shared.gr['storageUsed']) * 100)/shared.gr['storageTotal']))
