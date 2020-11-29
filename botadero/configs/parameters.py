@@ -19,16 +19,34 @@ class Parameters():
     captchaUse = False
     applicationTitle = 'Almacén público de archivos'
     cssSchemes = ('gris1', 'verde1','azul1','amarillo1', 'rojo1','cafe1')
-    
+
+    def ordenar_limites(self, lista):
+        tamanyos = sorted([tupla[0] for tupla in lista], reverse=True)
+        # print(lista)
+        # print('-------------')
+        # print(tamanyos)
+        ordenado = []
+        for tam in tamanyos:
+            found = False
+            j = 0
+            while not found and j < len(tamanyos):
+                if lista[j][0] == tam:
+                    found = True
+                    ordenado.append((tam, lista[j][1]))
+                j = j + 1
+        return ordenado
+        
     def create(self, app=None):
         if app is None:
             return
         self.totalStorage = app.config['TOTAL_STORAGE']
         self.uploadDirectory = app.config['UPLOAD_DIRECTORY']
-        l = app.config['SIZE_LIMITS_AND_TIME_TO_DELETE']
-        self.sizeLimitsAndTimeToDelete = sorted(l,
-                                                key=lambda l: l[0],
-                                                reverse=True)
+        self.sizeLimitsAndTimeToDelete = self.ordenar_limites(
+            app.config['SIZE_LIMITS_AND_TIME_TO_DELETE'])
+        #l = app.config['SIZE_LIMITS_AND_TIME_TO_DELETE']
+        # self.sizeLimitsAndTimeToDelete = sorted(l,
+        #                                         key=lambda l: l[0],
+        #                                         reverse=True)
         self.timeUnit = app.config['TIME_UNIT']
         self.logLevel = app.config['LOG_LEVEL']
         self.digestCheck = app.config['DIGEST_CHECK']
