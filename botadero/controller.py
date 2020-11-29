@@ -7,10 +7,13 @@ AGPL liberated.
 import os
 from datetime import datetime as dt
 from werkzeug.utils import secure_filename
+from flask import g
 
 from .shared import globalParams, gr
 from . import utils as u
 from .database.models import Archivo, HtmlPage
+
+log = g.log
 
 def descargaPermitida(cat, nombreArchivo):
     if '..' in nombreArchivo or nombreArchivo.startswith(os.path.sep):
@@ -76,7 +79,7 @@ def subirArchivo(cat, file, password=''):
     NOTA: En caso de subir exitosamente, la funcion que lo llama deberia
     llamar a sincronizarArchivo() para actualizar los registros.
     '''
-    print('subirArchivo(cat="%r", file="%r"' % (cat, file))
+    log.debug('^ subirArchivo(cat="{0}", file="{1}"'.format(cat, file))
     filename = secure_filename(file.filename)
     categoria = ''
     if cat != 'Misc':
@@ -87,7 +90,7 @@ def subirArchivo(cat, file, password=''):
     try:
         f = open(filepath, 'r')
         f.close()
-        print('Archivo siendo subido ya existe:', filepath)
+        log.debug('Archivo siendo subido ya existe: {0}'.format(filepath))
         return {
             'tipoError': 1,
             'mensaje': 'El archivo "' + filename + '" ya existen en ' + filepath,
@@ -109,7 +112,8 @@ def subirArchivo(cat, file, password=''):
             if cat == globalParams.uploadDirectory:
                 cat = ''
             cat += '/'
-            print ('Ya existe un archivo con el mismo digestCheck ', digestCheck, 'encontrado', str(regDb))
+            log.debug('Ya existe un archivo con el mismo digestCheck {0} encontrado {1}'
+                      .format(digestCheck, str(regDb)))
             return {
                 'tipoError': 2,
                 'mensaje': 'Ya existe un archivo con el mismo digestCheck ' + digestCheck + ' con nombre ' + regDb.name,
@@ -128,7 +132,8 @@ def subirArchivo(cat, file, password=''):
     if gr['storageUsed'] == 0:
         u.actualizarEstadisticasGenerales()
     if gr['storageUsed'] + fsize > gr['storageTotal']:
-        print('No se cuenta con espacio de almacenamiento suficiente, requiere', str(fsize), 'se cuenta', str(gr['storageTotal'] - gr['storageUsed']))
+        log.warning('No se cuenta con espacio de almacenamiento suficiente, requiere {0} se cuenta {1}'
+                    .format(str(fsize), str(gr['storageTotal'] - gr['storageUsed'])))
         return {
             'tipoError': 3,
             'mensaje': 'No se cuenta con espacio suficiente',
@@ -138,9 +143,11 @@ def subirArchivo(cat, file, password=''):
     # guardando en el sistema de archivos
     try:
         file.save(os.path.join(globalParams.uploadDirectory, categoria, filename))
-        print('✓ Archivo guardado en sistema de archivos: %r' % os.path.join(globalParams.uploadDirectory, categoria, filename))
+        log.info('✓ Archivo guardado en sistema de archivos: {0}'
+                 .format(os.path.join(globalParams.uploadDirectory, categoria, filename)))
     except Exception as E:
-        print('✕ Excepcion al guardar archivo %r en el sistema de archivos:\n%r' % (filename, str(E)))
+        log.error('✕ Excepcion al guardar archivo %r en el sistema de archivos: {0}\n{1}'
+                  .format((filename, str(E))))
         return {
             'tipoError': 4,
             'mensaje': 'Error interno al guardar el archivo ' + filename,
@@ -148,7 +155,7 @@ def subirArchivo(cat, file, password=''):
         }
 
     if len(Archivo.query.filter_by(name=filename).all()) > 1:
-        print('Ya existe un archivo en la BD con nombre: %r ' % filename)
+        log.warning('Ya existe un archivo en la BD con nombre: {0} '.format(filename))
         return {
             'tipoError': 1,
             'mensaje': 'Ya existe (BD) un archivo con nombre ' + filename,
@@ -169,7 +176,7 @@ def subirArchivo(cat, file, password=''):
                           remainingTime=remainingTime,
                           hashedPassword=hashedPassword)
     # sincronizarArchivos(['.gitkeep', '.gitkeep~', '#.gitkeep', '#.gitkeep#'])
-    print('✓ Archivo registrado en BD', str(arch), str(len(arch.hashedPassword)))
+    log.info('✓ Archivo registrado en BD {0} {1}'.format(str(arch), str(len(arch.hashedPassword))))
     return arch
     
     
@@ -196,10 +203,11 @@ def comprobarTiempoBorradoListaArchivos(categoria, hdd=False):
     for archivo in lista:
         tiempoBorrado = u.tiempoBorradoArchivo(archivo.size)
         edad = u.edadArchivo(archivo.path, archivo)
-        print ('archivo:', archivo.name, '  edad:', str(edad),  'borrado max', str(tiempoBorrado))
+        log.info('archivo: {0}    edad: {1}  borrado max: {2}'
+                 .format(archivo.name, str(edad), str(tiempoBorrado)))
         if (tiempoBorrado < edad):
             r = u.borrarArchivo(archivo.path)
-            print (' xx Borrando archivo', archivo.name, ' = ', r)
+            log.warning(' xx Borrando archivo {0} = {1}'.format(archivo.name,r))
             
             borrados.append(archivo.path)
     return borrados
@@ -220,10 +228,11 @@ def marcarPaginaListaParaRenderizar(categoria='Misc'):
         # modificando
         try:
             html_page.save(renderHtml=True)
-            print('marcado para generar html:', html_page.name, str(html_page.renderHtml))
+            log.debug('marcado para generar html: {0} {1}'
+                      .format(html_page.name, str(html_page.renderHtml)))
             return True
         except Exception as E:
-            print ('Excepcion modificando html_page %r', (name))
+            log.error('Excepcion modificando html_page {0}'.format(name))
             return False
     return False
 
@@ -249,8 +258,8 @@ def sincronizarArchivos(ignorar=[]):
 
     :return ([registrados],[borrados],[actualizados]): Retorna tres listas, segun registra nuevos archivos en BD, los borra o actualiza su tiempo restante.
     '''
-    print ('** Sincronizando archivos **')
-    print ('\nParametros', str(globalParams))
+    log.debug('** Sincronizando archivos **')
+    log.debug('\nParametros\n {0}'.format(str(globalParams)))
     listaEnBd = u.listaDeArchivosEnBd()
     archivosEnBd = []
     for reg in listaEnBd:
@@ -265,21 +274,21 @@ def sincronizarArchivos(ignorar=[]):
     actualizados = []
 
     # obteniendo lista de archivos en el sistema de archivos
-    print('#' + 'Misc')
+    log.debug('# Misc')
     lista = u.listaDeArchivos()
     for archivo in lista:
         if u.nombreArchivo(archivo) not in ignorar:
             # estandarizando nombre
-            print(os.path.join(os.path.curdir + os.path.sep, archivo))
+            log.debug(os.path.join(os.path.curdir + os.path.sep, archivo))
             archivos.append(os.path.join(os.path.curdir + os.path.sep, archivo))
     
     for cat in u.categorias():
-        print('#' + cat)
+        log.debug('# {0}'.format(cat))
         lista = u.listaDeArchivos(categoria=cat)
         for archivo in lista:
             if u.nombreArchivo(archivo) not in ignorar:
                 # estandarizando nombre
-                print(os.path.join(os.path.curdir + os.path.sep, archivo))
+                log.debug(os.path.join(os.path.curdir + os.path.sep, archivo))
                 archivos.append(os.path.join(os.path.curdir + os.path.sep, archivo))
 
     # actualizando BD
@@ -288,34 +297,35 @@ def sincronizarArchivos(ignorar=[]):
         if archivo in ignorar:
             continue
         if archivo not in archivosEnBd:
-            print ('(+)', str(archivo), u.categoriaArchivo(archivo))
+            log.debug ('(+) {0} {1}'.format(str(archivo), u.categoriaArchivo(archivo)))
             arch = u.registrarArchivo(archivo)
             marcarTodasLasPaginasParaRenderizar()
             #marcarPaginaListaParaRenderizar(categoria=u.categoriaArchivo(archivo))
             registrados.append(arch)
         else:
             if u.archivoDebeBorrarsePorTiempo(archivo):
-                print ('(-)', str(archivo), u.categoriaArchivo(archivo))
+                log.debug('(-) {0} {1}'.format(str(archivo), u.categoriaArchivo(archivo)))
                 r = u.borrarArchivo(archivo) # del sistema de archivos y BD
                 borrados.append(archivo)
-                print (' ✗ Registro de archivo borrado', archivo, ' = ', r)
+                log.debug(' ✗ Registro de archivo borrado {0} = {1}'
+                          .format(archivo, r))
                 marcarTodasLasPaginasParaRenderizar()
                 # marcarPaginaListaParaRenderizar(categoria=u.categoriaArchivo(archivo))
             else:
                 if u.actualizarTiempoRestanteArchivo(archivo):
-                    print ('(+-)', str(archivo), u.categoriaArchivo(archivo))
+                    log.debug('(+-) {0} {1}'.format(str(archivo), u.categoriaArchivo(archivo)))
                     actualizados.append(archivo)
                     marcarTodasLasPaginasParaRenderizar()
                     # marcarPaginaListaParaRenderizar(categoria=u.categoriaArchivo(archivo))
     for reg in archivosEnBd:
         # caso de que un archivo se borro del sistema de archivos
         if reg not in archivos:
-            print('(bd -)', str(reg), u.categoriaArchivo(reg))
+            log.debug('(bd -) {0} {1}'.format(str(reg), u.categoriaArchivo(reg)))
             r = u.borrarRegistroArchivoEnBd(u.nombreArchivo(reg))
             borrados.append(reg)
             marcarTodasLasPaginasParaRenderizar()
             # marcarPaginaListaParaRenderizar(categoria=u.categoriaArchivo(reg))
 
-    print ('\nsincronización completa')
+    log.debug('\nsincronización completa')
     return registrados, borrados, actualizados
 

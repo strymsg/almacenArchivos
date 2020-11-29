@@ -26,7 +26,7 @@ LOG_LEVEL = 'WARNING'
 
 # Nivel de verbosidad para guardar registros de eventos
 # 'CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG', 'NOSET'
-LOG_LEVEL = 'DEBUG'
+LOG_LEVEL = 'WARNING'
 
 # Poner en True si se acumularán logs también en 
 LOG_TODISK = True

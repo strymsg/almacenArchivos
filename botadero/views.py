@@ -117,6 +117,11 @@ def descargarArchivoProtegidoForm(cat, nombreArchivo):
 # vista de subida de archivo (individual) este caso se asume que no se usa javascript.
 @botaderoBp.route('/<string:cat>/upload_file', methods=['GET', 'POST'])
 def subidaArchivo(cat):
+    # La siguiente línea es para evitar el error con uwsgi
+    # *4719 readv() failed (104: Connection reset by peer) while reading upstream
+    # Ref: https://uwsgi.readthedocs.io/en/latest/ThingsToKnow.html?highlight=clobbered
+    rdata = request.get_data(cache=True)
+
     log.info('⮉ request (individual): name={0}, method={1}, categoria={2}'
                     .format(
                         request.files.get('file', 'No se ha proporcionado archivo'), \
@@ -149,6 +154,12 @@ def subidaArchivo(cat):
 # vista de subida de varios archivos
 @botaderoBp.route('/<string:cat>/upload_file_a', methods=['GET', 'POST'])
 def subidaArchivos(cat):
+    # La siguiente línea es para evitar el error con uwsgi
+    # *4719 readv() failed (104: Connection reset by peer) while reading upstream
+    # Ref: https://uwsgi.readthedocs.io/en/latest/ThingsToKnow.html?highlight=clobbered
+    rdata = request.get_data(cache=True)
+    # log.warning('request.data?::::\n{0}\n::::::::'.format(len(rdata)))
+
     log.info('⮉ request (multiple): files={0}'.format(request.files.getlist("file")))
     if cat == '':
         cat = 'Misc'
@@ -159,8 +170,11 @@ def subidaArchivos(cat):
     exitosos = []
     erroneos = []
 
+    # TODO: controlar suma de peticion y tamaño máximo
+    # ...
+    
     for upload in request.files.getlist("file"):
-        log.debug('* filename', upload.filename)
+        log.debug('* filename {0}'.format(upload.filename))
         resultado = None
         if password != '':
             resultado = co.subirArchivo(cat, upload, password)
