@@ -64,9 +64,10 @@ def create_app(config=None, instance_path=None, db_path='sqlite:///db.sqlite3', 
     g.log.warning('--Configs cargadas--\n {0}'.format(str(shared.globalParams)))
 
     app.config['UPLOAD_FOLDER'] = shared.globalParams.uploadDirectory
-    # Se agrega 50% por que al parecer cuando se envian archivos de gran tamaño
+    # Se agrega 90% por que al parecer cuando se envian archivos de gran tamaño
     # Crecen las peticiones y el tamaño real de la petición excede a de los archivos
-    app.config['MAX_CONTENT_LENGTH'] = int(shared.globalParams.sizeLimitsAndTimeToDelete[0][0]*1.5)
+    # TODO: revisar
+    app.config['MAX_CONTENT_LENGTH'] = int(int(shared.globalParams.sizeLimitsAndTimeToDelete[0][0])*1.9)
 
     g.log.warning('Max file size (config file): {0}'
                   .format(

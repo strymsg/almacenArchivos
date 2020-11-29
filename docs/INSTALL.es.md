@@ -94,6 +94,10 @@ server {
        # permite la subida de archivos de hasta 5000 MB
        client_max_body_size 5000M;
 
+	   # incrementar el tiempo para mentener viva la conexión
+       keepalive_timeout 4000s;
+       keepalive_requests 100;
+
        location / {
              include uwsgi_params;
 			 # socket unix, el mismo que indica el archivo app.ini
