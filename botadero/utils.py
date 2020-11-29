@@ -538,13 +538,38 @@ def renderizarHtmlListado(category='Misc'):
         timeUnit = 'minutos'
     elif shared.globalParams.timeUnit == 'second':
         timeUnit = 'segundos'
-        
+
+    # print('>>>>>>>>>>>>>>>>>>>>>>>>>')
+    # print(shared.globalParams.sizeLimitsAndTimeToDelete)
+    # print(shared.globalParams.sizeLimitsAndTimeToDelete[0][0])
+
+    # --- TEST ordenando ---
+    # TODO: Revisar por que shared.globalParams.sizeLimitsAndTimeToDelete no esta ordenado
+    # Parece que el estado entre la creaciuon de la app en botadero/__init__.py y
+    # la llamada a 'shared' desde esta funcion devuelven objetos diferentes
+    tamanyos = sorted(
+        [tupla[0] for tupla in shared.globalParams.sizeLimitsAndTimeToDelete], reverse=True)
+    limitesOrdenados = []
+    for tam in tamanyos:
+        found = False
+        j = 0
+        while not found and j < len(tamanyos):
+            if shared.globalParams.sizeLimitsAndTimeToDelete[j][0] == tam:
+                found = True
+                limitesOrdenados.append(
+                    (tam, shared.globalParams.sizeLimitsAndTimeToDelete[j][1]))
+            j = j + 1
+    print(limitesOrdenados)
+    # ------
     dv = {
         'title': shared.globalParams.applicationTitle,
         'esquemaColores': esquemaColoresRandom(),
-        'maxFilesize': int(shared.globalParams.sizeLimitsAndTimeToDelete[-1][0]),
-        'timeLapseMax': shared.globalParams.sizeLimitsAndTimeToDelete[-1][1],
-        'timeLapseMin': shared.globalParams.sizeLimitsAndTimeToDelete[0][1],
+        #'maxFilesize': int(shared.globalParams.sizeLimitsAndTimeToDelete[0][0]),
+        'maxFilesize': int(limitesOrdenados[0][0]),
+        #'timeLapseMax': shared.globalParams.sizeLimitsAndTimeToDelete[-1][1],
+        'timeLapseMax': limitesOrdenados[0][1],
+        #'timeLapseMin': shared.globalParams.sizeLimitsAndTimeToDelete[0][1],
+        'timeLapseMin': limitesOrdenados[-1][1],
         'timeUnit': timeUnit,
         'categoriaActual': category,
         'storageUsed': shared.gr['storageUsed'],
