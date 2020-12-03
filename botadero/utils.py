@@ -19,6 +19,35 @@ from flask import g
 
 log = g.log
 
+### utilitarios internos
+def ordenar_tamaños(lista):
+    tamaños = sorted([tupla[0] for tupla in lista], reverse=True)
+    limitesOrdenados = []
+    for tam in tamaños:
+        found = False
+        j = 0
+        while not found and j < len(tamaños):
+            if lista[j][0] == tam:
+                found = True
+                limitesOrdenados.append((tam, lista[j][1]))
+            j = j + 1
+    return limitesOrdenados
+
+def unidad_almacenamiento(tam):
+    cad = ''
+    tam = int(tam)
+    if tam < 1000:
+        cad = '{0} B'.format(tam)
+    elif tam >= 1000 and tam < 1000000:
+        cad = '{0:0.2f} KB'.format(tam/1000)
+    elif tam >= 1000000 and tam < 1000000000:
+        cad = '{0:0.2f} MB'.format(tam/1000000)
+    elif tam >= 1000000000:
+        cad = '{0:0.2f} GB'.format(tam/1000000000)
+    return cad
+        
+### utilitarios generales
+
 def registrarArchivo(nombreYRuta, digestCheck=None, digestAlgorithm=None, accelerateHash=False, hashedPassword=''):
     ''' Dado un archivo en el sistema de archivos hace una serie de comprobaciones 
     y lo registra en la base de datos como un nuevo archivo.
@@ -547,19 +576,8 @@ def renderizarHtmlListado(category='Misc'):
     # TODO: Revisar por que shared.globalParams.sizeLimitsAndTimeToDelete no esta ordenado
     # Parece que el estado entre la creaciuon de la app en botadero/__init__.py y
     # la llamada a 'shared' desde esta funcion devuelven objetos diferentes
-    tamanyos = sorted(
-        [tupla[0] for tupla in shared.globalParams.sizeLimitsAndTimeToDelete], reverse=True)
-    limitesOrdenados = []
-    for tam in tamanyos:
-        found = False
-        j = 0
-        while not found and j < len(tamanyos):
-            if shared.globalParams.sizeLimitsAndTimeToDelete[j][0] == tam:
-                found = True
-                limitesOrdenados.append(
-                    (tam, shared.globalParams.sizeLimitsAndTimeToDelete[j][1]))
-            j = j + 1
-    print(limitesOrdenados)
+    limitesOrdenados = ordenar_tamaños(shared.globalParams.sizeLimitsAndTimeToDelete)
+    #print(limitesOrdenados)
     # ------
     dv = {
         'title': shared.globalParams.applicationTitle,
@@ -634,3 +652,59 @@ def actualizarEstadisticasGenerales():
     log.debug('- remaining storage: {0} ({1:2.3f}%)'.
               format((shared.gr['storageTotal'] - shared.gr['storageUsed']),
                      ((shared.gr['storageTotal'] - shared.gr['storageUsed']) * 100)/shared.gr['storageTotal']))
+
+def obtener_pag_info():
+    ''' Devuelve la cadena HTML con el contenido de la página de información general extrayendo
+    el HTML de la BD.
+    '''
+    html_page = HtmlPage.query.filter_by(name='info').first()
+    return html_page
+
+def renderizar_pag_info():
+    '''Usa jinja2 para renderizar (generar) un nuevo HTML y guardarlo en la BD. Si no es necesario
+    volver a renderizar la página, retorna el HTML guardado en la BD.
+torage
+    :return: html renderizado o un error
+    '''
+    limitesOrdenados = ordenar_tamaños(shared.globalParams.sizeLimitsAndTimeToDelete)
+    limites = []
+    for limite in limitesOrdenados:
+        limites.append((unidad_almacenamiento(limite[0]), limite[1]))
+
+    timeUnit = ''
+    if shared.globalParams.timeUnit == 'day':
+        timeUnit = 'días'
+    elif shared.globalParams.timeUnit == 'minute':
+        timeUnit = 'minutos'
+    elif shared.globalParams.timeUnit == 'second':
+        timeUnit = 'segundos'
+        
+    variables = {
+        'title': shared.globalParams.applicationTitle,
+        'esquemaColores': esquemaColoresRandom(),
+        'timeUnit': timeUnit,
+        'limites': limites,
+        'storageTotal': unidad_almacenamiento(shared.globalParams.totalStorage),
+        'filesNumber': shared.gr['filesNumber'],
+        'categorias': categorias(),
+    }
+    html = render_template("info.html", **variables)
+
+    # actualizando BD
+    html_page = HtmlPage.query.filter_by(name='info').first()
+    if html_page is None:
+        try:
+            HtmlPage.create(name='info', category='', html=html, renderHtml=False)
+            log.debug('/info.html page rendered and created')
+        except Exception as E:
+            log.error('Excepcion creando html_page info en BD:\n{0}'
+                      .format(str(E)))
+    else:
+        try:
+            html_page.save(name="info", category='', html=html, renderHtml=False)
+            log.debug('/info.html page rendered')
+            return html
+        except Exception as E:
+            log.error('Excepcion modificando html_page info en BD:\n{0}'
+                      .format(str(E)))
+            raise E

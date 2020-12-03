@@ -194,3 +194,12 @@ def subidaArchivos(cat):
     log.debug('exitosos:\n {0}'.format(str(exitosos)))
     log.debug('erroneos:\n {0}'.format(str(erroneos)))
     return jsonify(exitosos=exitosos, erroneos=erroneos)
+
+
+####### vistas informativas ######
+
+@botaderoBp.route('/info', methods=['GET'])
+def info_page():
+    html_page = u.obtener_pag_info()
+    return html_page.html
+

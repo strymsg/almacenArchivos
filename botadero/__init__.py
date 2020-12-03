@@ -86,6 +86,8 @@ def create_app(config=None, instance_path=None, db_path='sqlite:///db.sqlite3', 
     # blueprints
     configure_blueprints(app)
 
+    initialize_static_pages()
+    
     g.log.warning('\n   Creating app finished!')
     return app
 
@@ -131,3 +133,8 @@ def init_logs(app, config):
 def configure_blueprints(app):
     from . import views
     app.register_blueprint(views.botaderoBp)
+
+def initialize_static_pages():
+    from . import utils as u
+
+    u.renderizar_pag_info()
