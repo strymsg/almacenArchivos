@@ -65,6 +65,7 @@ La aplicación necesita que se ejecute el script `cronjobs.py` que se encarga de
 ### Tareas por hacer
 
 - [ ] Mejorar interfaz de subida de archivos
+  - [ ] Captcha
 - [ ] Borrado de archivos con contraseña
 - [ ] Panel de administración
 - [ ] Dockerizar
@@ -134,6 +135,7 @@ The aplication requires the script `cronjob.py` to be executed, this *updates* t
 ### TODO
 
 - [ ] Improve file upload user interface
+  - [ ] Captcha
 - [ ] File deletion using password
 - [ ] Admin panel
 - [ ] Dockerize the app
