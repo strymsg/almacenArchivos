@@ -61,6 +61,15 @@ La aplicación necesita que se ejecute el script `cronjobs.py` que se encarga de
 ```
 */1 *   * * *   user    cd /home/user/alamcenArchivos; export FLASK_ENV=production;venv/bin/python3 cronjobs.py >> cronjobs.log 2>&1
 ```
+
+### Tareas por hacer
+
+- [ ] Mejorar interfaz de subida de archivos
+- [ ] Borrado de archivos con contraseña
+- [ ] Panel de administración
+- [ ] Dockerizar
+- [ ] Agregar más Tests
+
 <h3 id="en">Archive store</h3>
 
 - Repositorio Original: https://notabug.org/strysg/botadero
@@ -122,3 +131,10 @@ The aplication requires the script `cronjob.py` to be executed, this *updates* t
 */2 *    * * *   user    export FLASK_ENV=production; /home/user/almacenArchivos/venv/bin/python3 /home/user/almacenArchivos/cronjobs.py
 ```
 
+### TODO
+
+- [ ] Improve file upload user interface
+- [ ] File deletion using password
+- [ ] Admin panel
+- [ ] Dockerize the app
+- [ ] Add more tests
