@@ -18,7 +18,7 @@
       aquí tienen un límite de permanencia (<strong>{{ limites[0][1] }}</strong>  a <strong>{{ limites[-1][1] }}</strong> {{ timeUnit }}) pero no hay límites de velocidad de descarga.
     </p>
     <h2>¿Por qué se borran los archivos?</h2>
-    <p>La principal razón es para <b>ahorrar espacio de almacenamiento</b>: este servidor ha dispuesto <strong>{{ storageTotal }}</strong> en total para almacenar archivos.</p>
+    <p>La principal razón es para <b>ahorrar espacio de almacenamiento</b>, este servidor ha dispuesto <strong>{{ storageTotal }}</strong> en total para almacenar archivos.</p>
     
     <h2>Criterios de borrado de archivos</h2>
     <p>Usualmente los archivos desaparecen dependiendo de su tamaño:</p>
@@ -42,15 +42,14 @@
         {% endif %}
 
       {% endfor %}
-
     </ul>
     <p>No se aceptan archivos mayores a {{ limites[0][0] }}.</p>
     
     <p>Cuando un archivo se borra, sus registros en el servidor tambíen se eliminan.</p>
     
-    <h2>Archivos protegidos</h2>
+    <h2 id="protegidos">Archivos protegidos</h2>
     <p>Al subir archivos puedes escoger <strong>protegerlos con una contraseña</strong> y solo quienes conozcan la contraseña podrán descargarlos. Recuerda que los archivos <strong>no se cifran</strong> en el servidor al guardarlos con contraseña.</p>
-
+    <p>Te recomendamos que no subas archivos secretos ya que el administrador del sitio podría verlos y si alguien averigua la contraseña con la que lo subes también podría hacerlo. Para archivos secretos, es mejor que los cifres por tu cuenta o uses medios más seguros.</p>
     <h2 id="duplicados">¿Qué pasa con los archivos duplicados?</h2>
     <p>Se rechazan los archivos subidos que tengan un nombre igual a algún otro que ya exista.
       También rechaza los archivos que se detecten sean iguales en contenido a otro que ya exista,
@@ -60,26 +59,32 @@
     <p>Cuando subes un archivo, la aplicación no guarda datos relacionados a tu dirección IP o computadora.</p>
 
     <h2>Espacio público</h2>
-    <p>Recuerda que este es un espacio público, por tanto debes considerar.
-      <ul>
-        <li>No se filtra por sí solo el contenido</li>
-        <li>Los archivos permanecen en el servidor hasta que cumple su tiempo de vida o un administrador los borra.</li>
-      </ul>
-      <h2>Contenido prohibido</h2>
-      <p>Existen algunos tipos no admitidos:</p>
-      <ul>
-    	<!-- <li>Contenido para adultos de todo tipo</li> -->
-    	<li>Archivos que hagan referencia a delitos o actividad ilegal (en el país donde este instalado el servidor)</li>
-      </ul>
-      
-      <p>Cuida este espacio para que siga funcionando por que <b>compartir es bueno</b>.</p>
-      <!-- Notas al pie -->
+    <p>
+      Recuerda que este es un espacio público, por tanto debes considerar.
+    </p>
+    <ul>
+      <li>No se filtra por sí solo el contenido</li>
+      <li>Los archivos permanecen en el servidor hasta que cumple su tiempo de vida o un administrador los borra.</li>
+      <li>Los archivos subidos no son cifrados, el administrador puede verlos.</li>
+    </ul>
+    <h2>Contenido prohibido</h2>
+    <p>Existen algunos tipos no admitidos:</p>
+    <ul>
+      <!-- <li>Contenido para adultos de todo tipo</li> -->
+      <li>Archivos que hagan referencia a delitos o actividad ilegal (en el país donde este instalado el servidor)</li>
+    </ul>
+    <p>El administrador del sitio tiene la última decisión sobre la permanencia de un archivo particular y también tiene pleno acceso a todos.</p>
+    <!-- Notas al pie -->
 
-      <!-- Notas al pie -->
-      <div class="qu">
-	" Compartir es bueno " 
-	<p> <a href="https://notabug.org/strysg/botadero">Código fuente</a> de esta aplicación.</p>
-      </div>
+    <h2>Instala tu propia instancia</h2>
+    <p>Esta aplicación web es libre y puedes instalarla en tu propio servidor, revisa el <a href="https://notabug.org/strysg/botadero/src/master/docs/INSTALL.es.md">manual de instalación</a>— si programas en python y/o javascript se agradecerán tus aportes para mejorar el sitio B)</p>
 
+    <p>Cuida este espacio para que siga funcionando por que <b>compartir es bueno</b>.</p>
+
+    <!-- Notas al pie -->
+    <div class="qu">
+      " Compartir es bueno " 
+      <p> <a href="https://notabug.org/strysg/botadero">Código fuente</a> de esta aplicación.</p>
+    </div>
   </body>
 </html>

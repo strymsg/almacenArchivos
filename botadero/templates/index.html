@@ -38,8 +38,14 @@
 	  </fieldset>
           <!-- check password y menu passwords-->
           <p>
-            <img src="{{ url_for('static', filename='botadero_resources/lock32.png')}}" height="16"> <span>Proteger con contraseña</span> 
+            <img src="{{ url_for('static', filename='botadero_resources/lock32.png')}}" height="16"> <span>Proteger con contraseña</span>
             <input type="checkbox" id="pwd_check" onclick="menuPassword()">
+            <details>
+              <summary>Archivos protegidos</summary>
+              <p>
+                Un archivo protegido con contraseña requiere que se introduzca la misma contraseña para descargarlo. <a href="/info#protegidos" target="_blank">El archivo <strong>no se cifra</strong>.</a>
+              </p>
+            </details>
           </p>
           <div id="menu_password" style="display: none">
             <p id="pwd_msj"></p>
