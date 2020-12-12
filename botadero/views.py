@@ -195,7 +195,6 @@ def subidaArchivos(cat):
     log.debug('erroneos:\n {0}'.format(str(erroneos)))
     return jsonify(exitosos=exitosos, erroneos=erroneos)
 
-
 ####### vistas informativas ######
 
 @botaderoBp.route('/info', methods=['GET'])

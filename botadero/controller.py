@@ -87,6 +87,17 @@ def subirArchivo(cat, file, password=''):
     # comprobando existencia
     filepath = os.path.join(globalParams.uploadDirectory, categoria, filename)
     filepath = u.addRelativeFileName(filepath)
+
+    # nombre del archivo
+    if len(filename) < 1:
+        log.debug('El archivo "{0}" se ha traducido en el nombre "{1}" que tiene un nombre válido'
+                  .format(file.filename, filename))
+        return {
+            'tipoError': 5,
+            'mensaje': 'El archivo no tiene un nombre válido',
+            'redirect': categoria
+        }
+
     try:
         f = open(filepath, 'r')
         f.close()
