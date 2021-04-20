@@ -19,7 +19,7 @@ MarkupSafe==1.1.1
 more-itertools==4.2.0
 passlib==1.7.2
 pluggy==0.6.0
-py==1.5.4
+py==1.10.0
 Pygments==2.2.0
 pytest==3.6.2
 pytest-flask==0.15.1
